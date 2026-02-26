@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>점수 상세 · ElectionAI</title>
+<link rel="stylesheet" href="css/style.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+.heatmap-cell {
+  font-weight: 700; font-size: 13px;
+  padding: 10px 14px !important;
+  transition: all 0.2s;
+}
+.metric-section { margin-bottom: 28px; }
+.metric-title {
+  font-size: 15px; font-weight: 700; color: var(--primary-dark);
+  margin-bottom: 10px; display: flex; align-items: center; gap: 8px;
+}
+.metric-bar-row { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+.metric-bar-name { width: 80px; font-size: 13px; font-weight: 600; flex-shrink: 0; }
+.metric-bar-wrap { flex: 1; }
+.metric-bar-score { width: 36px; text-align: right; font-size: 13px; font-weight: 700; }
+.avg-line { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
+</style>
+</head>
+<body>
+
+<header class="app-header">
+  <div class="header-inner">
+    <div class="header-logo">⚖️ Election<span>AI</span></div>
+    <div class="header-subtitle">AI 기반 선거 후보자 비교 분석 플랫폼</div>
+    <div class="header-date" id="header-date"></div>
+  </div>
+</header>
+<nav class="main-nav"><div class="nav-inner" id="main-nav"></div></nav>
+
+<div class="page-container">
+  <div class="page-title">
+    <h1>📈 10개 항목 상세 점수</h1>
+    <p>항목별 후보자 점수 비교 및 열지도 분석</p>
+  </div>
+  <div id="page-content"></div>
+</div>
+
+<button class="print-btn" onclick="window.open('report_full.html','_blank')" title="전체 PDF 보고서">📥</button>
+
+<script src="js/shared.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const data = requireData();
+  if (!data) return;
+
+  const { candidates } = data;
+  const n = candidates.length;
+  let html = '';
+
+  // ── 히트맵 테이블 ──
+  html += `<div class="card">
+    <div class="card-title">🔥 점수 히트맵 (항목 × 후보자)</div>
+    <div class="table-wrap"><table>
+      <thead><tr><th>평가 항목</th>`;
+  candidates.forEach((c,i) => {
+    html += `<th style="color:${CANDIDATE_COLORS[i%5].border}">${c.name}</th>`;
+  });
+  html += `<th>평균</th><th>최고</th><th>최저</th></tr></thead><tbody>`;
+
+  METRICS.forEach(m => {
+    const scores = candidates.map(c => c.metrics?.[m] ?? 0);
+    const avg = scores.reduce((a,b)=>a+b,0)/n;
+    const max = Math.max(...scores);
+    const min = Math.min(...scores);
+    html += `<tr><td><strong>${METRIC_LABELS[m]}</strong></td>`;
+    scores.forEach((s,i) => {
+      // 점수에 따른 배경색 계산
+      const ratio = (s - 50) / 50; // 50~100 범위를 0~1로 정규화
+      const col = CANDIDATE_COLORS[i%5];
+      const isMax = s === max;
+      const isMin = s === min;
+      const bg = isMax ? col.light : isMin ? '#fff7ed' : '';
+      const fw = isMax || isMin ? 'font-weight:800;' : '';
+      html += `<td class="heatmap-cell" style="background:${bg};${fw}">${s}${isMax?'▲':isMin?'▼':''}</td>`;
+    });
+    html += `<td style="color:var(--text-muted)">${avg.toFixed(1)}</td>
+      <td style="color:var(--success);font-weight:700">${max}</td>
+      <td style="color:var(--danger);font-weight:700">${min}</td></tr>`;
+  });
+
+  // 종합 행
+  html += `<tr style="background:#f8fafc;border-top:2px solid var(--border)">
+    <td><strong>종합 점수 (AI)</strong></td>`;
+  candidates.forEach(c => {
+    html += `<td style="font-weight:800;font-size:14px">${c.total_score || '-'}</td>`;
+  });
+  html += `<td colspan="3"></td></tr>`;
+
+  html += `</tbody></table></div>
+    <div class="insight-box">▲ 해당 항목 최고 점수 &nbsp;|&nbsp; ▼ 해당 항목 최저 점수</div>
+  </div>`;
+
+  // ── 그룹 막대 차트 ──
+  html += `<div class="card"><div class="card-title">📊 항목별 그룹 막대그래프</div>
+    <div class="chart-container" style="height:420px">
+      <canvas id="groupedBar"></canvas>
+    </div></div>`;
+
+  // ── 항목별 바 차트 (후보 비교) ──
+  html += `<div class="card"><div class="card-title">📋 항목별 후보자 점수 상세</div>`;
+  METRICS.forEach(m => {
+    const scores = candidates.map(c => c.metrics?.[m] ?? 0);
+    const avg = scores.reduce((a,b)=>a+b,0)/n;
+    html += `<div class="metric-section">
+      <div class="metric-title">${METRIC_LABELS[m]}</div>`;
+    candidates.forEach((c,i) => {
+      const s = c.metrics?.[m] ?? 0;
+      const col = CANDIDATE_COLORS[i%5];
+      html += `<div class="metric-bar-row">
+        <div class="metric-bar-name" style="color:${col.border}">${c.name}</div>
+        <div class="metric-bar-wrap">
+          <div class="progress-bar"><div class="progress-fill" style="width:${s}%;background:${col.border}"></div></div>
+        </div>
+        <div class="metric-bar-score" style="color:${col.border}">${s}</div>
+      </div>`;
+    });
+    html += `<div class="avg-line">항목 평균: ${avg.toFixed(1)}점</div></div>`;
+  });
+  html += `</div>`;
+
+  // ── 표준편차 분석 ──
+  html += `<div class="card"><div class="card-title">📐 항목별 편차 분석 (균형성)</div>
+    <div class="table-wrap"><table>
+      <thead><tr><th>후보자</th>`;
+  METRICS.forEach(m => { html += `<th>${METRIC_LABELS[m].split(' ')[0]}</th>`; });
+  html += `<th>표준편차</th><th>균형성</th></tr></thead><tbody>`;
+
+  candidates.forEach((c,i) => {
+    const scores = METRICS.map(m => c.metrics?.[m] ?? 0);
+    const avg = scores.reduce((a,b)=>a+b,0)/scores.length;
+    const std = Math.sqrt(scores.reduce((s,v)=>s+Math.pow(v-avg,2),0)/scores.length);
+    const col = CANDIDATE_COLORS[i%5];
+    html += `<tr><td style="color:${col.border};font-weight:700">${c.name}</td>`;
+    scores.forEach(s => { html += `<td>${s}</td>`; });
+    html += `<td style="font-weight:700">${std.toFixed(1)}</td>
+      <td>${std < 5 ? '🟢 균형' : std < 8 ? '🟡 보통' : '🔴 편중'}</td></tr>`;
+  });
+  html += `</tbody></table>
+    <div class="insight-box">표준편차가 낮을수록 항목 간 균형이 잡힌 후보입니다. 높을수록 특정 항목에 편중됩니다.</div>
+  </div></div>`;
+
+  document.getElementById('page-content').innerHTML = html;
+
+  // ── 그룹 막대 차트 렌더링 ──
+  new Chart(document.getElementById('groupedBar'), {
+    type: 'bar',
+    data: {
+      labels: METRICS.map(m => METRIC_LABELS[m]),
+      datasets: candidates.map((c,i) => ({
+        label: c.name,
+        data: METRICS.map(m => c.metrics?.[m] ?? 0),
+        backgroundColor: CANDIDATE_COLORS[i%5].bg,
+        borderColor: CANDIDATE_COLORS[i%5].border,
+        borderWidth: 2,
+        borderRadius: 4,
+      }))
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      scales: {
+        x: { ticks: { font: { size: 11 } }, grid: { display: false } },
+        y: { min: 50, max: 100, ticks: { font: { size: 11 } }, grid: { color: '#f1f5f9' } }
+      },
+      plugins: { legend: { position: 'bottom', labels: { font: { size: 12 }, padding: 16 } } }
+    }
+  });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>종합 비교 · ElectionAI</title>
+<link rel="stylesheet" href="css/style.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+.ranking-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px,1fr)); gap: 16px; }
+.rank-card {
+  background: white; border-radius: var(--radius); padding: 20px;
+  border: 2px solid var(--border); box-shadow: var(--shadow);
+  position: relative; overflow: hidden; transition: transform 0.2s;
+}
+.rank-card:hover { transform: translateY(-2px); }
+.rank-card .rank-num {
+  font-size: 48px; font-weight: 900; opacity: 0.06;
+  position: absolute; right: 12px; top: 4px; line-height:1;
+}
+.rank-card .candidate-name { font-size: 18px; font-weight: 800; margin-bottom: 2px; }
+.rank-card .candidate-party { font-size: 12px; color: var(--text-muted); margin-bottom: 12px; }
+.rank-card .total-score { font-size: 36px; font-weight: 900; }
+.rank-card .grade-badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 700;
+  margin-left: 8px; vertical-align: middle;
+}
+.rank-card .rank-position { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+
+.charts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.top-bar {
+  background: linear-gradient(90deg, var(--primary-dark), var(--primary));
+  color: white; padding: 4px 12px; border-radius: 20px;
+  font-size: 11px; font-weight: 600; display: inline-block; margin-bottom: 8px;
+}
+
+@media (max-width: 768px) { .charts-grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<header class="app-header">
+  <div class="header-inner">
+    <div class="header-logo">⚖️ Election<span>AI</span></div>
+    <div class="header-subtitle">AI 기반 선거 후보자 비교 분석 플랫폼</div>
+    <div class="header-date" id="header-date"></div>
+  </div>
+</header>
+<nav class="main-nav"><div class="nav-inner" id="main-nav"></div></nav>
+
+<div class="page-container">
+  <div class="page-title">
+    <h1>📊 종합 비교 분석</h1>
+    <p>4개 AI 모델 평균 점수 기반 후보자 종합 평가 결과</p>
+  </div>
+  <div id="page-content"></div>
+</div>
+
+<button class="print-btn" onclick="window.open('report_full.html','_blank')" title="전체 PDF 보고서">📥</button>
+
+<script src="js/shared.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const data = requireData();
+  if (!data) return;
+
+  const { candidates } = data;
+  const totalRanks = calcTotalRankings(candidates);
+  const metricRanks = calcMetricRankings(candidates);
+  const n = candidates.length;
+
+  let html = '';
+
+  // ── 순위 카드 ──
+  html += `<div class="card"><div class="card-title">🏆 종합 순위</div><div class="ranking-grid">`;
+  const sorted = [...candidates].map((c,i) => ({...c, idx:i})).sort((a,b)=>b.total_score-a.total_score);
+  sorted.forEach((c, rank) => {
+    const col = CANDIDATE_COLORS[c.idx % 5];
+    const g = scoreGrade(c.total_score);
+    html += `
+      <div class="rank-card" style="border-color:${col.border}">
+        <div class="rank-num">${rank+1}</div>
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+          <div class="rank-tag ${rank===0?'rank-1':rank===1?'rank-2':rank===2?'rank-3':'rank-other'}">${rank+1}</div>
+          <div>
+            <div class="candidate-name" style="color:${col.border}">${c.name}</div>
+            <div class="candidate-party">${c.party}</div>
+          </div>
+        </div>
+        <div>
+          <span class="total-score" style="color:${col.border}">${c.total_score}</span>
+          <span style="font-size:14px;color:var(--text-muted)">점</span>
+          <span class="grade-badge" style="background:${col.light};color:${col.text}">${g.label}등급 · ${g.desc}</span>
+        </div>
+        <div class="rank-position">${c.position || ''}</div>
+        <div class="progress-bar" style="margin-top:10px">
+          <div class="progress-fill" style="width:${(c.total_score/1000)*100}%;background:${col.border}"></div>
+        </div>
+      </div>`;
+  });
+  html += `</div></div>`;
+
+  // ── 차트 2개 ──
+  html += `<div class="charts-grid">`;
+
+  // 레이더 차트
+  html += `<div class="card"><div class="card-title">🕸️ 10개 항목 레이더 비교</div>
+    <div class="chart-container" style="height:360px">
+      <canvas id="radarChart"></canvas>
+    </div></div>`;
+
+  // 막대 차트
+  html += `<div class="card"><div class="card-title">📊 종합 점수 비교</div>
+    <div class="chart-container" style="height:360px">
+      <canvas id="barChart"></canvas>
+    </div></div>`;
+
+  html += `</div>`;
+
+  // ── 항목별 우위 분석 ──
+  html += `<div class="card"><div class="card-title">🎯 항목별 최고 점수 후보</div>
+    <div class="table-wrap"><table>
+      <thead><tr><th>평가 항목</th>`;
+  sorted.forEach(c => { html += `<th style="color:${CANDIDATE_COLORS[c.idx%5].border}">${c.name}</th>`; });
+  html += `<th>최고 점수</th></tr></thead><tbody>`;
+
+  METRICS.forEach(m => {
+    const scores = candidates.map((c,i) => ({ idx:i, name:c.name, score: c.metrics?.[m] ?? 0 }));
+    const maxScore = Math.max(...scores.map(s=>s.score));
+    html += `<tr><td><strong>${METRIC_LABELS[m]}</strong></td>`;
+    sorted.forEach(c => {
+      const sc = c.metrics?.[m] ?? 0;
+      const isMax = sc === maxScore;
+      html += `<td style="${isMax?`background:${CANDIDATE_COLORS[c.idx%5].light};font-weight:700;color:${CANDIDATE_COLORS[c.idx%5].text}`:''}">${sc}${isMax?' ★':''}</td>`;
+    });
+    const winner = scores.find(s=>s.score===maxScore);
+    html += `<td><strong>${winner.name} (${maxScore})</strong></td></tr>`;
+  });
+  html += `</tbody></table></div></div>`;
+
+  // ── 인사이트 ──
+  const top = sorted[0];
+  const topColor = CANDIDATE_COLORS[top.idx%5];
+  html += `<div class="card">
+    <div class="card-title">💡 핵심 인사이트</div>
+    <div class="insight-box">
+      <strong style="color:${topColor.border}">${top.name}</strong>이(가) 종합 ${top.total_score}점으로 1위를 기록했습니다.
+      ${n > 1 ? `2위 ${sorted[1].name}(${sorted[1].total_score}점)과의 격차는 <strong>${top.total_score - sorted[1].total_score}점</strong>입니다.` : ''}
+      ${n > 1 ? `<br>2~${n}위 후보는 ${sorted[n-1].total_score}~${sorted[1].total_score}점 범위에 분포하며, 격차는 ${sorted[1].total_score - sorted[n-1].total_score}점입니다.` : ''}
+    </div>
+  </div>`;
+
+  document.getElementById('page-content').innerHTML = html;
+
+  // ── 레이더 차트 ──
+  new Chart(document.getElementById('radarChart'), {
+    type: 'radar',
+    data: {
+      labels: METRICS.map(m => METRIC_LABELS[m]),
+      datasets: candidates.map((c,i) => ({
+        label: c.name,
+        data: METRICS.map(m => c.metrics?.[m] ?? 0),
+        borderColor: CANDIDATE_COLORS[i%5].border,
+        backgroundColor: CANDIDATE_COLORS[i%5].bg,
+        borderWidth: 2,
+        pointRadius: 4,
+        pointBackgroundColor: CANDIDATE_COLORS[i%5].border,
+      }))
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      scales: {
+        r: {
+          min: 50, max: 100, ticks: { stepSize: 10, font: { size: 10 } },
+          pointLabels: { font: { size: 12, weight: '600' } },
+          grid: { color: '#e2e8f0' }
+        }
+      },
+      plugins: { legend: { position: 'bottom', labels: { font: { size: 12 }, padding: 16 } } }
+    }
+  });
+
+  // ── 막대 차트 ──
+  new Chart(document.getElementById('barChart'), {
+    type: 'bar',
+    data: {
+      labels: candidates.map(c => c.name),
+      datasets: [{
+        label: '종합 점수',
+        data: candidates.map(c => c.total_score),
+        backgroundColor: candidates.map((c,i) => CANDIDATE_COLORS[i%5].bg),
+        borderColor: candidates.map((c,i) => CANDIDATE_COLORS[i%5].border),
+        borderWidth: 2,
+        borderRadius: 8,
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false, indexAxis: 'y',
+      scales: {
+        x: { min: 600, max: 1000, grid: { color: '#f1f5f9' }, ticks: { font: { size: 12 } } },
+        y: { ticks: { font: { size: 13, weight: '600' } } }
+      },
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: ctx => ` ${ctx.parsed.x}점` } }
+      }
+    }
+  });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>종합 분석 보고서 · ElectionAI</title>
+<link rel="stylesheet" href="css/style.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+/* ── 화면 레이아웃 ── */
+.top-bar {
+  position: sticky; top: 0; z-index: 200;
+  background: #1e3a8a; color: white;
+  padding: 12px 32px; display: flex; align-items: center; gap: 16px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+}
+.top-bar h2 { font-size: 15px; font-weight: 700; flex: 1; }
+.pdf-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: #f59e0b; color: #1c1917; border: none; cursor: pointer;
+  padding: 9px 22px; border-radius: 8px; font-family: inherit;
+  font-size: 14px; font-weight: 800; transition: all 0.2s;
+}
+.pdf-btn:hover { background: #d97706; transform: translateY(-1px); }
+.back-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: rgba(255,255,255,0.15); color: white; border: none; cursor: pointer;
+  padding: 7px 14px; border-radius: 6px; font-family: inherit; font-size: 13px;
+  text-decoration: none; transition: background 0.2s;
+}
+.back-btn:hover { background: rgba(255,255,255,0.25); }
+
+.full-report { max-width: 960px; margin: 0 auto; padding: 32px 24px 80px; }
+
+/* ── 표지 ── */
+.cover-page {
+  background: linear-gradient(160deg, #1e3a8a 0%, #1d4ed8 50%, #2563eb 100%);
+  color: white; border-radius: 16px; padding: 56px 48px;
+  margin-bottom: 32px; position: relative; overflow: hidden;
+}
+.cover-page::before {
+  content: '⚖️'; font-size: 200px; opacity: 0.05;
+  position: absolute; right: -20px; top: -20px; line-height: 1;
+}
+.cover-badge {
+  display: inline-block; background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.3); padding: 4px 14px;
+  border-radius: 20px; font-size: 12px; font-weight: 600; margin-bottom: 20px;
+}
+.cover-page h1 { font-size: 32px; font-weight: 900; line-height: 1.3; margin-bottom: 12px; }
+.cover-page .subtitle { font-size: 16px; opacity: .8; margin-bottom: 32px; }
+.cover-meta { display: flex; gap: 32px; flex-wrap: wrap; margin-bottom: 32px; }
+.cover-meta-item { }
+.cover-meta-item .label { font-size: 11px; opacity: .6; text-transform: uppercase; letter-spacing: .8px; margin-bottom: 3px; }
+.cover-meta-item .value { font-size: 16px; font-weight: 700; }
+.cover-candidates { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 28px; }
+.cover-candidate-chip {
+  background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3);
+  padding: 8px 18px; border-radius: 24px; font-size: 14px; font-weight: 700;
+}
+.cover-candidate-chip .score { opacity: .8; font-size: 12px; margin-left: 6px; }
+
+/* ── 섹션 구분 ── */
+.report-section { margin-bottom: 40px; }
+.section-header {
+  display: flex; align-items: center; gap: 12px;
+  background: linear-gradient(90deg, #1e3a8a, #1d4ed8);
+  color: white; padding: 14px 20px; border-radius: 10px;
+  margin-bottom: 20px; font-size: 18px; font-weight: 800;
+}
+.section-num {
+  background: rgba(255,255,255,0.2); width: 30px; height: 30px;
+  border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 900; flex-shrink: 0;
+}
+
+/* ── 순위 카드 그리드 ── */
+.rank-cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px,1fr)); gap: 14px; margin-bottom: 20px; }
+.rk-card {
+  background: white; border-radius: 12px; padding: 18px 16px;
+  border: 2px solid var(--border); box-shadow: var(--shadow);
+  position: relative; overflow: hidden;
+}
+.rk-card .num { font-size: 56px; font-weight: 900; opacity:.05; position:absolute; right:8px; top:0; line-height:1; }
+.rk-card .rank-tag-lg {
+  width: 32px; height: 32px; border-radius: 50%;
+  display:flex; align-items:center; justify-content:center;
+  font-weight:800; font-size:14px; margin-bottom:10px;
+}
+.rk-card .name { font-size:17px; font-weight:800; }
+.rk-card .party { font-size:11px; color:var(--text-muted); margin-bottom:8px; }
+.rk-card .big { font-size:34px; font-weight:900; }
+.rk-card .prog { height:6px; background:#f1f5f9; border-radius:3px; margin-top:10px; overflow:hidden; }
+.rk-card .prog-fill { height:100%; border-radius:3px; }
+
+/* ── 차트 그리드 ── */
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.chart-box { background:white; border:1px solid var(--border); border-radius:12px; padding:18px; }
+.chart-box h3 { font-size:13px; font-weight:700; color:var(--text-muted); margin-bottom:12px; text-transform:uppercase; letter-spacing:.4px; }
+
+/* ── 프로파일 그리드 ── */
+.profile-print-grid { display:grid; grid-template-columns: repeat(auto-fill, minmax(300px,1fr)); gap:16px; }
+.pp-card { background:white; border-radius:12px; overflow:hidden; border:1px solid var(--border); }
+.pp-head { padding:16px 20px; color:white; }
+.pp-head .name { font-size:18px; font-weight:900; margin-bottom:2px; }
+.pp-head .sub { font-size:12px; opacity:.85; margin-bottom:8px; }
+.pp-head .sc { font-size:30px; font-weight:900; }
+.pp-body { padding:16px 20px; }
+.pp-info { font-size:12px; color:var(--text-muted); margin-bottom:4px; }
+.pp-info strong { color:var(--text); }
+.pp-tags { display:flex; flex-wrap:wrap; gap:5px; margin:8px 0; }
+.pp-tag { padding:3px 9px; border-radius:12px; font-size:11px; font-weight:600; }
+.pp-tag.s { background:#dcfce7; color:#166534; }
+.pp-tag.w { background:#fee2e2; color:#991b1b; }
+.pp-sum { font-size:12px; color:var(--text-muted); line-height:1.6; margin-top:8px; border-top:1px solid var(--border); padding-top:8px; }
+.pp-ai-row { display:grid; grid-template-columns:repeat(4,1fr); gap:4px; margin-top:10px; text-align:center; }
+.pp-ai-cell { background:#f8fafc; border-radius:6px; padding:5px 3px; }
+.pp-ai-cell .lbl { font-size:9px; font-weight:700; }
+.pp-ai-cell .val { font-size:13px; font-weight:800; }
+
+/* ── AI 일관성 ── */
+.ai-consist-row {
+  display:flex; align-items:center; gap:12px;
+  background:white; border:1px solid var(--border); border-radius:10px;
+  padding:14px 16px; margin-bottom:10px;
+}
+.ai-consist-name { font-weight:700; width:80px; flex-shrink:0; }
+.ai-consist-bars { flex:1; display:flex; gap:6px; }
+.ai-consist-bar { flex:1; text-align:center; }
+.ai-consist-bar .al { font-size:10px; font-weight:600; }
+.ai-consist-bar .av { font-size:14px; font-weight:800; }
+
+/* ── 인쇄 스타일 ── */
+@page {
+  size: A4;
+  margin: 14mm 14mm 22mm 14mm;
+  @bottom-right {
+    content: counter(page) " / " counter(pages);
+    font-size: 9pt;
+    color: #94a3b8;
+    font-family: 'Noto Sans KR', sans-serif;
+  }
+}
+
+@media print {
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  .top-bar, .app-header, .main-nav { display: none !important; }
+  body { background: white !important; margin: 0; }
+  .full-report { max-width: 100%; padding: 0; }
+
+  /* 표지 */
+  .cover-page {
+    border-radius: 0;
+    margin: 0 0 20px;
+    padding: 40px 32px;
+    background: linear-gradient(160deg, #1e3a8a 0%, #1d4ed8 50%, #2563eb 100%) !important;
+    color: white !important;
+  }
+  .cover-badge {
+    background: rgba(255,255,255,0.15) !important;
+    border: 1px solid rgba(255,255,255,0.3) !important;
+    color: white !important;
+  }
+  .cover-candidate-chip {
+    background: rgba(255,255,255,0.15) !important;
+    border: 1px solid rgba(255,255,255,0.3) !important;
+    color: white !important;
+  }
+
+  /* 섹션 헤더 */
+  .section-header {
+    background: linear-gradient(90deg, #1e3a8a, #1d4ed8) !important;
+    color: white !important;
+    font-size: 13pt;
+  }
+  .section-num {
+    background: rgba(255,255,255,0.2) !important;
+    color: white !important;
+  }
+
+  /* 섹션 페이지 분리 */
+  .report-section { page-break-before: always; }
+  .report-section:first-child { page-break-before: auto; }
+
+  /* 카드 */
+  .card, .rk-card, .pp-card, .chart-box {
+    box-shadow: none !important;
+    break-inside: avoid;
+    border: 1px solid #e2e8f0 !important;
+  }
+
+  /* 그리드 레이아웃 유지 */
+  .two-col { grid-template-columns: 1fr 1fr; }
+  .rank-cards-grid { grid-template-columns: repeat(4, 1fr); }
+  .profile-print-grid { grid-template-columns: repeat(2, 1fr); }
+
+  /* 순위 태그 색상 유지 */
+  .rank-1 { background: #fef3c7 !important; color: #92400e !important; }
+  .rank-2 { background: #f1f5f9 !important; color: #475569 !important; }
+  .rank-3 { background: #fef9c3 !important; color: #713f12 !important; }
+
+  /* pp-tag 색상 유지 */
+  .pp-tag.s { background: #dcfce7 !important; color: #166534 !important; }
+  .pp-tag.w { background: #fee2e2 !important; color: #991b1b !important; }
+
+  /* insight-box */
+  .insight-box {
+    background: #eff6ff !important;
+    border: 1px solid #bfdbfe !important;
+    color: #1e40af !important;
+  }
+
+  /* 표 */
+  table { font-size: 10pt; }
+  h1 { font-size: 22pt; }
+
+  /* 이미지(차트 변환본) */
+  img.chart-img { max-width: 100% !important; height: auto !important; display: block; }
+}
+</style>
+</head>
+<body>
+
+<!-- 상단 바 -->
+<div class="top-bar no-print">
+  <a href="report_compare.html" class="back-btn">← 돌아가기</a>
+  <h2>📋 종합 분석 보고서 — 모든 항목 통합</h2>
+  <button class="pdf-btn" onclick="savePDF()">📥 PDF로 저장</button>
+</div>
+
+<div class="full-report" id="fullReport">
+  <!-- 동적으로 생성 -->
+</div>
+
+<script src="js/shared.js"></script>
+<script>
+/* ═══════════════════════════════════════════════════
+   전체 보고서 렌더링
+═══════════════════════════════════════════════════ */
+const chartInstances = {};
+
+document.addEventListener('DOMContentLoaded', async () => {
+  const data = getData();
+  if (!data || !data.candidates?.length) {
+    document.getElementById('fullReport').innerHTML = `
+      <div class="no-data" style="padding:80px 20px;text-align:center">
+        <div style="font-size:56px;margin-bottom:16px">📂</div>
+        <h3 style="font-size:22px;color:#64748b">분석된 데이터가 없습니다</h3>
+        <p style="color:#94a3b8;margin-bottom:24px">홈에서 PDF를 업로드하고 분석을 완료해주세요.</p>
+        <a href="index.html" class="btn btn-primary">🏠 홈으로 이동</a>
+      </div>`;
+    return;
+  }
+
+  const { candidates, district, analysis_date } = data;
+  const n = candidates.length;
+  const totalRanks = calcTotalRankings(candidates);
+  const sortedC = [...candidates].map((c,i)=>({...c,idx:i})).sort((a,b)=>b.total_score-a.total_score);
+
+  let html = buildCover(candidates, sortedC, district, analysis_date)
+    + buildSection1(candidates, sortedC, totalRanks)
+    + buildSection2(candidates)
+    + buildSection3(candidates, totalRanks)
+    + buildSection4(candidates, sortedC)
+    + buildSection5(candidates);
+
+  document.getElementById('fullReport').innerHTML = html;
+
+  // 차트 렌더링 (순서대로)
+  renderSection1Charts(candidates);
+  renderSection2Charts(candidates);
+  renderSection3Charts(candidates);
+  renderSection4Charts(candidates, sortedC);
+  renderSection5Charts(candidates);
+});
+
+/* ── 표지 ── */
+function buildCover(candidates, sortedC, district, analysis_date) {
+  const chips = sortedC.map((c,i) => {
+    const col = CANDIDATE_COLORS[c.idx%5];
+    return `<div class="cover-candidate-chip" style="border-color:${col.border}cc">
+      ${c.name} <span class="score">${c.total_score}점</span>
+    </div>`;
+  }).join('');
+
+  return `
+  <div class="cover-page">
+    <div class="cover-badge">ElectionAI · AI 기반 선거 후보자 분석 시스템</div>
+    <h1>선거 후보자<br>종합 비교 분석 보고서</h1>
+    <div class="subtitle">10개 지표 기반 정량 평가 · AI 모델 통합 분석</div>
+    <div class="cover-meta">
+      <div class="cover-meta-item">
+        <div class="label">선거구</div>
+        <div class="value">${district || '선거구'}</div>
+      </div>
+      <div class="cover-meta-item">
+        <div class="label">분석 일자</div>
+        <div class="value">${analysis_date || new Date().toISOString().split('T')[0]}</div>
+      </div>
+      <div class="cover-meta-item">
+        <div class="label">분석 후보</div>
+        <div class="value">${candidates.length}명</div>
+      </div>
+      <div class="cover-meta-item">
+        <div class="label">평가 지표</div>
+        <div class="value">10개 항목</div>
+      </div>
+    </div>
+    <div style="font-size:12px;opacity:.6;margin-bottom:8px">후보자 종합 순위</div>
+    <div class="cover-candidates">${chips}</div>
+  </div>`;
+}
+
+/* ── Section 1: 종합 비교 ── */
+function buildSection1(candidates, sortedC, totalRanks) {
+  const rankCards = sortedC.map((c, rank) => {
+    const col = CANDIDATE_COLORS[c.idx%5];
+    const g = scoreGrade(c.total_score);
+    const rankCls = rank===0?'rank-1':rank===1?'rank-2':rank===2?'rank-3':'rank-other';
+    return `
+    <div class="rk-card" style="border-color:${col.border}">
+      <div class="num">${rank+1}</div>
+      <div class="rank-tag-lg ${rankCls}">${rank+1}</div>
+      <div class="name" style="color:${col.border}">${c.name}</div>
+      <div class="party">${c.party}</div>
+      <div>
+        <span class="big" style="color:${col.border}">${c.total_score}</span>
+        <span style="font-size:13px;color:var(--text-muted)">점</span>
+      </div>
+      <div style="font-size:11px;color:${col.border};font-weight:600;margin-top:3px">${g.label}등급 · ${g.desc}</div>
+      <div class="prog"><div class="prog-fill" style="width:${(c.total_score/1000)*100}%;background:${col.border}"></div></div>
+    </div>`;
+  }).join('');
+
+  // 항목별 최고 점수 테이블
+  let tbl = `<table><thead><tr><th>평가 항목</th>`;
+  sortedC.forEach(c => { tbl += `<th style="color:${CANDIDATE_COLORS[c.idx%5].border}">${c.name}</th>`; });
+  tbl += `<th>최고</th></tr></thead><tbody>`;
+  METRICS.forEach(m => {
+    const scores = candidates.map((c,i)=>({name:c.name,score:c.metrics?.[m]??0,col:CANDIDATE_COLORS[i%5]}));
+    const max = Math.max(...scores.map(s=>s.score));
+    tbl += `<tr><td><strong>${METRIC_LABELS[m]}</strong></td>`;
+    sortedC.forEach(c => {
+      const s = c.metrics?.[m]??0;
+      tbl += `<td style="${s===max?`background:${CANDIDATE_COLORS[c.idx%5].light};font-weight:700;color:${CANDIDATE_COLORS[c.idx%5].text}`:''}">${s}${s===max?' ★':''}</td>`;
+    });
+    tbl += `<td><strong>${max}</strong></td></tr>`;
+  });
+  tbl += `</tbody></table>`;
+
+  // 인사이트
+  const top = sortedC[0], bot = sortedC[sortedC.length-1];
+  const insight = `<strong style="color:${CANDIDATE_COLORS[top.idx%5].border}">${top.name}</strong>이(가) ${top.total_score}점으로 1위.
+    ${sortedC.length>1?`2위 ${sortedC[1].name}(${sortedC[1].total_score}점)과의 격차: <strong>${top.total_score-sortedC[1].total_score}점</strong>. `:''}
+    ${sortedC.length>2?`최하위 ${bot.name}(${bot.total_score}점)과의 격차: <strong>${top.total_score-bot.total_score}점</strong>.`:''}`;
+
+  return `
+  <div class="report-section">
+    <div class="section-header"><div class="section-num">1</div>📊 종합 비교 분석</div>
+    <div class="card"><div class="card-title">🏆 종합 순위</div>
+      <div class="rank-cards-grid">${rankCards}</div>
+    </div>
+    <div class="two-col">
+      <div class="chart-box"><h3>🕸️ 10개 항목 레이더 비교</h3>
+        <div style="height:300px"><canvas id="s1_radar"></canvas></div>
+      </div>
+      <div class="chart-box"><h3>📊 종합 점수 막대</h3>
+        <div style="height:300px"><canvas id="s1_bar"></canvas></div>
+      </div>
+    </div>
+    <div class="card"><div class="card-title">🎯 항목별 최고 점수 후보</div>
+      <div class="table-wrap">${tbl}</div>
+    </div>
+    <div class="insight-box">${insight}</div>
+  </div>`;
+}
+
+/* ── Section 2: 점수 상세 ── */
+function buildSection2(candidates) {
+  const n = candidates.length;
+
+  // 히트맵 테이블
+  let tbl = `<table><thead><tr><th>항목</th>`;
+  candidates.forEach((c,i) => { tbl += `<th style="color:${CANDIDATE_COLORS[i%5].border}">${c.name}</th>`; });
+  tbl += `<th>평균</th><th>최고</th><th>최저</th></tr></thead><tbody>`;
+  METRICS.forEach(m => {
+    const scores = candidates.map(c=>c.metrics?.[m]??0);
+    const avg = scores.reduce((a,b)=>a+b,0)/n;
+    const max = Math.max(...scores), min = Math.min(...scores);
+    tbl += `<tr><td><strong>${METRIC_LABELS[m]}</strong></td>`;
+    scores.forEach((s,i) => {
+      const isMax=s===max, isMin=s===min, col=CANDIDATE_COLORS[i%5];
+      tbl += `<td style="${isMax?`background:${col.light};font-weight:800;color:${col.text}`:isMin?'background:#fff7ed;color:#92400e;font-weight:700':''}">${s}${isMax?'▲':isMin?'▼':''}</td>`;
+    });
+    tbl += `<td>${avg.toFixed(1)}</td><td style="color:var(--success);font-weight:700">${max}</td><td style="color:var(--danger);font-weight:700">${min}</td></tr>`;
+  });
+  tbl += `</tbody></table>`;
+
+  // 표준편차 테이블
+  let stdTbl = `<table><thead><tr><th>후보자</th>`;
+  METRICS.forEach(m => { stdTbl += `<th>${METRIC_LABELS[m].replace(' ','<br>')}</th>`; });
+  stdTbl += `<th>표준편차</th><th>균형성</th></tr></thead><tbody>`;
+  candidates.forEach((c,i) => {
+    const scores = METRICS.map(m=>c.metrics?.[m]??0);
+    const avg = scores.reduce((a,b)=>a+b,0)/scores.length;
+    const std = Math.sqrt(scores.reduce((s,v)=>s+Math.pow(v-avg,2),0)/scores.length);
+    const col = CANDIDATE_COLORS[i%5];
+    stdTbl += `<tr><td style="color:${col.border};font-weight:700">${c.name}</td>`;
+    scores.forEach(s => { stdTbl += `<td>${s}</td>`; });
+    stdTbl += `<td><strong>${std.toFixed(1)}</strong></td><td>${std<5?'🟢 균형':std<8?'🟡 보통':'🔴 편중'}</td></tr>`;
+  });
+  stdTbl += `</tbody></table>`;
+
+  return `
+  <div class="report-section">
+    <div class="section-header"><div class="section-num">2</div>📈 10개 항목 점수 상세</div>
+    <div class="card"><div class="card-title">🔥 점수 히트맵</div>
+      <div class="table-wrap">${tbl}</div>
+      <div class="insight-box" style="margin-top:10px">▲ 해당 항목 최고  |  ▼ 해당 항목 최저</div>
+    </div>
+    <div class="card"><div class="card-title">📊 항목별 그룹 비교</div>
+      <div style="height:360px"><canvas id="s2_grouped"></canvas></div>
+    </div>
+    <div class="card"><div class="card-title">📐 균형성 분석 (표준편차)</div>
+      <div class="table-wrap">${stdTbl}</div>
+    </div>
+  </div>`;
+}
+
+/* ── Section 3: 후보자 프로파일 ── */
+function buildSection3(candidates, totalRanks) {
+  const cards = candidates.map((c, i) => {
+    const col = CANDIDATE_COLORS[i%5];
+    const rank = totalRanks[i];
+    const g = scoreGrade(c.total_score);
+    const topM = METRICS.map(m=>({m,s:c.metrics?.[m]??0})).sort((a,b)=>b.s-a.s).slice(0,3);
+    const botM = METRICS.map(m=>({m,s:c.metrics?.[m]??0})).sort((a,b)=>a.s-b.s).slice(0,3);
+    const aiRow = AI_MODELS.map(m => `
+      <div class="pp-ai-cell">
+        <div class="lbl" style="color:${col.border}">${AI_LABELS[m]}</div>
+        <div class="val" style="color:${col.border}">${c.ai_scores?.[m]??'-'}</div>
+      </div>`).join('');
+
+    return `
+    <div class="pp-card">
+      <div class="pp-head" style="background:linear-gradient(135deg,${col.border}ee,${col.border})">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start">
+          <div>
+            <div class="name">${c.name}</div>
+            <div class="sub">${c.party} · ${c.position||''}</div>
+            <div class="sc">${c.total_score}점 <span style="font-size:13px;opacity:.8">${g.label}등급</span></div>
+          </div>
+          <div style="background:rgba(255,255,255,0.2);width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:16px">${rank}</div>
+        </div>
+      </div>
+      <div class="pp-body">
+        ${c.education?`<div class="pp-info"><strong>학력</strong> ${c.education}</div>`:''}
+        ${c.career?`<div class="pp-info"><strong>경력</strong> ${c.career}</div>`:''}
+        <div style="height:180px;margin:12px 0"><canvas id="s3_radar_${i}"></canvas></div>
+        <div style="font-size:11px;color:var(--text-muted);margin-bottom:6px">강점 항목</div>
+        <div class="pp-tags">${topM.map(x=>`<span class="pp-tag s">${METRIC_LABELS[x.m]} ${x.s}</span>`).join('')}${(c.strengths||[]).map(s=>`<span class="pp-tag s">${s}</span>`).join('')}</div>
+        <div style="font-size:11px;color:var(--text-muted);margin:6px 0">개선 항목</div>
+        <div class="pp-tags">${botM.map(x=>`<span class="pp-tag w">${METRIC_LABELS[x.m]} ${x.s}</span>`).join('')}${(c.weaknesses||[]).map(s=>`<span class="pp-tag w">${s}</span>`).join('')}</div>
+        ${c.summary?`<div class="pp-sum">${c.summary}</div>`:''}
+        <div class="pp-ai-row">${aiRow}</div>
+      </div>
+    </div>`;
+  }).join('');
+
+  return `
+  <div class="report-section">
+    <div class="section-header"><div class="section-num">3</div>👤 후보자 프로파일</div>
+    <div class="profile-print-grid">${cards}</div>
+  </div>`;
+}
+
+/* ── Section 4: 격차 분석 ── */
+function buildSection4(candidates, sortedC) {
+  const leader = sortedC[0];
+  const n = candidates.length;
+
+  // 종합 격차 테이블
+  let sumTbl = `<table><thead><tr><th>순위</th><th>후보자</th><th>종합 점수</th><th>1위 대비 격차</th><th>비율</th></tr></thead><tbody>`;
+  sortedC.forEach((c, rank) => {
+    const gap = c.total_score - leader.total_score;
+    const pct = ((c.total_score/leader.total_score)*100).toFixed(1);
+    const col = CANDIDATE_COLORS[c.idx%5];
+    sumTbl += `<tr>
+      <td>${rankTag(rank+1)}</td>
+      <td style="color:${col.border};font-weight:700">${c.name}</td>
+      <td style="font-weight:800;font-size:14px">${c.total_score}점</td>
+      <td style="font-weight:700;color:${gap===0?'var(--text-muted)':'var(--warning)'}">${gap===0?'기준':(gap>0?'+':'')+gap+'점'}</td>
+      <td>${pct}%</td>
+    </tr>`;
+  });
+  sumTbl += `</tbody></table>`;
+
+  // 항목별 격차 테이블
+  let metTbl = `<table><thead><tr><th>항목</th><th>${leader.name}<br>(기준)</th>`;
+  sortedC.slice(1).forEach(c => { metTbl += `<th style="color:${CANDIDATE_COLORS[c.idx%5].border}">${c.name}<br>격차</th>`; });
+  metTbl += `<th>최대격차</th></tr></thead><tbody>`;
+  METRICS.forEach(m => {
+    const ls = leader.metrics?.[m]??0;
+    const gaps = sortedC.slice(1).map(c=>(c.metrics?.[m]??0)-ls);
+    const maxG = Math.max(...gaps.map(g=>Math.abs(g)));
+    metTbl += `<tr><td><strong>${METRIC_LABELS[m]}</strong></td><td style="font-weight:700">${ls}</td>`;
+    gaps.forEach((g,ii)=>{
+      const col = CANDIDATE_COLORS[sortedC[ii+1].idx%5];
+      metTbl += `<td style="color:${g>0?'var(--success)':g<0?'var(--warning)':'var(--text-muted)'};font-weight:700">${g>0?'+'+g:g}</td>`;
+    });
+    metTbl += `<td style="font-weight:700">${maxG}점</td></tr>`;
+  });
+  metTbl += `</tbody></table>`;
+
+  // 경쟁 우위 테이블
+  let compTbl = `<table><thead><tr><th>항목</th><th>1위 후보</th><th>우위 점수</th><th>경쟁 강도</th></tr></thead><tbody>`;
+  METRICS.forEach(m => {
+    const scores = candidates.map((c,i)=>({name:c.name,score:c.metrics?.[m]??0,col:CANDIDATE_COLORS[i%5]})).sort((a,b)=>b.score-a.score);
+    const gap = scores[0].score - (scores[1]?.score??0);
+    const intensity = gap<=1?'🔴 매우치열':gap<=3?'🟡 치열':gap<=6?'🟢 우세':'🔵 압도적';
+    compTbl += `<tr><td><strong>${METRIC_LABELS[m]}</strong></td><td style="color:${scores[0].col.border};font-weight:700">${scores[0].name}</td><td>+${gap}점</td><td>${intensity}</td></tr>`;
+  });
+  compTbl += `</tbody></table>`;
+
+  const bigGap = METRICS.reduce((b,m)=>{const s=candidates.map(c=>c.metrics?.[m]??0);const g=Math.max(...s)-Math.min(...s);return g>b.gap?{m,gap:g}:b},{m:'',gap:0});
+  const smlGap = METRICS.reduce((b,m)=>{const s=candidates.map(c=>c.metrics?.[m]??0);const g=Math.max(...s)-Math.min(...s);return g<b.gap?{m,gap:g}:b},{m:METRICS[0],gap:999});
+
+  return `
+  <div class="report-section">
+    <div class="section-header"><div class="section-num">4</div>🎯 격차 분석</div>
+    <div class="card">
+      <div class="card-title">🥇 기준: <span style="color:${CANDIDATE_COLORS[leader.idx%5].border}">${leader.name}</span> (종합 1위 · ${leader.total_score}점)</div>
+      <div class="table-wrap">${sumTbl}</div>
+    </div>
+    <div class="card"><div class="card-title">📊 항목별 격차 차트 (1위 대비)</div>
+      <div style="height:${60+36*METRICS.length}px"><canvas id="s4_gap"></canvas></div>
+    </div>
+    <div class="card"><div class="card-title">📋 항목별 상세 격차</div>
+      <div class="table-wrap">${metTbl}</div>
+    </div>
+    <div class="card"><div class="card-title">⚔️ 항목별 경쟁 우위</div>
+      <div class="table-wrap">${compTbl}</div>
+    </div>
+    <div class="insight-box">
+      <strong>가장 큰 격차 항목:</strong> ${METRIC_LABELS[bigGap.m]} (${bigGap.gap}점 차이) &nbsp;|&nbsp;
+      <strong>가장 작은 격차:</strong> ${METRIC_LABELS[smlGap.m]} (${smlGap.gap}점 차이)
+    </div>
+  </div>`;
+}
+
+/* ── Section 5: AI 모델 비교 ── */
+function buildSection5(candidates) {
+  const AI_ICONS = {claude:'🟣',chatgpt:'🟢',gemini:'🔵',grok:'🔴'};
+  const AI_BORDER = {claude:'#7c3aed',chatgpt:'#16a34a',gemini:'#2563eb',grok:'#dc2626'};
+  const AI_DESCS = {claude:'제도화·지속가능성',chatgpt:'혁신성·영향력',gemini:'공개데이터·성과',grok:'최신이슈·현장'};
+
+  // AI 점수 테이블
+  let aiTbl = `<table><thead><tr><th>후보자</th>`;
+  AI_MODELS.forEach(m => { aiTbl += `<th style="color:${AI_BORDER[m]}">${AI_ICONS[m]} ${AI_LABELS[m]}</th>`; });
+  aiTbl += `<th>평균</th><th>편차</th><th>일관성</th></tr></thead><tbody>`;
+  candidates.forEach((c,i) => {
+    const col = CANDIDATE_COLORS[i%5];
+    const scores = AI_MODELS.map(m=>c.ai_scores?.[m]??0);
+    const avg = scores.reduce((a,b)=>a+b,0)/scores.length;
+    const std = Math.sqrt(scores.reduce((s,v)=>s+Math.pow(v-avg,2),0)/scores.length);
+    const cons = std<5?'매우높음':std<10?'높음':std<15?'보통':'낮음';
+    aiTbl += `<tr><td style="color:${col.border};font-weight:700">${c.name}</td>`;
+    AI_MODELS.forEach(m=>{ aiTbl += `<td style="font-weight:700">${c.ai_scores?.[m]??'-'}</td>`; });
+    aiTbl += `<td><strong>${avg.toFixed(1)}</strong></td><td>${std.toFixed(1)}</td><td>${cons}</td></tr>`;
+  });
+  // AI별 1위
+  aiTbl += `<tr style="background:#f8fafc;font-size:12px"><td style="color:var(--text-muted);font-weight:600">AI별 1위</td>`;
+  AI_MODELS.forEach(m => {
+    const best = candidates.reduce((b,c)=>(c.ai_scores?.[m]??0)>(b.ai_scores?.[m]??0)?c:b);
+    const idx = candidates.indexOf(best);
+    aiTbl += `<td style="color:${CANDIDATE_COLORS[idx%5].border};font-weight:700;font-size:11px">${best.name}<br>${best.ai_scores?.[m]}</td>`;
+  });
+  aiTbl += `<td colspan="3"></td></tr></tbody></table>`;
+
+  // AI 일관성 박스
+  const consistRows = candidates.map((c,i) => {
+    const col = CANDIDATE_COLORS[i%5];
+    const scores = AI_MODELS.map(m=>c.ai_scores?.[m]??0).filter(s=>s>0);
+    const avg = scores.reduce((a,b)=>a+b,0)/scores.length;
+    const std = Math.sqrt(scores.reduce((s,v)=>s+Math.pow(v-avg,2),0)/scores.length);
+    const spread = Math.max(...scores)-Math.min(...scores);
+    const bars = AI_MODELS.map(m => {
+      const s = c.ai_scores?.[m]??0;
+      const diff = s - avg;
+      return `<div class="ai-consist-bar">
+        <div class="al" style="color:#7c3aed">${AI_LABELS[m]}</div>
+        <div class="av" style="color:${col.border}">${s}</div>
+        <div style="font-size:9px;color:${diff>0?'#16a34a':diff<0?'#dc2626':'#94a3b8'}">${diff>0?'+':''  }${diff.toFixed(1)}</div>
+      </div>`;
+    }).join('');
+    return `<div class="ai-consist-row">
+      <div class="ai-consist-name" style="color:${col.border}">${c.name}</div>
+      <div class="ai-consist-bars">${bars}</div>
+      <div style="font-size:11px;color:var(--text-muted);white-space:nowrap;min-width:80px;text-align:right">편차 <strong>${std.toFixed(1)}</strong> · 범위 <strong>${spread}점</strong></div>
+    </div>`;
+  }).join('');
+
+  return `
+  <div class="report-section">
+    <div class="section-header"><div class="section-num">5</div>🤖 AI 모델별 점수 비교</div>
+    <div class="card"><div class="card-title">📊 AI 모델 × 후보자 그룹 비교</div>
+      <div style="height:360px"><canvas id="s5_bar"></canvas></div>
+    </div>
+    <div class="card"><div class="card-title">📋 AI 모델별 상세 점수</div>
+      <div class="table-wrap">${aiTbl}</div>
+    </div>
+    <div class="card"><div class="card-title">📈 AI 모델 추세 비교</div>
+      <div style="height:280px"><canvas id="s5_line"></canvas></div>
+    </div>
+    <div class="card"><div class="card-title">📐 후보별 AI 평가 일관성</div>
+      ${consistRows}
+      <div class="insight-box">편차가 낮을수록 AI 모델 간 평가가 일치하며 신뢰도가 높습니다.</div>
+    </div>
+  </div>`;
+}
+
+/* ════════════════════════════════════════
+   차트 렌더링 함수들
+════════════════════════════════════════ */
+function renderSection1Charts(candidates) {
+  chartInstances.s1_radar = new Chart(document.getElementById('s1_radar'), {
+    type: 'radar',
+    data: {
+      labels: METRICS.map(m=>METRIC_LABELS[m]),
+      datasets: candidates.map((c,i)=>({
+        label: c.name,
+        data: METRICS.map(m=>c.metrics?.[m]??0),
+        borderColor: CANDIDATE_COLORS[i%5].border,
+        backgroundColor: CANDIDATE_COLORS[i%5].bg,
+        borderWidth: 2, pointRadius: 3,
+        pointBackgroundColor: CANDIDATE_COLORS[i%5].border,
+      }))
+    },
+    options: {
+      responsive:true, maintainAspectRatio:false,
+      scales:{r:{min:50,max:100,ticks:{stepSize:10,font:{size:9}},pointLabels:{font:{size:11,weight:'600'}},grid:{color:'#e2e8f0'}}},
+      plugins:{legend:{position:'bottom',labels:{font:{size:11},padding:10}}}
+    }
+  });
+
+  chartInstances.s1_bar = new Chart(document.getElementById('s1_bar'), {
+    type: 'bar',
+    data: {
+      labels: candidates.map(c=>c.name),
+      datasets: [{
+        label:'종합 점수',
+        data: candidates.map(c=>c.total_score),
+        backgroundColor: candidates.map((c,i)=>CANDIDATE_COLORS[i%5].bg),
+        borderColor: candidates.map((c,i)=>CANDIDATE_COLORS[i%5].border),
+        borderWidth:2, borderRadius:6,
+      }]
+    },
+    options: {
+      responsive:true, maintainAspectRatio:false, indexAxis:'y',
+      scales:{x:{min:600,max:1000,grid:{color:'#f1f5f9'},ticks:{font:{size:11}}},y:{ticks:{font:{size:12,weight:'600'}}}},
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>` ${ctx.parsed.x}점`}}}
+    }
+  });
+}
+
+function renderSection2Charts(candidates) {
+  chartInstances.s2_grouped = new Chart(document.getElementById('s2_grouped'), {
+    type: 'bar',
+    data: {
+      labels: METRICS.map(m=>METRIC_LABELS[m]),
+      datasets: candidates.map((c,i)=>({
+        label:c.name,
+        data:METRICS.map(m=>c.metrics?.[m]??0),
+        backgroundColor:CANDIDATE_COLORS[i%5].bg,
+        borderColor:CANDIDATE_COLORS[i%5].border,
+        borderWidth:2, borderRadius:3,
+      }))
+    },
+    options: {
+      responsive:true, maintainAspectRatio:false,
+      scales:{x:{ticks:{font:{size:10}},grid:{display:false}},y:{min:50,max:100,ticks:{font:{size:10}},grid:{color:'#f1f5f9'}}},
+      plugins:{legend:{position:'bottom',labels:{font:{size:11},padding:12}}}
+    }
+  });
+}
+
+function renderSection3Charts(candidates) {
+  candidates.forEach((c, i) => {
+    const col = CANDIDATE_COLORS[i%5];
+    chartInstances[`s3_radar_${i}`] = new Chart(document.getElementById(`s3_radar_${i}`), {
+      type: 'radar',
+      data: {
+        labels: METRICS.map(m=>METRIC_LABELS[m]),
+        datasets: [{
+          label:c.name,
+          data:METRICS.map(m=>c.metrics?.[m]??0),
+          borderColor:col.border, backgroundColor:col.bg,
+          borderWidth:2, pointRadius:2, pointBackgroundColor:col.border,
+        }]
+      },
+      options: {
+        responsive:true, maintainAspectRatio:false,
+        scales:{r:{min:40,max:100,ticks:{display:false},pointLabels:{font:{size:9}},grid:{color:'#e2e8f0'}}},
+        plugins:{legend:{display:false}}
+      }
+    });
+  });
+}
+
+function renderSection4Charts(candidates, sortedC) {
+  const leader = sortedC[0];
+  const datasets = sortedC.slice(1).map(c=>({
+    label:c.name,
+    data:METRICS.map(m=>(c.metrics?.[m]??0)-(leader.metrics?.[m]??0)),
+    backgroundColor:CANDIDATE_COLORS[c.idx%5].bg,
+    borderColor:CANDIDATE_COLORS[c.idx%5].border,
+    borderWidth:2, borderRadius:3,
+  }));
+
+  chartInstances.s4_gap = new Chart(document.getElementById('s4_gap'), {
+    type:'bar',
+    data:{labels:METRICS.map(m=>METRIC_LABELS[m]), datasets},
+    options:{
+      responsive:true, maintainAspectRatio:false, indexAxis:'y',
+      scales:{
+        x:{ticks:{callback:v=>v>0?'+'+v:v,font:{size:10}},grid:{color:ctx=>ctx.tick.value===0?'#94a3b8':'#f1f5f9'}},
+        y:{ticks:{font:{size:11}}}
+      },
+      plugins:{legend:{position:'bottom',labels:{font:{size:11},padding:12}},tooltip:{callbacks:{label:ctx=>` ${ctx.dataset.label}: ${ctx.parsed.x>0?'+'+ctx.parsed.x:ctx.parsed.x}점`}}}
+    }
+  });
+}
+
+function renderSection5Charts(candidates) {
+  const AI_BORDER_C = {claude:'#7c3aed',chatgpt:'#16a34a',gemini:'#2563eb',grok:'#dc2626'};
+
+  chartInstances.s5_bar = new Chart(document.getElementById('s5_bar'), {
+    type:'bar',
+    data:{
+      labels:candidates.map(c=>c.name),
+      datasets:AI_MODELS.map(m=>({
+        label:AI_LABELS[m],
+        data:candidates.map(c=>c.ai_scores?.[m]??0),
+        backgroundColor:AI_BORDER_C[m]+'30',
+        borderColor:AI_BORDER_C[m],
+        borderWidth:2, borderRadius:3,
+      }))
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      scales:{x:{ticks:{font:{size:12}},grid:{display:false}},y:{min:650,max:900,ticks:{font:{size:10}},grid:{color:'#f1f5f9'}}},
+      plugins:{legend:{position:'bottom',labels:{font:{size:11},padding:12}}}
+    }
+  });
+
+  chartInstances.s5_line = new Chart(document.getElementById('s5_line'), {
+    type:'line',
+    data:{
+      labels:AI_MODELS.map(m=>AI_LABELS[m]),
+      datasets:candidates.map((c,i)=>({
+        label:c.name,
+        data:AI_MODELS.map(m=>c.ai_scores?.[m]??0),
+        borderColor:CANDIDATE_COLORS[i%5].border,
+        backgroundColor:CANDIDATE_COLORS[i%5].bg,
+        borderWidth:2, pointRadius:5, pointBackgroundColor:CANDIDATE_COLORS[i%5].border,
+        tension:0.3,
+      }))
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      scales:{x:{ticks:{font:{size:12,weight:'600'}}},y:{min:650,max:900,grid:{color:'#f1f5f9'}}},
+      plugins:{legend:{position:'bottom',labels:{font:{size:11},padding:12}}}
+    }
+  });
+}
+
+/* ════════════════════════════════════════
+   PDF 저장 (canvas → img 변환 후 인쇄)
+════════════════════════════════════════ */
+async function savePDF() {
+  const btn = document.querySelector('.pdf-btn');
+  btn.disabled = true;
+  btn.innerHTML = '⏳ 차트 변환 중...';
+
+  // 모든 canvas를 고해상도 img로 변환 (화면 비율 그대로 유지)
+  const canvasEls = Array.from(document.querySelectorAll('#fullReport canvas'));
+  const replacements = [];
+
+  for (const canvas of canvasEls) {
+    try {
+      // 화면에 표시된 실제 크기 캡처
+      const rect = canvas.getBoundingClientRect();
+      const img = document.createElement('img');
+      img.src = canvas.toDataURL('image/png', 1.0);
+      img.className = 'chart-img';
+      img.style.cssText = `
+        width: 100%;
+        height: ${rect.height}px;
+        display: block;
+        object-fit: contain;
+      `;
+      replacements.push({ canvas, img, parent: canvas.parentNode });
+      canvas.parentNode.replaceChild(img, canvas);
+    } catch(e) { console.warn('canvas 변환 실패:', e); }
+  }
+
+  btn.innerHTML = '🖨️ 인쇄 창 열림...';
+
+  // 렌더링 안정화 대기
+  await new Promise(r => setTimeout(r, 600));
+  window.print();
+
+  // 인쇄 후 canvas 복원
+  setTimeout(() => {
+    replacements.forEach(({ img, canvas, parent }) => {
+      try {
+        if (img.parentNode === parent) parent.replaceChild(canvas, img);
+      } catch(e) {}
+    });
+    btn.disabled = false;
+    btn.innerHTML = '📥 PDF로 저장';
+  }, 1500);
+}
+</script>
+</body>
+</html>

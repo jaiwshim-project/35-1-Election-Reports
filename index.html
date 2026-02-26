@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>선거 후보자 비교 분석 플랫폼</title>
+<link rel="stylesheet" href="css/style.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<style>
+.setup-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.step-badge {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 28px; height: 28px; border-radius: 50%;
+  background: var(--primary); color: white; font-weight: 700; font-size: 13px;
+  margin-right: 8px; flex-shrink: 0;
+}
+.step-title { font-size: 16px; font-weight: 700; color: var(--primary-dark); margin-bottom: 14px; display: flex; align-items: center; }
+.input-wrap { display: flex; gap: 8px; }
+.input-wrap input, .form-input {
+  flex: 1; padding: 10px 14px; border: 2px solid var(--border);
+  border-radius: var(--radius-sm); font-family: inherit; font-size: 14px;
+  outline: none; transition: border-color 0.2s;
+}
+.input-wrap input:focus, .form-input:focus { border-color: var(--primary-light); }
+.api-status { font-size: 12px; margin-top: 6px; }
+.api-ok { color: var(--success); } .api-none { color: var(--text-muted); }
+
+/* 드롭존 */
+.drop-zone {
+  border: 2px dashed var(--primary-light);
+  border-radius: var(--radius);
+  padding: 40px 24px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: #f0f7ff;
+}
+.drop-zone:hover, .drop-zone.drag-over { background: #dbeafe; border-color: var(--primary); }
+.drop-zone .drop-icon { font-size: 40px; margin-bottom: 12px; }
+.drop-zone h3 { color: var(--primary); font-size: 16px; margin-bottom: 6px; }
+.drop-zone p { color: var(--text-muted); font-size: 13px; }
+#fileInput { display: none; }
+
+/* 파일 목록 */
+.file-list { margin-top: 12px; display: flex; flex-direction: column; gap: 8px; }
+.file-item {
+  display: flex; align-items: center; gap: 10px;
+  background: white; border: 1px solid var(--border);
+  border-radius: var(--radius-sm); padding: 10px 14px;
+}
+.file-icon { font-size: 20px; flex-shrink: 0; }
+.file-name { flex: 1; font-weight: 500; font-size: 13px; }
+.file-size { color: var(--text-muted); font-size: 12px; }
+.file-remove { background: none; border: none; cursor: pointer; color: var(--danger); font-size: 16px; padding: 2px 6px; }
+
+/* 분석 버튼 */
+.analyze-area { margin-top: 20px; display: flex; align-items: center; gap: 16px; }
+#analyzeBtn { padding: 12px 32px; font-size: 15px; }
+
+/* 진행 상태 */
+.status-log {
+  margin-top: 16px; background: #0f172a; border-radius: var(--radius-sm);
+  padding: 14px 16px; max-height: 160px; overflow-y: auto;
+  display: none;
+}
+.status-line { color: #94a3b8; font-size: 13px; font-family: monospace; padding: 2px 0; }
+.status-line.ok { color: #4ade80; }
+.status-line.err { color: #f87171; }
+.status-line.info { color: #60a5fa; }
+
+/* 결과 카드 */
+.result-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px,1fr)); gap: 14px; margin-top: 16px; }
+.result-nav-card {
+  background: white; border-radius: var(--radius); border: 1px solid var(--border);
+  padding: 20px 16px; text-align: center; text-decoration: none;
+  color: var(--text); box-shadow: var(--shadow); transition: all 0.2s;
+}
+.result-nav-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); border-color: var(--primary-light); }
+.result-nav-card .nav-icon { font-size: 28px; margin-bottom: 8px; }
+.result-nav-card .nav-label { font-size: 13px; font-weight: 600; color: var(--primary-dark); }
+
+/* 저장된 데이터 요약 */
+.saved-summary {
+  background: linear-gradient(135deg, #eff6ff, #dbeafe);
+  border: 1px solid #bfdbfe; border-radius: var(--radius);
+  padding: 16px 20px; display: flex; align-items: center; gap: 16px;
+}
+.saved-candidate-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.saved-tag {
+  padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600;
+  background: white; border: 1px solid var(--border);
+}
+
+/* 전략 보고서 후보 선택 */
+.strategy-select-section {
+  margin-top: 20px;
+  background: linear-gradient(135deg, #1e3a8a, #1d4ed8);
+  border-radius: var(--radius); padding: 24px 28px; color: white;
+}
+.strategy-select-section h3 { font-size: 18px; font-weight: 800; margin-bottom: 6px; }
+.strategy-select-section p { font-size: 13px; opacity: .8; margin-bottom: 18px; }
+.strategy-candidate-btns { display: flex; flex-wrap: wrap; gap: 10px; }
+.strategy-candidate-btn {
+  display: flex; align-items: center; gap: 10px;
+  background: rgba(255,255,255,0.12); border: 2px solid rgba(255,255,255,0.3);
+  color: white; border-radius: 12px; padding: 12px 20px;
+  cursor: pointer; font-family: inherit; font-size: 14px; font-weight: 700;
+  transition: all 0.2s; text-decoration: none;
+}
+.strategy-candidate-btn:hover {
+  background: rgba(255,255,255,0.25); border-color: rgba(255,255,255,0.7);
+  transform: translateY(-2px);
+}
+.strategy-candidate-btn .sc-rank { font-size: 18px; }
+.strategy-candidate-btn .sc-info { text-align: left; }
+.strategy-candidate-btn .sc-name { font-size: 15px; font-weight: 800; }
+.strategy-candidate-btn .sc-score { font-size: 11px; opacity: .75; }
+
+@media (max-width: 768px) { .setup-grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<header class="app-header">
+  <div class="header-inner">
+    <div class="header-logo">⚖️ Election<span>AI</span></div>
+    <div class="header-subtitle">AI 기반 선거 후보자 비교 분석 플랫폼</div>
+    <div class="header-date" id="header-date"></div>
+  </div>
+</header>
+<nav class="main-nav"><div class="nav-inner" id="main-nav"></div></nav>
+
+<div class="page-container">
+
+  <div class="page-title">
+    <h1>후보자 분석 시작</h1>
+    <p>PoliticianFinder.com AI 평가 리포트 PDF를 업로드하면 10개 지표 비교 분석 보고서를 자동 생성합니다.</p>
+  </div>
+
+  <!-- 저장된 데이터가 있을 경우 -->
+  <div id="saved-data-section" style="display:none">
+    <div class="card">
+      <div class="card-title">📋 저장된 분석 데이터</div>
+      <div class="saved-summary" id="saved-summary"></div>
+      <div class="result-cards" id="result-cards">
+        <a href="report_compare.html" class="result-nav-card"><div class="nav-icon">📊</div><div class="nav-label">종합 비교</div></a>
+        <a href="report_scores.html" class="result-nav-card"><div class="nav-icon">📈</div><div class="nav-label">점수 상세</div></a>
+        <a href="report_profiles.html" class="result-nav-card"><div class="nav-icon">👤</div><div class="nav-label">후보 프로파일</div></a>
+        <a href="report_gaps.html" class="result-nav-card"><div class="nav-icon">🎯</div><div class="nav-label">격차 분석</div></a>
+        <a href="report_ai.html" class="result-nav-card"><div class="nav-icon">🤖</div><div class="nav-label">AI 모델 비교</div></a>
+      </div>
+
+      <!-- 전략 보고서 후보 선택 -->
+      <div class="strategy-select-section">
+        <h3>🏆 당선 전략 보고서 — 후보를 선택하세요</h3>
+        <p>아래 후보 중 전략 보고서를 작성할 대상을 선택하면, 해당 후보만을 위한<br>
+           <strong>AI 선거 전략 인텔리전스 리포트</strong>가 생성됩니다.</p>
+        <div class="strategy-candidate-btns" id="strategyBtns"></div>
+      </div>
+
+      <div style="margin-top:14px">
+        <button class="btn btn-outline btn-sm" onclick="clearData()">🗑️ 데이터 초기화 후 새 분석</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 설정 영역 -->
+  <div class="setup-grid">
+
+    <!-- Step 1: API 키 -->
+    <div class="card">
+      <div class="step-title"><span class="step-badge">1</span>Google Gemini API 키 설정</div>
+      <div class="input-wrap">
+        <input type="password" id="apiKeyInput" placeholder="AIzaSy..." autocomplete="off">
+        <button class="btn btn-primary" onclick="saveApiKey()">저장</button>
+      </div>
+      <div class="api-status" id="apiStatus">
+        <span class="api-none">● API 키 미설정</span>
+      </div>
+      <div class="alert alert-info" style="margin-top:12px;font-size:12px">
+        🔑 API 키는 브라우저 로컬 저장소에만 저장되며 외부로 전송되지 않습니다.
+        <a href="https://aistudio.google.com/app/apikey" target="_blank" style="color:inherit;font-weight:600">Google AI Studio에서 발급받기 →</a>
+      </div>
+    </div>
+
+    <!-- Step 2: 선거구 -->
+    <div class="card">
+      <div class="step-title"><span class="step-badge">2</span>선거구 및 분석 정보</div>
+      <label style="font-size:13px;color:var(--text-muted);margin-bottom:4px;display:block">선거구 이름</label>
+      <input class="form-input" type="text" id="districtName" placeholder="예: 서울 성동구" style="width:100%;margin-bottom:12px">
+      <label style="font-size:13px;color:var(--text-muted);margin-bottom:4px;display:block">선거 유형</label>
+      <input class="form-input" type="text" id="electionType" placeholder="예: 제9회 전국동시지방선거" style="width:100%">
+    </div>
+
+  </div>
+
+  <!-- Step 3: 파일 업로드 -->
+  <div class="card">
+    <div class="step-title"><span class="step-badge">3</span>후보자 PDF 리포트 업로드 (최대 5명)</div>
+
+    <div class="drop-zone" id="dropZone" onclick="document.getElementById('fileInput').click()">
+      <div class="drop-icon">📄</div>
+      <h3>PDF 파일을 드래그하거나 클릭하여 선택</h3>
+      <p>PoliticianFinder.com 평가 리포트 PDF · 후보자당 1개 파일 · 최대 5개</p>
+      <input type="file" id="fileInput" multiple accept=".pdf">
+    </div>
+
+    <div class="file-list" id="fileList"></div>
+
+    <div class="analyze-area">
+      <button class="btn btn-primary" id="analyzeBtn" onclick="startAnalysis()" disabled>
+        🔍 분석 시작
+      </button>
+      <span id="analyzeHint" style="font-size:13px;color:var(--text-muted)">PDF 파일을 업로드한 후 분석을 시작하세요.</span>
+    </div>
+
+    <div class="status-log" id="statusLog"></div>
+  </div>
+
+  <!-- 수동 입력 옵션 -->
+  <div class="card">
+    <div class="card-title">✏️ 수동 데이터 입력 (PDF 없이 직접 입력)</div>
+    <p style="font-size:13px;color:var(--text-muted);margin-bottom:14px">
+      PDF 추출이 안 될 경우, 아래 JSON 형식으로 데이터를 직접 입력할 수 있습니다.
+    </p>
+    <textarea id="manualInput" rows="6" style="width:100%;padding:12px;border:2px solid var(--border);border-radius:var(--radius-sm);font-family:monospace;font-size:12px;resize:vertical;outline:none"
+      placeholder='[{"name":"후보자명","party":"정당","position":"직책","total_score":785,"ai_scores":{"claude":773,"chatgpt":780,"gemini":812,"grok":771},"metrics":{"공익성":83,"정책실행력":81,"전문성":81,"대응성":82,"책임성":81,"소통능력":81,"리더십":79,"비전명확성":76,"청렴성":73,"윤리성":69},"strengths":["강점1","강점2"],"weaknesses":["약점1"],"summary":"요약"}]'></textarea>
+    <div style="margin-top:10px;display:flex;gap:8px">
+      <button class="btn btn-outline" onclick="loadManualData()">📥 데이터 불러오기</button>
+      <button class="btn btn-outline btn-sm" onclick="loadSampleData()">📋 샘플 데이터 불러오기</button>
+    </div>
+  </div>
+
+</div>
+
+<script src="js/shared.js"></script>
+<script>
+pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+let selectedFiles = [];
+
+// ── 초기화 ──
+window.addEventListener('DOMContentLoaded', () => {
+  const key = getApiKey();
+  if (key) {
+    document.getElementById('apiKeyInput').value = key.substring(0, 12) + '***';
+    document.getElementById('apiStatus').innerHTML = '<span class="api-ok">✓ API 키 저장됨</span>';
+  }
+  checkSavedData();
+  setupDropZone();
+});
+
+function checkSavedData() {
+  const data = getData();
+  if (data && data.candidates && data.candidates.length > 0) {
+    const sec = document.getElementById('saved-data-section');
+    sec.style.display = 'block';
+
+    // 요약 태그
+    const tags = data.candidates.map((c,i) =>
+      `<span class="saved-tag" style="border-color:${CANDIDATE_COLORS[i%5].border};color:${CANDIDATE_COLORS[i%5].text}">${c.name} (${c.total_score}점)</span>`
+    ).join('');
+    document.getElementById('saved-summary').innerHTML =
+      `<div style="font-size:22px">📊</div><div><div style="font-weight:700;margin-bottom:6px">${data.district || '선거구'} · ${data.candidates.length}명 분석 완료</div><div class="saved-candidate-tags">${tags}</div></div>`;
+
+    // 전략 보고서 후보 선택 버튼
+    const sorted = [...data.candidates]
+      .map((c,i) => ({...c, origIdx: i}))
+      .sort((a,b) => b.total_score - a.total_score);
+
+    const rankEmoji = ['🥇','🥈','🥉','4️⃣','5️⃣'];
+    const strategyLabel = ['1위 유지 방어 전략','역전 추격 전략','포지션 리빌딩 전략','포지션 리빌딩 전략','포지션 리빌딩 전략'];
+    const btns = sorted.map((c, rank) => {
+      const col = CANDIDATE_COLORS[c.origIdx % 5];
+      return `<a href="report_strategy.html" class="strategy-candidate-btn"
+          onclick="setTargetIdx(${c.origIdx})"
+          style="border-color:${col.border}88">
+          <span class="sc-rank">${rankEmoji[rank]}</span>
+          <div class="sc-info">
+            <div class="sc-name">${c.name}</div>
+            <div class="sc-score">${c.total_score}점 · ${strategyLabel[rank]}</div>
+          </div>
+        </a>`;
+    }).join('');
+    document.getElementById('strategyBtns').innerHTML = btns;
+  }
+}
+
+// ── API 키 저장 ──
+function saveApiKey() {
+  const val = document.getElementById('apiKeyInput').value.trim();
+  if (!val || val.includes('***')) return alert('유효한 API 키를 입력해주세요.');
+  setApiKey(val);
+  document.getElementById('apiKeyInput').value = val.substring(0, 12) + '***';
+  document.getElementById('apiStatus').innerHTML = '<span class="api-ok">✓ API 키 저장됨</span>';
+}
+
+// ── 드롭존 설정 ──
+function setupDropZone() {
+  const zone = document.getElementById('dropZone');
+  const input = document.getElementById('fileInput');
+
+  zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag-over'); });
+  zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
+  zone.addEventListener('drop', e => {
+    e.preventDefault();
+    zone.classList.remove('drag-over');
+    addFiles([...e.dataTransfer.files]);
+  });
+  input.addEventListener('change', () => { addFiles([...input.files]); input.value = ''; });
+}
+
+function addFiles(files) {
+  for (const f of files) {
+    if (!f.name.toLowerCase().endsWith('.pdf')) { alert(`${f.name}: PDF 파일만 지원됩니다.`); continue; }
+    if (selectedFiles.length >= 5) { alert('최대 5개 파일까지 가능합니다.'); break; }
+    if (selectedFiles.some(s => s.name === f.name)) continue;
+    selectedFiles.push(f);
+  }
+  renderFileList();
+}
+
+function renderFileList() {
+  const list = document.getElementById('fileList');
+  const btn = document.getElementById('analyzeBtn');
+  const hint = document.getElementById('analyzeHint');
+  list.innerHTML = selectedFiles.map((f,i) => `
+    <div class="file-item">
+      <span class="file-icon">📄</span>
+      <span class="file-name">${f.name}</span>
+      <span class="file-size">${(f.size/1024).toFixed(1)} KB</span>
+      <button class="file-remove" onclick="removeFile(${i})">✕</button>
+    </div>`).join('');
+  btn.disabled = selectedFiles.length === 0;
+  hint.textContent = selectedFiles.length > 0
+    ? `${selectedFiles.length}개 파일 선택됨 · 분석 시작을 클릭하세요.`
+    : 'PDF 파일을 업로드한 후 분석을 시작하세요.';
+}
+
+function removeFile(i) {
+  selectedFiles.splice(i, 1);
+  renderFileList();
+}
+
+// ── PDF 텍스트 추출 ──
+async function extractTextFromPDF(file) {
+  const arrayBuffer = await file.arrayBuffer();
+  const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+  let text = '';
+  for (let i = 1; i <= pdf.numPages; i++) {
+    const page = await pdf.getPage(i);
+    const content = await page.getTextContent();
+    text += content.items.map(item => item.str).join(' ') + '\n';
+  }
+  return text.trim();
+}
+
+// ── Gemini API 호출 ──
+async function analyzeWithGemini(text, apiKey) {
+  const prompt = `다음은 PoliticianFinder.com의 AI 정치인 평가 리포트 텍스트입니다.
+이 텍스트에서 아래 JSON 형식으로 데이터를 정확히 추출해주세요.
+
+규칙:
+- "정책실행력"이 없으면: 공익성×0.4 + 대응성×0.3 + 전문성×0.3 으로 계산
+- "책임성"이 없으면: 책임감 점수 사용
+- "비전명확성"이 없으면: 비전 점수 사용
+- 모든 점수는 0~100 범위의 정수
+- 반드시 순수 JSON만 반환 (마크다운 코드블록, 설명 없이)
+
+{
+  "name": "후보자 이름",
+  "party": "정당명",
+  "position": "직책 또는 지역구",
+  "total_score": 숫자(1000점 기준),
+  "ai_scores": {"claude": 숫자, "chatgpt": 숫자, "gemini": 숫자, "grok": 숫자},
+  "metrics": {
+    "공익성": 숫자, "정책실행력": 숫자, "전문성": 숫자, "대응성": 숫자,
+    "책임성": 숫자, "소통능력": 숫자, "리더십": 숫자, "비전명확성": 숫자,
+    "청렴성": 숫자, "윤리성": 숫자
+  },
+  "strengths": ["강점키워드1", "강점키워드2", "강점키워드3"],
+  "weaknesses": ["약점키워드1", "약점키워드2", "약점키워드3"],
+  "summary": "2~3문장 요약",
+  "education": "학력",
+  "career": "주요 경력 요약"
+}
+
+리포트 텍스트 (앞부분):
+${text.substring(0, 9000)}`;
+
+  const res = await fetch(
+    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contents: [{ parts: [{ text: prompt }] }],
+        generationConfig: { temperature: 0.1, maxOutputTokens: 2048 }
+      })
+    }
+  );
+
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error?.message || `API 오류 (${res.status})`);
+  }
+
+  const result = await res.json();
+  const jsonStr = result.candidates[0].content.parts[0].text
+    .trim()
+    .replace(/^```json?\n?/,'')
+    .replace(/\n?```$/,'');
+  return JSON.parse(jsonStr);
+}
+
+// ── 로그 출력 ──
+function log(msg, type = 'info') {
+  const box = document.getElementById('statusLog');
+  box.style.display = 'block';
+  const line = document.createElement('div');
+  line.className = `status-line ${type}`;
+  const time = new Date().toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+  line.textContent = `[${time}] ${msg}`;
+  box.appendChild(line);
+  box.scrollTop = box.scrollHeight;
+}
+
+// ── 분석 시작 ──
+async function startAnalysis() {
+  const apiKey = getApiKey();
+  if (!apiKey) { alert('API 키를 먼저 저장해주세요.'); return; }
+  if (selectedFiles.length === 0) { alert('PDF 파일을 업로드해주세요.'); return; }
+
+  const btn = document.getElementById('analyzeBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> 분석 중...';
+  document.getElementById('statusLog').innerHTML = '';
+
+  const district = document.getElementById('districtName').value.trim() || '선거구';
+  const electionType = document.getElementById('electionType').value.trim();
+  const candidates = [];
+
+  for (let i = 0; i < selectedFiles.length; i++) {
+    const f = selectedFiles[i];
+    log(`[${i+1}/${selectedFiles.length}] ${f.name} 처리 시작...`);
+    try {
+      log(`  PDF 텍스트 추출 중...`);
+      const text = await extractTextFromPDF(f);
+      if (text.length < 100) throw new Error('PDF에서 텍스트를 추출하지 못했습니다. 수동 입력을 이용해주세요.');
+      log(`  텍스트 추출 완료 (${text.length}자)`);
+
+      log(`  Gemini AI 분석 중...`);
+      const candidate = await analyzeWithGemini(text, apiKey);
+      candidates.push(candidate);
+      log(`  ✓ ${candidate.name} 분석 완료 (${candidate.total_score}점)`, 'ok');
+    } catch (err) {
+      log(`  ✗ 오류: ${err.message}`, 'err');
+    }
+  }
+
+  if (candidates.length > 0) {
+    setData({ candidates, district, election_type: electionType, analysis_date: new Date().toISOString().split('T')[0] });
+    log(`─────────────────────────────`, 'info');
+    log(`✅ 분석 완료! ${candidates.length}명 데이터 저장`, 'ok');
+    log(`리포트 페이지로 이동하세요.`, 'ok');
+    checkSavedData();
+    document.getElementById('saved-data-section').scrollIntoView({ behavior: 'smooth' });
+  } else {
+    log('분석에 실패했습니다. API 키 또는 PDF를 확인해주세요.', 'err');
+  }
+
+  btn.disabled = false;
+  btn.innerHTML = '🔍 분석 시작';
+}
+
+// ── 수동 데이터 입력 ──
+function loadManualData() {
+  const txt = document.getElementById('manualInput').value.trim();
+  if (!txt) { alert('데이터를 입력해주세요.'); return; }
+  try {
+    const candidates = JSON.parse(txt);
+    if (!Array.isArray(candidates) || candidates.length === 0) throw new Error('배열 형식이어야 합니다.');
+    const district = document.getElementById('districtName').value.trim() || '선거구';
+    setData({ candidates, district, analysis_date: new Date().toISOString().split('T')[0] });
+    alert(`✅ ${candidates.length}명 데이터 저장 완료!`);
+    checkSavedData();
+  } catch(e) {
+    alert('JSON 형식 오류: ' + e.message);
+  }
+}
+
+function loadSampleData() {
+  const sample = [
+    {
+      name: "정원오", party: "더불어민주당", position: "서울 성동구청장",
+      total_score: 785, education: "한양대학교 대학원 도시공학 박사",
+      career: "서울 성동구청장 3선, 전국시장군수구청장협의회 공동회장",
+      ai_scores: { claude: 773, chatgpt: 780, gemini: 812, grok: 771 },
+      metrics: { 공익성:83, 정책실행력:82, 전문성:81, 대응성:82, 책임성:81, 소통능력:81, 리더십:79, 비전명확성:76, 청렴성:73, 윤리성:69 },
+      strengths: ["공익성","행정전문성","대응력"], weaknesses: ["윤리성","청렴성"],
+      summary: "3선 구청장으로 행정 전문성과 공익적 성과에서 강점을 보임. 필수노동자 보호, 젠트리피케이션 방지 등 선도적 정책 시행."
+    },
+    {
+      name: "박주민", party: "더불어민주당", position: "국회의원 (서울 은평구갑)",
+      total_score: 753, education: "서울대학교 법학과",
+      career: "21대 국회의원, 변호사 출신 인권 활동가",
+      ai_scores: { claude: 748, chatgpt: 755, gemini: 760, grok: 749 },
+      metrics: { 공익성:80, 정책실행력:76, 전문성:78, 대응성:77, 책임성:79, 소통능력:82, 리더십:75, 비전명확성:74, 청렴성:76, 윤리성:72 },
+      strengths: ["소통능력","공익성","전문성"], weaknesses: ["리더십","비전명확성"],
+      summary: "소통 능력과 공익성에서 높은 평가. 인권·민생 분야 정책 활동 활발."
+    },
+    {
+      name: "조은희", party: "국민의힘", position: "국회의원 (서울 서초구갑)",
+      total_score: 745, education: "이화여자대학교 경영학과",
+      career: "20·21대 국회의원, 서초구청장 역임",
+      ai_scores: { claude: 740, chatgpt: 748, gemini: 752, grok: 740 },
+      metrics: { 공익성:76, 정책실행력:75, 전문성:78, 대응성:76, 책임성:77, 소통능력:75, 리더십:76, 비전명확성:73, 청렴성:78, 윤리성:75 },
+      strengths: ["청렴성","전문성","책임성"], weaknesses: ["소통능력","비전명확성"],
+      summary: "행정 경험과 청렴성에서 안정적 평가. 고른 점수 분포의 관리형 리더."
+    },
+    {
+      name: "오세훈", party: "국민의힘", position: "서울특별시장",
+      total_score: 732, education: "서울대학교 법학과, 단국대 법학 박사",
+      career: "서울시장 2선, 국회의원 3선",
+      ai_scores: { claude: 740, chatgpt: 730, gemini: 729, grok: 735 },
+      metrics: { 공익성:78, 정책실행력:78, 전문성:79, 대응성:77, 책임성:80, 소통능력:75, 리더십:82, 비전명확성:80, 청렴성:77, 윤리성:76 },
+      strengths: ["리더십","비전명확성","책임성"], weaknesses: ["소통능력","공익성"],
+      summary: "리더십과 비전 제시에서 강점. 광역 행정 경험 풍부하나 소통 점수 상대적 약세."
+    }
+  ];
+  document.getElementById('manualInput').value = JSON.stringify(sample, null, 2);
+  document.getElementById('districtName').value = '샘플 선거구';
+}
+
+function clearData() {
+  if (!confirm('저장된 분석 데이터를 삭제하시겠습니까?')) return;
+  localStorage.removeItem('election_data');
+  document.getElementById('saved-data-section').style.display = 'none';
+  selectedFiles = [];
+  renderFileList();
+  document.getElementById('statusLog').innerHTML = '';
+  document.getElementById('statusLog').style.display = 'none';
+}
+</script>
+</body>
+</html>
