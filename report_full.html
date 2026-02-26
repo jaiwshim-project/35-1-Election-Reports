@@ -1,0 +1,1050 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>종합 분석 보고서 · ElectionAI</title>
+<link rel="stylesheet" href="css/style.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+/* ── 화면 레이아웃 ── */
+.top-bar {
+  position: sticky; top: 0; z-index: 200;
+  background: #1e3a8a; color: white;
+  padding: 12px 32px; display: flex; align-items: center; gap: 16px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+}
+.top-bar h2 { font-size: 15px; font-weight: 700; flex: 1; }
+.pdf-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: #f59e0b; color: #1c1917; border: none; cursor: pointer;
+  padding: 9px 22px; border-radius: 8px; font-family: inherit;
+  font-size: 14px; font-weight: 800; transition: all 0.2s;
+}
+.pdf-btn:hover { background: #d97706; transform: translateY(-1px); }
+.back-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: rgba(255,255,255,0.15); color: white; border: none; cursor: pointer;
+  padding: 7px 14px; border-radius: 6px; font-family: inherit; font-size: 13px;
+  text-decoration: none; transition: background 0.2s;
+}
+.back-btn:hover { background: rgba(255,255,255,0.25); }
+
+.full-report { max-width: 960px; margin: 0 auto; padding: 32px 24px 80px; }
+
+/* ── 표지 ── */
+.cover-page {
+  background: linear-gradient(160deg, #1e3a8a 0%, #1d4ed8 50%, #2563eb 100%);
+  color: white; border-radius: 16px; padding: 56px 48px;
+  margin-bottom: 32px; position: relative; overflow: hidden;
+}
+.cover-page::before {
+  content: '⚖️'; font-size: 200px; opacity: 0.05;
+  position: absolute; right: -20px; top: -20px; line-height: 1;
+}
+.cover-badge {
+  display: inline-block; background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.3); padding: 4px 14px;
+  border-radius: 20px; font-size: 12px; font-weight: 600; margin-bottom: 20px;
+}
+.cover-page h1 { font-size: 32px; font-weight: 900; line-height: 1.3; margin-bottom: 12px; }
+.cover-page .subtitle { font-size: 16px; opacity: .8; margin-bottom: 32px; }
+.cover-meta { display: flex; gap: 32px; flex-wrap: wrap; margin-bottom: 32px; }
+.cover-meta-item { }
+.cover-meta-item .label { font-size: 11px; opacity: .6; text-transform: uppercase; letter-spacing: .8px; margin-bottom: 3px; }
+.cover-meta-item .value { font-size: 16px; font-weight: 700; }
+.cover-candidates { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 28px; }
+.cover-candidate-chip {
+  background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3);
+  padding: 8px 18px; border-radius: 24px; font-size: 14px; font-weight: 700;
+}
+.cover-candidate-chip .score { opacity: .8; font-size: 12px; margin-left: 6px; }
+
+/* ── 섹션 구분 ── */
+.report-section { margin-bottom: 40px; }
+.section-header {
+  display: flex; align-items: center; gap: 12px;
+  background: linear-gradient(90deg, #1e3a8a, #1d4ed8);
+  color: white; padding: 14px 20px; border-radius: 10px;
+  margin-bottom: 20px; font-size: 18px; font-weight: 800;
+}
+.section-num {
+  background: rgba(255,255,255,0.2); width: 30px; height: 30px;
+  border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 900; flex-shrink: 0;
+}
+
+/* ── 순위 카드 그리드 ── */
+.rank-cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px,1fr)); gap: 14px; margin-bottom: 20px; }
+.rk-card {
+  background: white; border-radius: 12px; padding: 18px 16px;
+  border: 2px solid var(--border); box-shadow: var(--shadow);
+  position: relative; overflow: hidden;
+}
+.rk-card .num { font-size: 56px; font-weight: 900; opacity:.05; position:absolute; right:8px; top:0; line-height:1; }
+.rk-card .rank-tag-lg {
+  width: 32px; height: 32px; border-radius: 50%;
+  display:flex; align-items:center; justify-content:center;
+  font-weight:800; font-size:14px; margin-bottom:10px;
+}
+.rk-card .name { font-size:17px; font-weight:800; }
+.rk-card .party { font-size:11px; color:var(--text-muted); margin-bottom:8px; }
+.rk-card .big { font-size:34px; font-weight:900; }
+.rk-card .prog { height:6px; background:#f1f5f9; border-radius:3px; margin-top:10px; overflow:hidden; }
+.rk-card .prog-fill { height:100%; border-radius:3px; }
+
+/* ── 차트 그리드 ── */
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.chart-box { background:white; border:1px solid var(--border); border-radius:12px; padding:18px; }
+.chart-box h3 { font-size:13px; font-weight:700; color:var(--text-muted); margin-bottom:12px; text-transform:uppercase; letter-spacing:.4px; }
+
+/* ── 프로파일 그리드 ── */
+.profile-print-grid { display:grid; grid-template-columns: repeat(auto-fill, minmax(300px,1fr)); gap:16px; }
+.pp-card { background:white; border-radius:12px; overflow:hidden; border:1px solid var(--border); }
+.pp-head { padding:16px 20px; color:white; }
+.pp-head .name { font-size:18px; font-weight:900; margin-bottom:2px; }
+.pp-head .sub { font-size:12px; opacity:.85; margin-bottom:8px; }
+.pp-head .sc { font-size:30px; font-weight:900; }
+.pp-body { padding:16px 20px; }
+.pp-info { font-size:12px; color:var(--text-muted); margin-bottom:4px; }
+.pp-info strong { color:var(--text); }
+.pp-tags { display:flex; flex-wrap:wrap; gap:5px; margin:8px 0; }
+.pp-tag { padding:3px 9px; border-radius:12px; font-size:11px; font-weight:600; }
+.pp-tag.s { background:#dcfce7; color:#166534; }
+.pp-tag.w { background:#fee2e2; color:#991b1b; }
+.pp-sum { font-size:12px; color:var(--text-muted); line-height:1.6; margin-top:8px; border-top:1px solid var(--border); padding-top:8px; }
+.pp-ai-row { display:grid; grid-template-columns:repeat(4,1fr); gap:4px; margin-top:10px; text-align:center; }
+.pp-ai-cell { background:#f8fafc; border-radius:6px; padding:5px 3px; }
+.pp-ai-cell .lbl { font-size:9px; font-weight:700; }
+.pp-ai-cell .val { font-size:13px; font-weight:800; }
+
+/* ── AI 일관성 ── */
+.ai-consist-row {
+  display:flex; align-items:center; gap:12px;
+  background:white; border:1px solid var(--border); border-radius:10px;
+  padding:14px 16px; margin-bottom:10px;
+}
+.ai-consist-name { font-weight:700; width:80px; flex-shrink:0; }
+.ai-consist-bars { flex:1; display:flex; gap:6px; }
+.ai-consist-bar { flex:1; text-align:center; }
+.ai-consist-bar .al { font-size:10px; font-weight:600; }
+.ai-consist-bar .av { font-size:14px; font-weight:800; }
+
+/* ── 인쇄 스타일 ── */
+@page {
+  size: A4;
+  margin: 14mm 14mm 22mm 14mm;
+  @bottom-right {
+    content: counter(page) " / " counter(pages);
+    font-size: 9pt;
+    color: #94a3b8;
+    font-family: 'Noto Sans KR', sans-serif;
+  }
+}
+
+@media print {
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  .top-bar, .app-header, .main-nav { display: none !important; }
+  body { background: white !important; margin: 0; }
+  .full-report { max-width: 100%; padding: 0; }
+
+  /* 표지 */
+  .cover-page {
+    border-radius: 0;
+    margin: 0 0 20px;
+    padding: 40px 32px;
+    background: linear-gradient(160deg, #1e3a8a 0%, #1d4ed8 50%, #2563eb 100%) !important;
+    color: white !important;
+  }
+  .cover-badge {
+    background: rgba(255,255,255,0.15) !important;
+    border: 1px solid rgba(255,255,255,0.3) !important;
+    color: white !important;
+  }
+  .cover-candidate-chip {
+    background: rgba(255,255,255,0.15) !important;
+    border: 1px solid rgba(255,255,255,0.3) !important;
+    color: white !important;
+  }
+
+  /* 섹션 헤더 */
+  .section-header {
+    background: linear-gradient(90deg, #1e3a8a, #1d4ed8) !important;
+    color: white !important;
+    font-size: 13pt;
+  }
+  .section-num {
+    background: rgba(255,255,255,0.2) !important;
+    color: white !important;
+  }
+
+  /* 섹션 페이지 분리 */
+  .report-section { page-break-before: always; }
+  .report-section:first-child { page-break-before: auto; }
+
+  /* 카드 */
+  .card, .rk-card, .pp-card, .chart-box {
+    box-shadow: none !important;
+    break-inside: avoid;
+    border: 1px solid #e2e8f0 !important;
+  }
+
+  /* 그리드 레이아웃 유지 */
+  .two-col { grid-template-columns: 1fr 1fr; }
+  .rank-cards-grid { grid-template-columns: repeat(4, 1fr); }
+  .profile-print-grid { grid-template-columns: repeat(2, 1fr); }
+
+  /* 순위 태그 색상 유지 */
+  .rank-1 { background: #fef3c7 !important; color: #92400e !important; }
+  .rank-2 { background: #f1f5f9 !important; color: #475569 !important; }
+  .rank-3 { background: #fef9c3 !important; color: #713f12 !important; }
+
+  /* pp-tag 색상 유지 */
+  .pp-tag.s { background: #dcfce7 !important; color: #166534 !important; }
+  .pp-tag.w { background: #fee2e2 !important; color: #991b1b !important; }
+
+  /* insight-box */
+  .insight-box {
+    background: #eff6ff !important;
+    border: 1px solid #bfdbfe !important;
+    color: #1e40af !important;
+  }
+
+  /* 표 */
+  table { font-size: 10pt; }
+  h1 { font-size: 22pt; }
+
+  /* 이미지(차트 변환본) */
+  img.chart-img { max-width: 100% !important; height: auto !important; display: block; }
+}
+</style>
+</head>
+<body>
+
+<!-- 상단 바 -->
+<div class="top-bar no-print">
+  <a href="report_compare.html" class="back-btn">← 돌아가기</a>
+  <h2>📋 종합 분석 보고서 — 모든 항목 통합</h2>
+  <button class="pdf-btn" onclick="savePDF()">📥 PDF로 저장</button>
+</div>
+
+<div class="full-report" id="fullReport">
+  <!-- 동적으로 생성 -->
+</div>
+
+<script src="js/shared.js"></script>
+<script>
+/* ═══════════════════════════════════════════════════
+   전체 보고서 렌더링
+═══════════════════════════════════════════════════ */
+const chartInstances = {};
+
+document.addEventListener('DOMContentLoaded', async () => {
+  const data = getData();
+  if (!data || !data.candidates?.length) {
+    document.getElementById('fullReport').innerHTML = `
+      <div class="no-data" style="padding:80px 20px;text-align:center">
+        <div style="font-size:56px;margin-bottom:16px">📂</div>
+        <h3 style="font-size:22px;color:#64748b">분석된 데이터가 없습니다</h3>
+        <p style="color:#94a3b8;margin-bottom:24px">홈에서 PDF를 업로드하고 분석을 완료해주세요.</p>
+        <a href="index.html" class="btn btn-primary">🏠 홈으로 이동</a>
+      </div>`;
+    return;
+  }
+
+  const { candidates, district, analysis_date } = data;
+  const n = candidates.length;
+  const totalRanks = calcTotalRankings(candidates);
+  const sortedC = [...candidates].map((c,i)=>({...c,idx:i})).sort((a,b)=>b.total_score-a.total_score);
+
+  let html = buildCover(candidates, sortedC, district, analysis_date)
+    + buildSection1(candidates, sortedC, totalRanks)
+    + buildSection2(candidates)
+    + buildSection3(candidates, totalRanks)
+    + buildSection4(candidates, sortedC)
+    + buildSection5(candidates);
+
+  document.getElementById('fullReport').innerHTML = html;
+
+  // 차트 렌더링 (순서대로)
+  renderSection1Charts(candidates);
+  renderSection2Charts(candidates);
+  renderSection3Charts(candidates);
+  renderSection4Charts(candidates, sortedC);
+  renderSection5Charts(candidates);
+});
+
+/* ── 표지 ── */
+function buildCover(candidates, sortedC, district, analysis_date) {
+  const chips = sortedC.map((c,i) => {
+    const col = CANDIDATE_COLORS[c.idx%5];
+    return `<div class="cover-candidate-chip" style="border-color:${col.border}cc">
+      ${c.name} <span class="score">${c.total_score}점</span>
+    </div>`;
+  }).join('');
+
+  return `
+  <div class="cover-page">
+    <div class="cover-badge">ElectionAI · AI 기반 선거 후보자 분석 시스템</div>
+    <h1>선거 후보자<br>종합 비교 분석 보고서</h1>
+    <div class="subtitle">10개 지표 기반 정량 평가 · AI 모델 통합 분석</div>
+    <div class="cover-meta">
+      <div class="cover-meta-item">
+        <div class="label">선거구</div>
+        <div class="value">${district || '선거구'}</div>
+      </div>
+      <div class="cover-meta-item">
+        <div class="label">분석 일자</div>
+        <div class="value">${analysis_date || new Date().toISOString().split('T')[0]}</div>
+      </div>
+      <div class="cover-meta-item">
+        <div class="label">분석 후보</div>
+        <div class="value">${candidates.length}명</div>
+      </div>
+      <div class="cover-meta-item">
+        <div class="label">평가 지표</div>
+        <div class="value">10개 항목</div>
+      </div>
+    </div>
+    <div style="font-size:12px;opacity:.6;margin-bottom:8px">후보자 종합 순위</div>
+    <div class="cover-candidates">${chips}</div>
+  </div>`;
+}
+
+/* ── Section 1: 종합 비교 ── */
+function buildSection1(candidates, sortedC, totalRanks) {
+  const n = sortedC.length;
+  const rankCards = sortedC.map((c, rank) => {
+    const col = CANDIDATE_COLORS[c.idx%5];
+    const g = scoreGrade(c.total_score);
+    const rankCls = rank===0?'rank-1':rank===1?'rank-2':rank===2?'rank-3':'rank-other';
+    return `
+    <div class="rk-card" style="border-color:${col.border}">
+      <div class="num">${rank+1}</div>
+      <div class="rank-tag-lg ${rankCls}">${rank+1}</div>
+      <div class="name" style="color:${col.border}">${c.name}</div>
+      <div class="party">${c.party}</div>
+      <div>
+        <span class="big" style="color:${col.border}">${c.total_score}</span>
+        <span style="font-size:13px;color:var(--text-muted)">점</span>
+      </div>
+      <div style="font-size:11px;color:${col.border};font-weight:600;margin-top:3px">${g.label}등급 · ${g.desc}</div>
+      <div class="prog"><div class="prog-fill" style="width:${(c.total_score/1000)*100}%;background:${col.border}"></div></div>
+    </div>`;
+  }).join('');
+
+  // 항목별 최고 점수 테이블
+  let tbl = `<table><thead><tr><th>평가 항목</th>`;
+  sortedC.forEach(c => { tbl += `<th style="color:${CANDIDATE_COLORS[c.idx%5].border}">${c.name}</th>`; });
+  tbl += `<th>최고</th></tr></thead><tbody>`;
+  METRICS.forEach(m => {
+    const scores = candidates.map((c,i)=>({name:c.name,score:c.metrics?.[m]??0,col:CANDIDATE_COLORS[i%5]}));
+    const max = Math.max(...scores.map(s=>s.score));
+    tbl += `<tr><td><strong>${METRIC_LABELS[m]}</strong></td>`;
+    sortedC.forEach(c => {
+      const s = c.metrics?.[m]??0;
+      tbl += `<td style="${s===max?`background:${CANDIDATE_COLORS[c.idx%5].light};font-weight:700;color:${CANDIDATE_COLORS[c.idx%5].text}`:''}">${s}${s===max?' ★':''}</td>`;
+    });
+    tbl += `<td><strong>${max}</strong></td></tr>`;
+  });
+  tbl += `</tbody></table>`;
+
+  // 인사이트
+  const top = sortedC[0], bot = sortedC[n-1];
+  const insight = `<strong style="color:${CANDIDATE_COLORS[top.idx%5].border}">${top.name}</strong>이(가) ${top.total_score}점으로 1위.
+    ${n>1?`2위 ${sortedC[1].name}(${sortedC[1].total_score}점)과의 격차: <strong>${top.total_score-sortedC[1].total_score}점</strong>. `:''}
+    ${n>2?`최하위 ${bot.name}(${bot.total_score}점)과의 격차: <strong>${top.total_score-bot.total_score}점</strong>.`:''}`;
+
+  // ── 종합 순위 종합 설명 ──
+  const avgScore = Math.round(sortedC.reduce((a,c)=>a+c.total_score,0)/n);
+  const gap12 = n>1 ? top.total_score - sortedC[1].total_score : 0;
+  const spread = n>1 ? top.total_score - bot.total_score : 0;
+  const gradeTop = scoreGrade(top.total_score);
+  const sum_rank = summaryBox('종합 순위 분석 종합 설명', [
+    `이번 분석에서 <strong>${top.name}</strong>(${top.party})이(가) 종합 <strong>${top.total_score}점</strong>으로 1위를 기록했습니다. 등급은 <strong>${gradeTop.label}등급(${gradeTop.desc})</strong>으로 평가되었으며, 4개 AI 모델 — Claude, ChatGPT, Gemini, Grok — 의 평균 점수를 종합한 결과입니다. 전체 후보의 평균 점수는 <strong>${avgScore}점</strong>이며, 1위와 최하위 후보 간 점수 격차는 <strong>${spread}점</strong>입니다.`,
+    `2위${n>1?' '+sortedC[1].name:''}와의 점수 차이는 <strong>${gap12}점</strong>으로, ${gap12 <= 10 ? '매우 경쟁적인 구도임을 확인할 수 있습니다. 소수점 단위의 평가 차이가 순위를 결정하는 박빙의 경쟁이 펼쳐지고 있어, 특정 항목에서의 단기적 개선이 전체 순위를 바꿀 수 있는 구조입니다.' : gap12 <= 30 ? '일정한 차이를 보이고 있습니다. 상위권 경쟁은 여전히 치열하며, 2~3개 항목의 개선으로 순위 변동이 가능한 수준입니다.' : '비교적 뚜렷한 격차를 형성하고 있습니다. 1위 후보가 다수 항목에서 안정적 우위를 확보했음을 의미하며, 하위 후보들은 전략적 차별화가 필요합니다.'}`,
+    `본 순위는 공익성·전문성·책임성·청렴성 등 유권자가 정치인을 평가하는 핵심 10개 역량을 AI가 공개 문서 및 보도 자료 기반으로 분석한 결과입니다. 지지율 여론조사와 달리 감정·이미지 편향 없이 <strong>성과 및 공약 이행 데이터</strong>에 근거한 객관적 평가라는 점에서 차별화됩니다.`,
+    `종합 순위만으로 후보의 역량을 단정 짓는 것은 한계가 있습니다. 각 항목별 점수와 강점·약점 분포를 함께 분석하면 보다 입체적인 후보 평가가 가능합니다. 하단의 레이더 차트 및 항목별 상세 분석 페이지를 통해 각 후보의 세부 역량 프로파일을 확인하시기 바랍니다.`
+  ]);
+
+  // ── 비교 차트 종합 설명 ──
+  const topMetrics = METRICS.map(m=>({m, s:top.metrics?.[m]??0})).sort((a,b)=>b.s-a.s).slice(0,3);
+  const sum_chart = summaryBox('비교 차트 종합 설명', [
+    `레이더 차트는 10개 평가 항목에 대한 각 후보의 역량을 동시에 시각화합니다. 차트에서 면적이 넓고 균형 잡힌 다각형을 그리는 후보일수록 전 분야에 걸쳐 고른 역량을 보유하고 있습니다. <strong>${top.name}</strong>의 레이더는 특히 <strong>${topMetrics.map(x=>METRIC_LABELS[x.m]).join(', ')}</strong> 항목에서 외곽으로 뻗어 있어 해당 역량이 두드러집니다.`,
+    `종합 점수 막대 그래프에서는 후보 간 절대적 점수 차이를 한눈에 파악할 수 있습니다. 전체 평균 점수는 <strong>${avgScore}점</strong>이며, 600점~1,000점 척도 중 ${avgScore >= 800 ? '상위권' : avgScore >= 700 ? '중상위권' : '중위권'}에 분포하고 있습니다. 점수 분포의 밀집도가 높을수록 후보들 간의 실질적 역량 차이가 작음을 의미합니다.`,
+    `두 차트를 함께 해석할 때 중요한 점은, 종합 점수가 높더라도 특정 항목에 편중된 후보는 레이더 차트에서 비대칭 형태를 보인다는 것입니다. 반면 종합 점수가 다소 낮아도 레이더가 균형 잡힌 후보는 안정적인 전방위 역량을 갖추고 있다고 볼 수 있습니다.`,
+    `유권자 입장에서는 레이더의 면적(종합 역량)과 균형성(항목 간 편차)을 함께 고려해야 하며, 자신이 중요하게 여기는 항목 — 예컨대 청렴성·공익성·정책실행력 — 에서 두드러지는 후보를 별도로 확인하는 것이 바람직합니다.`
+  ]);
+
+  // ── 항목별 최고 점수 종합 설명 ──
+  const metricWinCounts = {};
+  candidates.forEach((c,i) => { metricWinCounts[i] = 0; });
+  METRICS.forEach(m => {
+    const sc = candidates.map((c,i)=>({i, s: c.metrics?.[m]??0}));
+    const maxS = Math.max(...sc.map(x=>x.s));
+    sc.filter(x=>x.s===maxS).forEach(x=>{ metricWinCounts[x.i]++; });
+  });
+  const topWinEntry = Object.entries(metricWinCounts).sort((a,b)=>b[1]-a[1])[0];
+  const topWinnerName = candidates[topWinEntry[0]].name;
+  const topWinCount = topWinEntry[1];
+  const contestedMetric = METRICS.reduce((best,m) => {
+    const sc = candidates.map(c=>c.metrics?.[m]??0);
+    const g = Math.max(...sc) - Math.min(...sc);
+    return (!best || g < best.gap) ? {m, gap:g} : best;
+  }, null);
+  const dominantMetric = METRICS.reduce((best,m) => {
+    const sc = candidates.map(c=>c.metrics?.[m]??0);
+    const g = Math.max(...sc) - Math.min(...sc);
+    return (!best || g > best.gap) ? {m, gap:g} : best;
+  }, null);
+  const sum_metric = summaryBox('항목별 최고 점수 후보 종합 설명', [
+    `10개 평가 항목별 최고 점수 분석에서 <strong>${topWinnerName}</strong>이(가) 총 <strong>${topWinCount}개 항목</strong>에서 1위를 차지하며 가장 넓은 영역에서 우위를 보였습니다. 이는 단순 종합 점수 순위와 더불어, 해당 후보의 역량이 특정 분야에 집중되지 않고 광범위하게 분포한다는 것을 의미합니다.`,
+    `가장 치열하게 경쟁하는 항목은 <strong>${METRIC_LABELS[contestedMetric.m]}</strong>(후보 간 최대 격차 ${contestedMetric.gap}점)으로, 어느 후보도 압도적 우위를 점하지 못한 '격전지' 항목입니다. 반면 <strong>${METRIC_LABELS[dominantMetric.m]}</strong> 항목은 격차가 ${dominantMetric.gap}점으로 특정 후보가 독보적 우위를 보이는 '차별화 항목'입니다.`,
+    `항목별 최고 점수를 확보한 후보 수가 분산되어 있을수록 선거 경쟁의 복잡성이 높아집니다. 한 후보가 모든 항목을 석권할 때와 여러 후보가 서로 다른 항목에서 1위를 나눠 가질 때는 유권자의 선택 기준이 달라집니다. 전자는 명확한 리더가 있는 구조이고, 후자는 유권자 개인의 가치관이 투표 결과를 결정하는 구조입니다.`,
+    `이 분석은 각 후보의 '핵심 강점 항목'을 파악하고 선거 전략을 수립하는 데 직접적으로 활용됩니다. 유권자 입장에서는 자신이 중요하게 여기는 항목에서 1위를 차지한 후보를 확인하는 것이 후보 선택의 근거가 될 수 있습니다.`
+  ]);
+
+  return `
+  <div class="report-section">
+    <div class="section-header"><div class="section-num">1</div>📊 종합 비교 분석</div>
+    <div class="card"><div class="card-title">🏆 종합 순위</div>
+      <div class="rank-cards-grid">${rankCards}</div>
+    </div>
+    ${sum_rank}
+    <div class="two-col">
+      <div class="chart-box"><h3>🕸️ 10개 항목 레이더 비교</h3>
+        <div style="height:300px"><canvas id="s1_radar"></canvas></div>
+      </div>
+      <div class="chart-box"><h3>📊 종합 점수 막대</h3>
+        <div style="height:300px"><canvas id="s1_bar"></canvas></div>
+      </div>
+    </div>
+    ${sum_chart}
+    <div class="card"><div class="card-title">🎯 항목별 최고 점수 후보</div>
+      <div class="table-wrap">${tbl}</div>
+    </div>
+    ${sum_metric}
+    <div class="insight-box">${insight}</div>
+  </div>`;
+}
+
+/* ── Section 2: 점수 상세 ── */
+function buildSection2(candidates) {
+  const n = candidates.length;
+
+  // 히트맵 테이블
+  let tbl = `<table><thead><tr><th>항목</th>`;
+  candidates.forEach((c,i) => { tbl += `<th style="color:${CANDIDATE_COLORS[i%5].border}">${c.name}</th>`; });
+  tbl += `<th>평균</th><th>최고</th><th>최저</th></tr></thead><tbody>`;
+  METRICS.forEach(m => {
+    const scores = candidates.map(c=>c.metrics?.[m]??0);
+    const avg = scores.reduce((a,b)=>a+b,0)/n;
+    const max = Math.max(...scores), min = Math.min(...scores);
+    tbl += `<tr><td><strong>${METRIC_LABELS[m]}</strong></td>`;
+    scores.forEach((s,i) => {
+      const isMax=s===max, isMin=s===min, col=CANDIDATE_COLORS[i%5];
+      tbl += `<td style="${isMax?`background:${col.light};font-weight:800;color:${col.text}`:isMin?'background:#fff7ed;color:#92400e;font-weight:700':''}">${s}${isMax?'▲':isMin?'▼':''}</td>`;
+    });
+    tbl += `<td>${avg.toFixed(1)}</td><td style="color:var(--success);font-weight:700">${max}</td><td style="color:var(--danger);font-weight:700">${min}</td></tr>`;
+  });
+  tbl += `</tbody></table>`;
+
+  // ── 히트맵 종합 설명 ──
+  const allAvgByMetric = METRICS.map(m => {
+    const scores = candidates.map(c=>c.metrics?.[m]??0);
+    return { m, avg: scores.reduce((a,b)=>a+b,0)/n, max: Math.max(...scores), min: Math.min(...scores) };
+  });
+  const highestMetric = allAvgByMetric.reduce((a,b)=>b.avg>a.avg?b:a);
+  const lowestMetric = allAvgByMetric.reduce((a,b)=>b.avg<a.avg?b:a);
+  const uniformHigh = candidates.filter(c => METRICS.every(m=>(c.metrics?.[m]??0)>=75)).map(c=>c.name);
+  const sum_heatmap = summaryBox('점수 히트맵 종합 설명', [
+    `점수 히트맵은 10개 평가 항목과 각 후보의 점수를 교차 시각화하여 강점과 약점 패턴을 한눈에 파악할 수 있게 합니다. 강조 색상(▲)이 집중된 열의 후보는 해당 항목군에서 지속적 강점을 보이며, 반대로 ▼ 표시가 많은 후보는 그 항목들에서 개선이 필요합니다.`,
+    `항목별 평균 점수를 살펴보면 <strong>${METRIC_LABELS[highestMetric.m]}</strong> 항목이 평균 <strong>${highestMetric.avg.toFixed(1)}점</strong>으로 후보 전체에서 가장 높은 점수를 기록했습니다. 반면 <strong>${METRIC_LABELS[lowestMetric.m]}</strong> 항목은 평균 <strong>${lowestMetric.avg.toFixed(1)}점</strong>으로 가장 낮아, 후보들이 공통적으로 보완이 필요한 영역임을 시사합니다.`,
+    `${uniformHigh.length > 0 ? `<strong>${uniformHigh.join(', ')}</strong>은(는) 전 항목에서 75점 이상을 유지하며 균형 잡힌 역량을 보여줬습니다. 이처럼 히트맵에서 전반적으로 밝은 색조를 보이는 후보는 특정 이슈 공세에도 안정적으로 대응할 수 있는 구조적 강점을 지닙니다.` : `특정 항목에서 색상 대비가 뚜렷이 나타나는 후보는 강점 항목을 전략적으로 부각하면서 약점 항목은 적극적으로 보완하는 전략이 필요합니다.`}`,
+    `히트맵을 분석할 때는 단순히 높은 점수에만 집중하기보다, 경쟁 후보 대비 상대적으로 높은 항목(자신의 차별화 포인트)과 낮은 항목(상대가 공세할 수 있는 취약점)을 동시에 파악하는 것이 전략적으로 중요합니다. 특히 청렴성·윤리성 항목의 점수 분포는 유권자 신뢰도와 직결됩니다.`
+  ]);
+
+  // 표준편차 테이블
+  let stdTbl = `<table><thead><tr><th>후보자</th>`;
+  METRICS.forEach(m => { stdTbl += `<th>${METRIC_LABELS[m].replace(' ','<br>')}</th>`; });
+  stdTbl += `<th>표준편차</th><th>균형성</th></tr></thead><tbody>`;
+  candidates.forEach((c,i) => {
+    const scores = METRICS.map(m=>c.metrics?.[m]??0);
+    const avg = scores.reduce((a,b)=>a+b,0)/scores.length;
+    const std = Math.sqrt(scores.reduce((s,v)=>s+Math.pow(v-avg,2),0)/scores.length);
+    const col = CANDIDATE_COLORS[i%5];
+    stdTbl += `<tr><td style="color:${col.border};font-weight:700">${c.name}</td>`;
+    scores.forEach(s => { stdTbl += `<td>${s}</td>`; });
+    stdTbl += `<td><strong>${std.toFixed(1)}</strong></td><td>${std<5?'🟢 균형':std<8?'🟡 보통':'🔴 편중'}</td></tr>`;
+  });
+  stdTbl += `</tbody></table>`;
+
+  // ── 균형성 분석 종합 설명 ──
+  const stdData = candidates.map((c,i) => {
+    const scores = METRICS.map(m=>c.metrics?.[m]??0);
+    const avg = scores.reduce((a,b)=>a+b,0)/scores.length;
+    const std = Math.sqrt(scores.reduce((s,v)=>s+Math.pow(v-avg,2),0)/scores.length);
+    return { name: c.name, party: c.party, std, avg };
+  });
+  const mostBalanced = stdData.reduce((a,b)=>b.std<a.std?b:a);
+  const leastBalanced = stdData.reduce((a,b)=>b.std>a.std?b:a);
+  const avgStd = stdData.reduce((a,b)=>a+b.std,0)/stdData.length;
+  const sum_balance = summaryBox('균형성 분석(표준편차) 종합 설명', [
+    `균형성 분석은 각 후보가 10개 평가 항목에서 얼마나 고른 역량을 보이는지를 표준편차로 측정합니다. 표준편차가 <strong>5 미만이면 균형</strong>, 5~8이면 보통, 8 이상이면 특정 항목에 편중된 불균형 상태를 나타냅니다. 전체 후보의 평균 표준편차는 <strong>${avgStd.toFixed(1)}</strong>입니다.`,
+    `<strong>${mostBalanced.name}</strong>은(는) 표준편차 <strong>${mostBalanced.std.toFixed(1)}</strong>로 가장 균형 잡힌 역량 분포를 보였습니다. 이는 어느 한 항목에도 치우치지 않고 전 분야에서 안정적인 수준을 유지하고 있음을 의미합니다. 균형성이 높은 후보는 상대 후보의 특정 항목 공세에도 비교적 방어가 용이합니다.`,
+    `반면 <strong>${leastBalanced.name}</strong>은(는) 표준편차 <strong>${leastBalanced.std.toFixed(1)}</strong>로 항목 간 편차가 상대적으로 컸습니다. 이 경우 강점 항목에서는 독보적인 우위를 보이지만, 약점 항목이 노출될 경우 상대 후보의 공세에 취약해질 수 있습니다. 선거 캠프 입장에서는 약점 항목의 집중 개선 또는 강점 항목 극대화 전략 중 하나를 선택해야 합니다.`,
+    `균형성과 종합 점수는 서로 다른 차원의 지표입니다. 점수가 다소 낮더라도 균형성이 높은 후보는 안정적이고 예측 가능한 리더십을 보여주며, 이는 중도층 유권자에게 특히 긍정적으로 작용합니다. 반대로 편중된 후보는 특정 지지층에게 강력한 호소력을 발휘할 수 있습니다.`
+  ]);
+
+  return `
+  <div class="report-section">
+    <div class="section-header"><div class="section-num">2</div>📈 10개 항목 점수 상세</div>
+    <div class="card"><div class="card-title">🔥 점수 히트맵</div>
+      <div class="table-wrap">${tbl}</div>
+      <div class="insight-box" style="margin-top:10px">▲ 해당 항목 최고  |  ▼ 해당 항목 최저</div>
+    </div>
+    ${sum_heatmap}
+    <div class="card"><div class="card-title">📊 항목별 그룹 비교</div>
+      <div style="height:360px"><canvas id="s2_grouped"></canvas></div>
+    </div>
+    <div class="card"><div class="card-title">📐 균형성 분석 (표준편차)</div>
+      <div class="table-wrap">${stdTbl}</div>
+    </div>
+    ${sum_balance}
+  </div>`;
+}
+
+/* ── Section 3: 후보자 프로파일 ── */
+function buildSection3(candidates, totalRanks) {
+  const cards = candidates.map((c, i) => {
+    const col = CANDIDATE_COLORS[i%5];
+    const rank = totalRanks[i];
+    const g = scoreGrade(c.total_score);
+    const topM = METRICS.map(m=>({m,s:c.metrics?.[m]??0})).sort((a,b)=>b.s-a.s).slice(0,3);
+    const botM = METRICS.map(m=>({m,s:c.metrics?.[m]??0})).sort((a,b)=>a.s-b.s).slice(0,3);
+    const aiRow = AI_MODELS.map(m => `
+      <div class="pp-ai-cell">
+        <div class="lbl" style="color:${col.border}">${AI_LABELS[m]}</div>
+        <div class="val" style="color:${col.border}">${c.ai_scores?.[m]??'-'}</div>
+      </div>`).join('');
+
+    return `
+    <div class="pp-card">
+      <div class="pp-head" style="background:linear-gradient(135deg,${col.border}ee,${col.border})">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start">
+          <div>
+            <div class="name">${c.name}</div>
+            <div class="sub">${c.party} · ${c.position||''}</div>
+            <div class="sc">${c.total_score}점 <span style="font-size:13px;opacity:.8">${g.label}등급</span></div>
+          </div>
+          <div style="background:rgba(255,255,255,0.2);width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:16px">${rank}</div>
+        </div>
+      </div>
+      <div class="pp-body">
+        ${c.education?`<div class="pp-info"><strong>학력</strong> ${c.education}</div>`:''}
+        ${c.career?`<div class="pp-info"><strong>경력</strong> ${c.career}</div>`:''}
+        <div style="height:180px;margin:12px 0"><canvas id="s3_radar_${i}"></canvas></div>
+        <div style="font-size:11px;color:var(--text-muted);margin-bottom:6px">강점 항목</div>
+        <div class="pp-tags">${topM.map(x=>`<span class="pp-tag s">${METRIC_LABELS[x.m]} ${x.s}</span>`).join('')}${(c.strengths||[]).map(s=>`<span class="pp-tag s">${s}</span>`).join('')}</div>
+        <div style="font-size:11px;color:var(--text-muted);margin:6px 0">개선 항목</div>
+        <div class="pp-tags">${botM.map(x=>`<span class="pp-tag w">${METRIC_LABELS[x.m]} ${x.s}</span>`).join('')}${(c.weaknesses||[]).map(s=>`<span class="pp-tag w">${s}</span>`).join('')}</div>
+        ${c.summary?`<div class="pp-sum">${c.summary}</div>`:''}
+        <div class="pp-ai-row">${aiRow}</div>
+      </div>
+    </div>`;
+  }).join('');
+
+  // ── 프로파일 카드 종합 설명 ──
+  const totalRanksArr = [...candidates].map((c,i)=>({...c,i})).sort((a,b)=>b.total_score-a.total_score);
+  const topC = totalRanksArr[0];
+  const topCMetrics = METRICS.map(m=>({m,s:topC.metrics?.[m]??0})).sort((a,b)=>b.s-a.s).slice(0,3);
+  const avgAll = Math.round(candidates.reduce((a,c)=>a+c.total_score,0)/candidates.length);
+  const aboveAvg = candidates.filter(c=>c.total_score>=avgAll).map(c=>c.name);
+  const sum_profiles = summaryBox('후보자 프로파일 종합 설명', [
+    `각 후보자 프로파일 카드는 종합 점수, AI 모델별 점수, 10개 항목 레이더 차트, 강점·약점 키워드를 통합적으로 제시합니다. <strong>${topC.name}</strong>(${topC.party})이(가) <strong>${topC.total_score}점</strong>으로 1위를 기록했으며, 특히 <strong>${topCMetrics.map(x=>METRIC_LABELS[x.m]).join(', ')}</strong> 항목에서 두드러진 역량을 보였습니다.`,
+    `전체 후보 평균 점수인 <strong>${avgAll}점</strong> 이상을 기록한 후보는 <strong>${aboveAvg.join(', ')}</strong>입니다. 각 후보의 미니 레이더 차트에서는 개인별로 강조되는 역량과 개선이 필요한 영역이 시각적으로 구분되어, 후보자 간 역량 구조의 차이를 직관적으로 파악할 수 있습니다.`,
+    `AI 모델 4개(Claude, ChatGPT, Gemini, Grok)가 각각 부여한 점수를 카드 하단에서 확인할 수 있습니다. 모델 간 점수 차이가 큰 후보는 평가 기준에 따라 판단이 갈리는 '논쟁적 프로파일'을 가지며, 점수 차이가 작은 후보는 AI 모델 전체에 걸쳐 일관적으로 평가되는 '안정적 프로파일'을 보입니다.`,
+    `강점·약점 태그는 해당 후보의 공개된 활동 기록과 AI 분석을 기반으로 도출된 것입니다. 강점 항목은 유권자 소통에서 적극적으로 활용할 수 있는 메시지 자원이 되며, 약점 항목은 상대 후보의 공세 대상이 될 수 있어 사전 대응 전략 수립이 필요합니다.`
+  ]);
+
+  // 교차분석 테이블
+  let crossTbl = `<table><thead><tr><th>항목</th>`;
+  candidates.forEach((c,i) => { crossTbl += `<th style="color:${CANDIDATE_COLORS[i%5].border}">${c.name}</th>`; });
+  crossTbl += `<th>항목 평균</th></tr></thead><tbody>`;
+  METRICS.forEach(m => {
+    const scores = candidates.map(c => c.metrics?.[m] ?? 0);
+    const avg = scores.reduce((a,b)=>a+b,0)/scores.length;
+    const max = Math.max(...scores);
+    crossTbl += `<tr><td><strong>${METRIC_LABELS[m]}</strong></td>`;
+    scores.forEach((s,i) => {
+      const col = CANDIDATE_COLORS[i%5];
+      const isMax = s === max;
+      crossTbl += `<td style="${isMax?`color:${col.border};font-weight:800`:''}">${s}${isMax?' 🏆':''}</td>`;
+    });
+    crossTbl += `<td style="color:var(--text-muted)">${avg.toFixed(1)}</td></tr>`;
+  });
+  crossTbl += `</tbody></table>`;
+
+  // ── 교차분석 종합 설명 ──
+  const metricLeaders = METRICS.map(m => {
+    const scores = candidates.map((c,i)=>({name:c.name,s:c.metrics?.[m]??0,i}));
+    const maxS = Math.max(...scores.map(x=>x.s));
+    return { m, leader: scores.find(x=>x.s===maxS), max:maxS, min: Math.min(...scores.map(x=>x.s)), gap: maxS - Math.min(...scores.map(x=>x.s)) };
+  });
+  const topCompetitive = [...metricLeaders].sort((a,b)=>a.gap-b.gap).slice(0,2);
+  const topDominant = [...metricLeaders].sort((a,b)=>b.gap-a.gap).slice(0,2);
+  const uniqueLeaders = [...new Set(metricLeaders.map(x=>x.leader.name))];
+  const sum_cross = summaryBox('10개 항목 개인별 교차분석 종합 설명', [
+    `10개 항목 개인별 교차분석표는 각 후보의 항목별 점수를 나란히 배치하여, 어느 항목에서 누가 앞서고 뒤처지는지를 직접 비교할 수 있게 합니다. 항목별 1위를 차지하는 후보가 분산되어 있을수록 선거 경쟁 구도가 다원화됩니다. 이번 분석에서는 <strong>${uniqueLeaders.join(', ')}</strong>이(가) 항목별 1위를 나눠 가졌습니다.`,
+    `항목 간 경쟁이 가장 치열한 구간은 <strong>${topCompetitive.map(x=>METRIC_LABELS[x.m]).join(', ')}</strong>으로, 후보 간 점수 차이가 ${topCompetitive.map(x=>x.gap+'점').join(', ')}에 불과합니다. 이 항목들은 선거 결과에 결정적 영향을 미칠 수 있는 '승부처'로, 해당 항목에서의 인상적인 공약 이행 또는 이미지 개선이 전체 순위를 뒤흔들 수 있습니다.`,
+    `반대로 <strong>${topDominant.map(x=>METRIC_LABELS[x.m]).join(', ')}</strong> 항목에서는 후보 간 격차가 ${topDominant.map(x=>x.gap+'점').join(', ')}으로 특정 후보의 우위가 뚜렷합니다. 이 항목들은 리더 후보의 핵심 차별화 자산이 되며, 나머지 후보들에게는 장기적 역전을 위해 집중 공략이 필요한 영역입니다.`,
+    `항목 평균값과 개인 점수를 대조하면 전체 수준 대비 각 후보의 상대적 위치를 파악할 수 있습니다. 항목 평균 이상을 지속적으로 유지하는 후보는 전략적 안정성이 높고, 특정 항목에서만 평균을 상회하는 후보는 해당 역량을 집중 홍보하는 '선택과 집중' 전략이 효과적입니다.`
+  ]);
+
+  return `
+  <div class="report-section">
+    <div class="section-header"><div class="section-num">3</div>👤 후보자 프로파일</div>
+    <div class="profile-print-grid">${cards}</div>
+    ${sum_profiles}
+    <div class="card" style="margin-top:20px">
+      <div class="card-title">📊 10개 항목 개인별 비교 분석</div>
+      <div class="table-wrap">${crossTbl}</div>
+    </div>
+    ${sum_cross}
+  </div>`;
+}
+
+/* ── Section 4: 격차 분석 ── */
+function buildSection4(candidates, sortedC) {
+  const leader = sortedC[0];
+  const n = candidates.length;
+
+  // 종합 격차 테이블
+  let sumTbl = `<table><thead><tr><th>순위</th><th>후보자</th><th>종합 점수</th><th>1위 대비 격차</th><th>비율</th></tr></thead><tbody>`;
+  sortedC.forEach((c, rank) => {
+    const gap = c.total_score - leader.total_score;
+    const pct = ((c.total_score/leader.total_score)*100).toFixed(1);
+    const col = CANDIDATE_COLORS[c.idx%5];
+    sumTbl += `<tr>
+      <td>${rankTag(rank+1)}</td>
+      <td style="color:${col.border};font-weight:700">${c.name}</td>
+      <td style="font-weight:800;font-size:14px">${c.total_score}점</td>
+      <td style="font-weight:700;color:${gap===0?'var(--text-muted)':'var(--warning)'}">${gap===0?'기준':(gap>0?'+':'')+gap+'점'}</td>
+      <td>${pct}%</td>
+    </tr>`;
+  });
+  sumTbl += `</tbody></table>`;
+
+  // 항목별 격차 테이블
+  let metTbl = `<table><thead><tr><th>항목</th><th>${leader.name}<br>(기준)</th>`;
+  sortedC.slice(1).forEach(c => { metTbl += `<th style="color:${CANDIDATE_COLORS[c.idx%5].border}">${c.name}<br>격차</th>`; });
+  metTbl += `<th>최대격차</th></tr></thead><tbody>`;
+  METRICS.forEach(m => {
+    const ls = leader.metrics?.[m]??0;
+    const gaps = sortedC.slice(1).map(c=>(c.metrics?.[m]??0)-ls);
+    const maxG = Math.max(...gaps.map(g=>Math.abs(g)));
+    metTbl += `<tr><td><strong>${METRIC_LABELS[m]}</strong></td><td style="font-weight:700">${ls}</td>`;
+    gaps.forEach((g,ii)=>{
+      const col = CANDIDATE_COLORS[sortedC[ii+1].idx%5];
+      metTbl += `<td style="color:${g>0?'var(--success)':g<0?'var(--warning)':'var(--text-muted)'};font-weight:700">${g>0?'+'+g:g}</td>`;
+    });
+    metTbl += `<td style="font-weight:700">${maxG}점</td></tr>`;
+  });
+  metTbl += `</tbody></table>`;
+
+  // 경쟁 우위 테이블
+  let compTbl = `<table><thead><tr><th>항목</th><th>1위 후보</th><th>우위 점수</th><th>경쟁 강도</th></tr></thead><tbody>`;
+  METRICS.forEach(m => {
+    const scores = candidates.map((c,i)=>({name:c.name,score:c.metrics?.[m]??0,col:CANDIDATE_COLORS[i%5]})).sort((a,b)=>b.score-a.score);
+    const gap = scores[0].score - (scores[1]?.score??0);
+    const intensity = gap<=1?'🔴 매우치열':gap<=3?'🟡 치열':gap<=6?'🟢 우세':'🔵 압도적';
+    compTbl += `<tr><td><strong>${METRIC_LABELS[m]}</strong></td><td style="color:${scores[0].col.border};font-weight:700">${scores[0].name}</td><td>+${gap}점</td><td>${intensity}</td></tr>`;
+  });
+  compTbl += `</tbody></table>`;
+
+  const bigGap = METRICS.reduce((b,m)=>{const s=candidates.map(c=>c.metrics?.[m]??0);const g=Math.max(...s)-Math.min(...s);return g>b.gap?{m,gap:g}:b},{m:'',gap:0});
+  const smlGap = METRICS.reduce((b,m)=>{const s=candidates.map(c=>c.metrics?.[m]??0);const g=Math.max(...s)-Math.min(...s);return g<b.gap?{m,gap:g}:b},{m:METRICS[0],gap:999});
+
+  // ── 항목별 상세 격차 종합 설명 ──
+  const gapByMetric = METRICS.map(m => {
+    const leaderScore = leader.metrics?.[m]??0;
+    const othersGaps = sortedC.slice(1).map(c=>(c.metrics?.[m]??0)-leaderScore);
+    const maxGapAbs = Math.max(...othersGaps.map(g=>Math.abs(g)));
+    return { m, leaderScore, maxGap: maxGapAbs, avgGap: othersGaps.length ? othersGaps.reduce((a,b)=>a+b,0)/othersGaps.length : 0 };
+  });
+  const biggestGapM = gapByMetric.reduce((a,b)=>b.maxGap>a.maxGap?b:a);
+  const smallestGapM = gapByMetric.reduce((a,b)=>b.maxGap<a.maxGap?b:a);
+  const closest = sortedC.length > 1 ? sortedC[1] : null;
+  const closestGap = closest ? leader.total_score - closest.total_score : 0;
+  const sum_gaps = summaryBox('항목별 상세 격차 종합 설명', [
+    `항목별 상세 격차 테이블은 1위 <strong>${leader.name}(${leader.total_score}점)</strong>을 기준으로 각 후보가 10개 항목 각각에서 얼마나 앞서거나 뒤처지는지를 수치로 보여줍니다. 음수(-)는 1위 대비 부족한 점수, 양수(+)는 특정 항목에서 1위를 앞선 수치입니다.`,
+    `격차가 가장 큰 항목은 <strong>${METRIC_LABELS[biggestGapM.m]}</strong>(최대 ${biggestGapM.maxGap}점 차이)으로, 이 항목에서의 성과 격차가 후보 간 역량 차이를 가장 뚜렷하게 드러냅니다. 반면 <strong>${METRIC_LABELS[smallestGapM.m]}</strong> 항목은 격차가 ${smallestGapM.maxGap}점으로 가장 작아 후보 간 경쟁이 팽팽하며, 이 영역에서의 미세한 성과 차이가 전체 판세에 영향을 줄 수 있습니다.`,
+    `${closest ? `2위 <strong>${closest.name}</strong>과의 종합 점수 격차는 <strong>${closestGap}점</strong>입니다. ${closestGap <= 15 ? '이 격차는 단 1~2개 항목의 집중 개선으로 역전 가능한 범위에 해당합니다. 특히 2위 후보가 앞서는 개별 항목이 있다면, 해당 항목을 공략 포인트로 삼는 전략이 효과적입니다.' : '이 격차를 좁히기 위해서는 복수 항목에 걸친 체계적인 역량 개선이 필요합니다.'}` : ''}`,
+    `이 분석의 핵심 활용 포인트는 '역전 가능한 항목'을 찾는 것입니다. 격차가 5점 이내인 항목은 단기간의 집중 노력으로 순위 역전이 가능한 '공략 목표'가 됩니다. 선거 캠프는 이 테이블을 기반으로 어느 항목에 자원을 집중 투입할지 우선순위를 설정하는 데 활용할 수 있습니다.`
+  ]);
+
+  // ── 경쟁 우위 매트릭스 종합 설명 ──
+  const compData = METRICS.map(m => {
+    const scores = candidates.map((c,i)=>({name:c.name,s:c.metrics?.[m]??0,i})).sort((a,b)=>b.s-a.s);
+    const gap = scores[0].s - (scores[1]?.s??0);
+    const intensity = gap<=1?'매우 치열':gap<=3?'치열':gap<=6?'우세':'압도적';
+    return { m, leader: scores[0], gap, intensity };
+  });
+  const fierce = compData.filter(x=>x.intensity==='매우 치열'||x.intensity==='치열');
+  const dominant = compData.filter(x=>x.intensity==='압도적');
+  const topLeaderInMatrix = (() => {
+    const cnt = {}; compData.forEach(x=>{ cnt[x.leader.name]=(cnt[x.leader.name]||0)+1; });
+    return Object.entries(cnt).sort((a,b)=>b[1]-a[1])[0];
+  })();
+  const sum_comp = summaryBox('항목별 경쟁 우위 매트릭스 종합 설명', [
+    `경쟁 우위 매트릭스는 10개 항목별로 '현재 1위 후보'와 '경쟁 강도'를 동시에 파악하는 분석 도구입니다. <strong>${topLeaderInMatrix[0]}</strong>이(가) 총 <strong>${topLeaderInMatrix[1]}개 항목</strong>에서 경쟁 우위를 보이며 가장 광범위한 영역에서 선두를 달리고 있습니다.`,
+    `경쟁 강도를 기준으로 보면, ${fierce.length > 0 ? `<strong>${fierce.map(x=>METRIC_LABELS[x.m]).join(', ')}</strong> 항목은 '치열' 이상의 경쟁 강도를 보여 어느 후보도 안심할 수 없는 '무주공산' 구간입니다.` : '매우 치열한 구간이 없어 항목별 우위가 비교적 명확하게 구분됩니다.'} ${dominant.length > 0 ? `반면 <strong>${dominant.map(x=>METRIC_LABELS[x.m]).join(', ')}</strong>은(는) '압도적 우위' 구간으로, 해당 항목의 1위 후보가 핵심 차별화 자산으로 유지해야 합니다.` : ''}`,
+    `경쟁 강도가 '매우 치열'인 항목들은 선거 전략에서 가장 중요한 의미를 가집니다. 단 1~2점의 차이로 1위가 결정되는 이 항목들에서의 미세한 성과 개선이 전체 순위를 바꿀 수 있습니다. 각 후보는 이 항목들에서 구체적이고 검증 가능한 성과를 제시하는 것이 경쟁력 강화의 핵심입니다.`,
+    `매트릭스 분석을 통해 각 후보의 '독점 강점 항목'(압도적 우위)과 '공략 가능 항목'(치열한 경쟁) 지도를 작성할 수 있습니다. 이 지도는 유권자가 각 후보를 어떤 기준으로 비교해야 하는지, 그리고 각 후보가 어떤 메시지를 강조해야 하는지를 결정하는 데 핵심적인 근거가 됩니다.`
+  ]);
+
+  return `
+  <div class="report-section">
+    <div class="section-header"><div class="section-num">4</div>🎯 격차 분석</div>
+    <div class="card">
+      <div class="card-title">🥇 기준: <span style="color:${CANDIDATE_COLORS[leader.idx%5].border}">${leader.name}</span> (종합 1위 · ${leader.total_score}점)</div>
+      <div class="table-wrap">${sumTbl}</div>
+    </div>
+    <div class="card"><div class="card-title">📊 항목별 격차 차트 (1위 대비)</div>
+      <div style="height:${60+36*METRICS.length}px"><canvas id="s4_gap"></canvas></div>
+    </div>
+    <div class="card"><div class="card-title">📋 항목별 상세 격차</div>
+      <div class="table-wrap">${metTbl}</div>
+    </div>
+    ${sum_gaps}
+    <div class="card"><div class="card-title">⚔️ 항목별 경쟁 우위</div>
+      <div class="table-wrap">${compTbl}</div>
+    </div>
+    ${sum_comp}
+    <div class="insight-box">
+      <strong>가장 큰 격차 항목:</strong> ${METRIC_LABELS[bigGap.m]} (${bigGap.gap}점 차이) &nbsp;|&nbsp;
+      <strong>가장 작은 격차:</strong> ${METRIC_LABELS[smlGap.m]} (${smlGap.gap}점 차이)
+    </div>
+  </div>`;
+}
+
+/* ── Section 5: AI 모델 비교 ── */
+function buildSection5(candidates) {
+  const AI_ICONS = {claude:'🟣',chatgpt:'🟢',gemini:'🔵',grok:'🔴'};
+  const AI_BORDER = {claude:'#7c3aed',chatgpt:'#16a34a',gemini:'#2563eb',grok:'#dc2626'};
+  const AI_DESCS = {claude:'제도화·지속가능성',chatgpt:'혁신성·영향력',gemini:'공개데이터·성과',grok:'최신이슈·현장'};
+
+  // AI 점수 테이블
+  let aiTbl = `<table><thead><tr><th>후보자</th>`;
+  AI_MODELS.forEach(m => { aiTbl += `<th style="color:${AI_BORDER[m]}">${AI_ICONS[m]} ${AI_LABELS[m]}</th>`; });
+  aiTbl += `<th>평균</th><th>편차</th><th>일관성</th></tr></thead><tbody>`;
+  candidates.forEach((c,i) => {
+    const col = CANDIDATE_COLORS[i%5];
+    const scores = AI_MODELS.map(m=>c.ai_scores?.[m]??0);
+    const avg = scores.reduce((a,b)=>a+b,0)/scores.length;
+    const std = Math.sqrt(scores.reduce((s,v)=>s+Math.pow(v-avg,2),0)/scores.length);
+    const cons = std<5?'매우높음':std<10?'높음':std<15?'보통':'낮음';
+    aiTbl += `<tr><td style="color:${col.border};font-weight:700">${c.name}</td>`;
+    AI_MODELS.forEach(m=>{ aiTbl += `<td style="font-weight:700">${c.ai_scores?.[m]??'-'}</td>`; });
+    aiTbl += `<td><strong>${avg.toFixed(1)}</strong></td><td>${std.toFixed(1)}</td><td>${cons}</td></tr>`;
+  });
+  // AI별 1위
+  aiTbl += `<tr style="background:#f8fafc;font-size:12px"><td style="color:var(--text-muted);font-weight:600">AI별 1위</td>`;
+  AI_MODELS.forEach(m => {
+    const best = candidates.reduce((b,c)=>(c.ai_scores?.[m]??0)>(b.ai_scores?.[m]??0)?c:b);
+    const idx = candidates.indexOf(best);
+    aiTbl += `<td style="color:${CANDIDATE_COLORS[idx%5].border};font-weight:700;font-size:11px">${best.name}<br>${best.ai_scores?.[m]}</td>`;
+  });
+  aiTbl += `<td colspan="3"></td></tr></tbody></table>`;
+
+  // AI 일관성 박스
+  const consistRows = candidates.map((c,i) => {
+    const col = CANDIDATE_COLORS[i%5];
+    const scores = AI_MODELS.map(m=>c.ai_scores?.[m]??0).filter(s=>s>0);
+    const avg = scores.reduce((a,b)=>a+b,0)/scores.length;
+    const std = Math.sqrt(scores.reduce((s,v)=>s+Math.pow(v-avg,2),0)/scores.length);
+    const spread = Math.max(...scores)-Math.min(...scores);
+    const bars = AI_MODELS.map(m => {
+      const s = c.ai_scores?.[m]??0;
+      const diff = s - avg;
+      return `<div class="ai-consist-bar">
+        <div class="al" style="color:#7c3aed">${AI_LABELS[m]}</div>
+        <div class="av" style="color:${col.border}">${s}</div>
+        <div style="font-size:9px;color:${diff>0?'#16a34a':diff<0?'#dc2626':'#94a3b8'}">${diff>0?'+':''  }${diff.toFixed(1)}</div>
+      </div>`;
+    }).join('');
+    return `<div class="ai-consist-row">
+      <div class="ai-consist-name" style="color:${col.border}">${c.name}</div>
+      <div class="ai-consist-bars">${bars}</div>
+      <div style="font-size:11px;color:var(--text-muted);white-space:nowrap;min-width:80px;text-align:right">편차 <strong>${std.toFixed(1)}</strong> · 범위 <strong>${spread}점</strong></div>
+    </div>`;
+  }).join('');
+
+  // ── AI 모델별 점수 비교 종합 설명 ──
+  const modelAvgs = AI_MODELS.map(m => ({
+    m, avg: candidates.reduce((a,c)=>a+(c.ai_scores?.[m]??0),0)/candidates.length
+  }));
+  const highestModel = modelAvgs.reduce((a,b)=>b.avg>a.avg?b:a);
+  const lowestModel = modelAvgs.reduce((a,b)=>b.avg<a.avg?b:a);
+  const modelRankConsist = candidates.map(c => {
+    const ranks = AI_MODELS.map(m => {
+      const sorted2 = [...candidates].sort((a,b)=>(b.ai_scores?.[m]??0)-(a.ai_scores?.[m]??0));
+      return sorted2.findIndex(x=>x===c)+1;
+    });
+    return { name: c.name, consistent: new Set(ranks).size === 1 };
+  });
+  const consistent = modelRankConsist.filter(x=>x.consistent).map(x=>x.name);
+  const sum_ai = summaryBox('AI 모델별 점수 비교 종합 설명', [
+    `이 분석에서는 Claude(제도화·지속가능성 중심), ChatGPT(혁신성·사회적 영향력), Gemini(공개 데이터·성과 중심), Grok(최신 이슈·현장 대응) 등 4개 AI 모델이 각자의 평가 관점에서 후보들의 역량을 점수화했습니다. 모델별 평균 점수에서 <strong>${AI_LABELS[highestModel.m]}</strong>이 가장 높은 평균(${highestModel.avg.toFixed(1)}점)을 기록했고, <strong>${AI_LABELS[lowestModel.m]}</strong>이 ${lowestModel.avg.toFixed(1)}점으로 가장 낮은 평균을 보였습니다.`,
+    `4개 AI의 후보 순위 일관성을 보면, ${consistent.length > 0 ? `<strong>${consistent.join(', ')}</strong>은(는) 모든 AI 모델에서 동일한 순위를 기록하며 평가 신뢰도가 높습니다.` : '후보별로 AI 모델마다 순위 차이를 보여, 평가 관점에 따라 다르게 해석될 수 있습니다.'} 이러한 일관성 여부는 해당 후보의 역량이 얼마나 보편적으로 인정받는지를 나타냅니다.`,
+    `AI 모델별 순위표에서 특정 모델에서만 순위가 급등하거나 급락하는 후보가 있다면, 해당 AI의 평가 기준과 해당 후보의 강점이 일치하거나 충돌한다는 의미입니다. Grok에서 높은 점수를 받은 후보는 최신 이슈 대응과 현장 반응성이 탁월하며, Claude에서 높게 평가된 후보는 정책의 제도화·지속가능성이 뛰어납니다.`,
+    `4개 AI 모델의 평균값이 바로 본 플랫폼의 종합 점수 기반이 됩니다. 단일 AI 모델의 점수보다 4개 모델의 평균이 편향을 줄이고 다각적 관점을 반영하므로 신뢰성이 높습니다. 그러나 AI 평가는 공개 데이터 기반이며 개인적 면담이나 현장 실사를 대체하지 않습니다.`
+  ]);
+
+  // ── AI 평가 일관성 종합 설명 ──
+  const consistData = candidates.map(c => {
+    const scores = AI_MODELS.map(m=>c.ai_scores?.[m]??0).filter(s=>s>0);
+    const avg = scores.reduce((a,b)=>a+b,0)/scores.length;
+    const std = Math.sqrt(scores.reduce((s,v)=>s+Math.pow(v-avg,2),0)/scores.length);
+    const spread = Math.max(...scores)-Math.min(...scores);
+    return { name: c.name, party: c.party, std, spread, ai_scores: c.ai_scores };
+  });
+  const mostConsist = consistData.reduce((a,b)=>b.std<a.std?b:a);
+  const leastConsist = consistData.reduce((a,b)=>b.std>a.std?b:a);
+  const leastHighModel = AI_MODELS.reduce((a,m)=>(leastConsist.ai_scores?.[m]??0)>(leastConsist.ai_scores?.[a]??0)?m:a, AI_MODELS[0]);
+  const sum_consist = summaryBox('후보별 AI 평가 일관성 종합 설명', [
+    `AI 평가 일관성 분석은 4개 AI 모델이 동일 후보를 얼마나 비슷하게 평가했는지를 수치로 보여줍니다. 편차(표준편차)가 낮을수록 AI 간 합의가 높고 신뢰도가 높으며, 높을수록 평가 관점에 따라 판단이 갈리는 '복합적 프로파일'을 가진 후보임을 나타냅니다.`,
+    `<strong>${mostConsist.name}</strong>(표준편차 ${mostConsist.std.toFixed(1)}, 범위 ${mostConsist.spread}점)은(는) AI 모델 간 일관성이 가장 높습니다. 이는 해당 후보의 역량이 어느 평가 관점에서 보더라도 유사하게 인정된다는 의미로, 유권자에게 '예측 가능하고 안정적인 후보'로 인식될 가능성이 높습니다.`,
+    `반면 <strong>${leastConsist.name}</strong>(표준편차 ${leastConsist.std.toFixed(1)}, 범위 ${leastConsist.spread}점)은 모델 간 점수 차이가 가장 크며, 특히 <strong>${AI_LABELS[leastHighModel]}</strong>에서 높은 점수를 받았습니다. 이는 특정 평가 관점에서 강하게 인정받는 역량이 있으나 다른 관점에서는 상대적으로 낮게 평가될 수 있음을 의미합니다.`,
+    `AI 일관성은 본 보고서 신뢰도의 핵심 지표입니다. 편차가 낮은 후보일수록 종합 점수가 실제 역량을 정확히 반영할 가능성이 높으며, 편차가 큰 후보는 추가적인 정성적 분석 — 현장 인터뷰, 시민 평가, 언론 모니터링 — 을 보완해야 더 정확한 판단이 가능합니다.`
+  ]);
+
+  return `
+  <div class="report-section">
+    <div class="section-header"><div class="section-num">5</div>🤖 AI 모델별 점수 비교</div>
+    <div class="card"><div class="card-title">📊 AI 모델 × 후보자 그룹 비교</div>
+      <div style="height:360px"><canvas id="s5_bar"></canvas></div>
+    </div>
+    <div class="card"><div class="card-title">📋 AI 모델별 상세 점수</div>
+      <div class="table-wrap">${aiTbl}</div>
+    </div>
+    ${sum_ai}
+    <div class="card"><div class="card-title">📈 AI 모델 추세 비교</div>
+      <div style="height:280px"><canvas id="s5_line"></canvas></div>
+    </div>
+    <div class="card"><div class="card-title">📐 후보별 AI 평가 일관성</div>
+      ${consistRows}
+      <div class="insight-box">편차가 낮을수록 AI 모델 간 평가가 일치하며 신뢰도가 높습니다.</div>
+    </div>
+    ${sum_consist}
+  </div>`;
+}
+
+/* ════════════════════════════════════════
+   차트 렌더링 함수들
+════════════════════════════════════════ */
+function renderSection1Charts(candidates) {
+  chartInstances.s1_radar = new Chart(document.getElementById('s1_radar'), {
+    type: 'radar',
+    data: {
+      labels: METRICS.map(m=>METRIC_LABELS[m]),
+      datasets: candidates.map((c,i)=>({
+        label: c.name,
+        data: METRICS.map(m=>c.metrics?.[m]??0),
+        borderColor: CANDIDATE_COLORS[i%5].border,
+        backgroundColor: CANDIDATE_COLORS[i%5].bg,
+        borderWidth: 2, pointRadius: 3,
+        pointBackgroundColor: CANDIDATE_COLORS[i%5].border,
+      }))
+    },
+    options: {
+      responsive:true, maintainAspectRatio:false,
+      scales:{r:{min:50,max:100,ticks:{stepSize:10,font:{size:9}},pointLabels:{font:{size:11,weight:'600'}},grid:{color:'#e2e8f0'}}},
+      plugins:{legend:{position:'bottom',labels:{font:{size:11},padding:10}}}
+    }
+  });
+
+  chartInstances.s1_bar = new Chart(document.getElementById('s1_bar'), {
+    type: 'bar',
+    data: {
+      labels: candidates.map(c=>c.name),
+      datasets: [{
+        label:'종합 점수',
+        data: candidates.map(c=>c.total_score),
+        backgroundColor: candidates.map((c,i)=>CANDIDATE_COLORS[i%5].bg),
+        borderColor: candidates.map((c,i)=>CANDIDATE_COLORS[i%5].border),
+        borderWidth:2, borderRadius:6,
+      }]
+    },
+    options: {
+      responsive:true, maintainAspectRatio:false, indexAxis:'y',
+      scales:{x:{min:600,max:1000,grid:{color:'#f1f5f9'},ticks:{font:{size:11}}},y:{ticks:{font:{size:12,weight:'600'}}}},
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>` ${ctx.parsed.x}점`}}}
+    }
+  });
+}
+
+function renderSection2Charts(candidates) {
+  chartInstances.s2_grouped = new Chart(document.getElementById('s2_grouped'), {
+    type: 'bar',
+    data: {
+      labels: METRICS.map(m=>METRIC_LABELS[m]),
+      datasets: candidates.map((c,i)=>({
+        label:c.name,
+        data:METRICS.map(m=>c.metrics?.[m]??0),
+        backgroundColor:CANDIDATE_COLORS[i%5].bg,
+        borderColor:CANDIDATE_COLORS[i%5].border,
+        borderWidth:2, borderRadius:3,
+      }))
+    },
+    options: {
+      responsive:true, maintainAspectRatio:false,
+      scales:{x:{ticks:{font:{size:10}},grid:{display:false}},y:{min:50,max:100,ticks:{font:{size:10}},grid:{color:'#f1f5f9'}}},
+      plugins:{legend:{position:'bottom',labels:{font:{size:11},padding:12}}}
+    }
+  });
+}
+
+function renderSection3Charts(candidates) {
+  candidates.forEach((c, i) => {
+    const col = CANDIDATE_COLORS[i%5];
+    chartInstances[`s3_radar_${i}`] = new Chart(document.getElementById(`s3_radar_${i}`), {
+      type: 'radar',
+      data: {
+        labels: METRICS.map(m=>METRIC_LABELS[m]),
+        datasets: [{
+          label:c.name,
+          data:METRICS.map(m=>c.metrics?.[m]??0),
+          borderColor:col.border, backgroundColor:col.bg,
+          borderWidth:2, pointRadius:2, pointBackgroundColor:col.border,
+        }]
+      },
+      options: {
+        responsive:true, maintainAspectRatio:false,
+        scales:{r:{min:40,max:100,ticks:{display:false},pointLabels:{font:{size:9}},grid:{color:'#e2e8f0'}}},
+        plugins:{legend:{display:false}}
+      }
+    });
+  });
+}
+
+function renderSection4Charts(candidates, sortedC) {
+  const leader = sortedC[0];
+  const datasets = sortedC.slice(1).map(c=>({
+    label:c.name,
+    data:METRICS.map(m=>(c.metrics?.[m]??0)-(leader.metrics?.[m]??0)),
+    backgroundColor:CANDIDATE_COLORS[c.idx%5].bg,
+    borderColor:CANDIDATE_COLORS[c.idx%5].border,
+    borderWidth:2, borderRadius:3,
+  }));
+
+  chartInstances.s4_gap = new Chart(document.getElementById('s4_gap'), {
+    type:'bar',
+    data:{labels:METRICS.map(m=>METRIC_LABELS[m]), datasets},
+    options:{
+      responsive:true, maintainAspectRatio:false, indexAxis:'y',
+      scales:{
+        x:{ticks:{callback:v=>v>0?'+'+v:v,font:{size:10}},grid:{color:ctx=>ctx.tick.value===0?'#94a3b8':'#f1f5f9'}},
+        y:{ticks:{font:{size:11}}}
+      },
+      plugins:{legend:{position:'bottom',labels:{font:{size:11},padding:12}},tooltip:{callbacks:{label:ctx=>` ${ctx.dataset.label}: ${ctx.parsed.x>0?'+'+ctx.parsed.x:ctx.parsed.x}점`}}}
+    }
+  });
+}
+
+function renderSection5Charts(candidates) {
+  const AI_BORDER_C = {claude:'#7c3aed',chatgpt:'#16a34a',gemini:'#2563eb',grok:'#dc2626'};
+
+  chartInstances.s5_bar = new Chart(document.getElementById('s5_bar'), {
+    type:'bar',
+    data:{
+      labels:candidates.map(c=>c.name),
+      datasets:AI_MODELS.map(m=>({
+        label:AI_LABELS[m],
+        data:candidates.map(c=>c.ai_scores?.[m]??0),
+        backgroundColor:AI_BORDER_C[m]+'30',
+        borderColor:AI_BORDER_C[m],
+        borderWidth:2, borderRadius:3,
+      }))
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      scales:{x:{ticks:{font:{size:12}},grid:{display:false}},y:{min:650,max:900,ticks:{font:{size:10}},grid:{color:'#f1f5f9'}}},
+      plugins:{legend:{position:'bottom',labels:{font:{size:11},padding:12}}}
+    }
+  });
+
+  chartInstances.s5_line = new Chart(document.getElementById('s5_line'), {
+    type:'line',
+    data:{
+      labels:AI_MODELS.map(m=>AI_LABELS[m]),
+      datasets:candidates.map((c,i)=>({
+        label:c.name,
+        data:AI_MODELS.map(m=>c.ai_scores?.[m]??0),
+        borderColor:CANDIDATE_COLORS[i%5].border,
+        backgroundColor:CANDIDATE_COLORS[i%5].bg,
+        borderWidth:2, pointRadius:5, pointBackgroundColor:CANDIDATE_COLORS[i%5].border,
+        tension:0.3,
+      }))
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      scales:{x:{ticks:{font:{size:12,weight:'600'}}},y:{min:650,max:900,grid:{color:'#f1f5f9'}}},
+      plugins:{legend:{position:'bottom',labels:{font:{size:11},padding:12}}}
+    }
+  });
+}
+
+/* ════════════════════════════════════════
+   PDF 저장 (canvas → img 변환 후 인쇄)
+════════════════════════════════════════ */
+async function savePDF() {
+  const btn = document.querySelector('.pdf-btn');
+  btn.disabled = true;
+  btn.innerHTML = '⏳ 차트 변환 중...';
+
+  // 모든 canvas를 고해상도 img로 변환 (화면 비율 그대로 유지)
+  const canvasEls = Array.from(document.querySelectorAll('#fullReport canvas'));
+  const replacements = [];
+
+  for (const canvas of canvasEls) {
+    try {
+      // 화면에 표시된 실제 크기 캡처
+      const rect = canvas.getBoundingClientRect();
+      const img = document.createElement('img');
+      img.src = canvas.toDataURL('image/png', 1.0);
+      img.className = 'chart-img';
+      img.style.cssText = `
+        width: 100%;
+        height: ${rect.height}px;
+        display: block;
+        object-fit: contain;
+      `;
+      replacements.push({ canvas, img, parent: canvas.parentNode });
+      canvas.parentNode.replaceChild(img, canvas);
+    } catch(e) { console.warn('canvas 변환 실패:', e); }
+  }
+
+  btn.innerHTML = '🖨️ 인쇄 창 열림...';
+
+  // 렌더링 안정화 대기
+  await new Promise(r => setTimeout(r, 600));
+  window.print();
+
+  // 인쇄 후 canvas 복원
+  setTimeout(() => {
+    replacements.forEach(({ img, canvas, parent }) => {
+      try {
+        if (img.parentNode === parent) parent.replaceChild(canvas, img);
+      } catch(e) {}
+    });
+    btn.disabled = false;
+    btn.innerHTML = '📥 PDF로 저장';
+  }, 1500);
+}
+</script>
+</body>
+</html>

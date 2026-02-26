@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI 모델 비교 · ElectionAI</title>
+<link rel="stylesheet" href="css/style.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+.ai-model-card {
+  background: white; border-radius: var(--radius); padding: 20px 24px;
+  border: 1px solid var(--border); box-shadow: var(--shadow);
+  border-top: 4px solid;
+}
+.ai-model-header { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+.ai-model-icon { font-size: 24px; }
+.ai-model-name { font-size: 18px; font-weight: 800; }
+.ai-model-desc { font-size: 12px; color: var(--text-muted); }
+.ai-score-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.ai-score-name { font-size: 13px; font-weight: 600; flex: 1; }
+.ai-score-bar-wrap { flex: 2; }
+.ai-score-val { font-size: 14px; font-weight: 800; width: 40px; text-align: right; }
+.consistency-badge {
+  padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 700;
+}
+</style>
+</head>
+<body>
+
+<header class="app-header">
+  <div class="header-inner">
+    <div class="header-logo">⚖️ Election<span>AI</span></div>
+    <div class="header-subtitle">AI 기반 선거 후보자 비교 분석 플랫폼</div>
+    <div class="header-date" id="header-date"></div>
+  </div>
+</header>
+<nav class="main-nav"><div class="nav-inner" id="main-nav"></div></nav>
+
+<div class="page-container">
+  <div class="page-title">
+    <h1>🤖 AI 모델별 점수 비교</h1>
+    <p>Claude · ChatGPT · Gemini · Grok 4개 AI 모델의 평가 결과 및 일관성 분석</p>
+  </div>
+  <div id="page-content"></div>
+</div>
+
+<button class="print-btn" onclick="window.open('report_full.html','_blank')" title="전체 PDF 보고서">📥</button>
+
+<script src="js/shared.js"></script>
+<script>
+const AI_ICONS = { claude: '🟣', chatgpt: '🟢', gemini: '🔵', grok: '🔴' };
+const AI_BORDER = { claude: '#7c3aed', chatgpt: '#16a34a', gemini: '#2563eb', grok: '#dc2626' };
+const AI_DESCS = {
+  claude: '제도화·지속가능성 중심 평가',
+  chatgpt: '혁신성·사회적 영향력 균형',
+  gemini: '공개 데이터 폭넓음·성과 중심',
+  grok: '최신 이슈·현장 대응 중심'
+};
+
+document.addEventListener('DOMContentLoaded', () => {
+  const data = requireData();
+  if (!data) return;
+
+  const { candidates } = data;
+  const n = candidates.length;
+  let html = '';
+
+  // ── 그룹 막대 차트 ──
+  html += `<div class="card"><div class="card-title">📊 AI 모델 × 후보자 점수 비교</div>
+    <div class="chart-container" style="height:380px">
+      <canvas id="aiGroupBar"></canvas>
+    </div></div>`;
+
+  // ── AI 모델별 순위 ──
+  html += `<div class="card"><div class="card-title">🏆 AI 모델별 후보자 순위</div>
+    <div class="table-wrap"><table>
+      <thead><tr><th>후보자</th>`;
+  AI_MODELS.forEach(m => {
+    html += `<th style="color:${AI_BORDER[m]}">${AI_ICONS[m]} ${AI_LABELS[m]}</th>`;
+  });
+  html += `<th>평균</th><th>편차</th><th>일관성</th></tr></thead><tbody>`;
+
+  candidates.forEach((c, i) => {
+    const col = CANDIDATE_COLORS[i % 5];
+    const scores = AI_MODELS.map(m => c.ai_scores?.[m] ?? 0);
+    const avg = scores.reduce((a,b)=>a+b,0)/scores.length;
+    const std = Math.sqrt(scores.reduce((s,v)=>s+Math.pow(v-avg,2),0)/scores.length);
+    const consistency = std < 5 ? { label: '매우 높음', cls: 'score-excellent' }
+                      : std < 10 ? { label: '높음', cls: 'score-good' }
+                      : std < 15 ? { label: '보통', cls: 'score-average' }
+                      : { label: '낮음', cls: 'score-low' };
+    html += `<tr>
+      <td style="color:${col.border};font-weight:700">${c.name}</td>`;
+    AI_MODELS.forEach(m => {
+      html += `<td style="font-weight:700">${c.ai_scores?.[m] ?? '-'}</td>`;
+    });
+    html += `<td style="font-weight:800">${avg.toFixed(1)}</td>
+      <td>${std.toFixed(1)}</td>
+      <td><span class="consistency-badge ${consistency.cls}">${consistency.label}</span></td>
+    </tr>`;
+  });
+
+  // AI별 최고 평가 후보
+  html += `<tr style="background:#f8fafc;font-size:12px"><td style="color:var(--text-muted);font-weight:600">AI 1위 후보</td>`;
+  AI_MODELS.forEach(m => {
+    const best = candidates.reduce((b,c) => (c.ai_scores?.[m]??0) > (b.ai_scores?.[m]??0) ? c : b);
+    html += `<td style="font-size:11px;color:${AI_BORDER[m]};font-weight:700">${best.name}<br>${best.ai_scores?.[m]}</td>`;
+  });
+  html += `<td colspan="3"></td></tr>`;
+
+  html += `</tbody></table></div></div>`;
+
+  // ── AI 모델별 점수 비교 종합 설명 ──
+  {
+    const modelAvgs = AI_MODELS.map(m => ({
+      m,
+      avg: candidates.reduce((a,c)=>a+(c.ai_scores?.[m]??0),0)/n
+    }));
+    const highestModel = modelAvgs.reduce((a,b)=>b.avg>a.avg?b:a);
+    const lowestModel = modelAvgs.reduce((a,b)=>b.avg<a.avg?b:a);
+    const modelRankConsist = candidates.map(c => {
+      const ranks = AI_MODELS.map(m => {
+        const sorted = [...candidates].sort((a,b)=>(b.ai_scores?.[m]??0)-(a.ai_scores?.[m]??0));
+        return sorted.findIndex(x=>x===c)+1;
+      });
+      const allSameRank = new Set(ranks).size === 1;
+      return { name: c.name, ranks, consistent: allSameRank };
+    });
+    const consistent = modelRankConsist.filter(x=>x.consistent).map(x=>x.name);
+    html += summaryBox('AI 모델별 점수 비교 종합 설명', [
+      `이 분석에서는 Claude(제도화·지속가능성 중심), ChatGPT(혁신성·사회적 영향력), Gemini(공개 데이터·성과 중심), Grok(최신 이슈·현장 대응) 등 4개 AI 모델이 각자의 평가 관점에서 후보들의 역량을 점수화했습니다. 모델별 평균 점수에서 <strong>${AI_LABELS[highestModel.m]}</strong>이 가장 높은 평균(${highestModel.avg.toFixed(1)}점)을 기록했고, <strong>${AI_LABELS[lowestModel.m]}</strong>이 ${lowestModel.avg.toFixed(1)}점으로 가장 낮은 평균을 보였습니다.`,
+      `4개 AI의 후보 순위 일관성을 보면, ${consistent.length > 0 ? `<strong>${consistent.join(', ')}</strong>은(는) 모든 AI 모델에서 동일한 순위를 기록하며 평가 신뢰도가 높습니다.` : '후보별로 AI 모델마다 순위 차이를 보여, 평가 관점에 따라 다르게 해석될 수 있습니다.'} 이러한 일관성 여부는 해당 후보의 역량이 얼마나 보편적으로 인정받는지를 나타냅니다.`,
+      `AI 모델별 순위표에서 특정 모델에서만 순위가 급등하거나 급락하는 후보가 있다면, 해당 AI의 평가 기준과 해당 후보의 강점이 일치하거나 충돌한다는 의미입니다. 예를 들어 Grok에서 높은 점수를 받은 후보는 최신 이슈 대응과 현장 반응성이 탁월하며, Claude에서 높게 평가된 후보는 정책의 제도화·지속가능성이 뛰어납니다.`,
+      `4개 AI 모델의 평균값이 바로 본 플랫폼의 종합 점수 기반이 됩니다. 단일 AI 모델의 점수보다 4개 모델의 평균이 편향을 줄이고 다각적 관점을 반영하므로 신뢰성이 높습니다. 그러나 AI 평가는 공개 데이터 기반이며 개인적 면담이나 현장 실사를 대체하지 않습니다.`
+    ]);
+  }
+
+  // ── AI 모델별 카드 ──
+  html += `<div class="grid-2">`;
+  AI_MODELS.forEach(m => {
+    const scores = candidates.map((c,i) => ({ name:c.name, score:c.ai_scores?.[m]??0, col:CANDIDATE_COLORS[i%5] }))
+      .sort((a,b)=>b.score-a.score);
+    const avg = scores.reduce((s,x)=>s+x.score,0)/scores.length;
+
+    html += `<div class="ai-model-card" style="border-top-color:${AI_BORDER[m]}">
+      <div class="ai-model-header">
+        <span class="ai-model-icon">${AI_ICONS[m]}</span>
+        <div>
+          <div class="ai-model-name" style="color:${AI_BORDER[m]}">${AI_LABELS[m]}</div>
+          <div class="ai-model-desc">${AI_DESCS[m]}</div>
+        </div>
+        <span style="margin-left:auto;font-size:12px;color:var(--text-muted)">평균 ${avg.toFixed(1)}점</span>
+      </div>`;
+
+    scores.forEach((s, rank) => {
+      html += `<div class="ai-score-row">
+        <div style="display:flex;align-items:center;gap:6px;flex:1">
+          ${rankTag(rank+1)}
+          <span class="ai-score-name" style="color:${s.col.border}">${s.name}</span>
+        </div>
+        <div class="ai-score-bar-wrap">
+          <div class="progress-bar">
+            <div class="progress-fill" style="width:${(s.score/1000)*100}%;background:${AI_BORDER[m]}"></div>
+          </div>
+        </div>
+        <div class="ai-score-val" style="color:${AI_BORDER[m]}">${s.score}</div>
+      </div>`;
+    });
+    html += `</div>`;
+  });
+  html += `</div>`;
+
+  // ── AI 모델 간 일관성 분석 ──
+  html += `<div class="card"><div class="card-title">📐 후보별 AI 평가 일관성 분석</div>`;
+  candidates.forEach((c, i) => {
+    const col = CANDIDATE_COLORS[i % 5];
+    const scores = AI_MODELS.map(m => c.ai_scores?.[m] ?? 0).filter(s => s > 0);
+    if (scores.length === 0) return;
+    const avg = scores.reduce((a,b)=>a+b,0)/scores.length;
+    const std = Math.sqrt(scores.reduce((s,v)=>s+Math.pow(v-avg,2),0)/scores.length);
+    const spread = Math.max(...scores) - Math.min(...scores);
+    html += `<div class="strength-card">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+        <strong style="color:${col.border};font-size:15px">${c.name}</strong>
+        <span style="font-size:12px;color:var(--text-muted)">${c.party}</span>
+        <span style="margin-left:auto;font-size:12px">편차: <strong>${std.toFixed(1)}</strong> · 범위: <strong>${spread}점</strong></span>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        ${AI_MODELS.map(m => {
+          const s = c.ai_scores?.[m] ?? 0;
+          const diff = s - avg;
+          return `<div style="text-align:center;min-width:70px;background:#f8fafc;border-radius:8px;padding:8px 10px">
+            <div style="font-size:11px;color:${AI_BORDER[m]};font-weight:700">${AI_LABELS[m]}</div>
+            <div style="font-size:18px;font-weight:900;color:${col.border}">${s}</div>
+            <div style="font-size:11px;color:${diff>0?'#16a34a':diff<0?'#dc2626':'#94a3b8'}">${diff>0?'+'+diff.toFixed(1):diff.toFixed(1)}</div>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>`;
+  });
+  html += `<div class="insight-box">편차가 낮을수록 AI 모델 간 평가가 일치하며 신뢰도가 높습니다. 높은 편차는 특정 AI에서 다르게 판단되었음을 의미합니다.</div>
+  </div>`;
+
+  // ── AI 평가 일관성 종합 설명 ──
+  {
+    const consistData = candidates.map((c,i) => {
+      const scores = AI_MODELS.map(m=>c.ai_scores?.[m]??0).filter(s=>s>0);
+      const avg = scores.reduce((a,b)=>a+b,0)/scores.length;
+      const std = Math.sqrt(scores.reduce((s,v)=>s+Math.pow(v-avg,2),0)/scores.length);
+      const spread = Math.max(...scores)-Math.min(...scores);
+      return { name: c.name, party: c.party, std, spread, avg };
+    });
+    const mostConsist = consistData.reduce((a,b)=>b.std<a.std?b:a);
+    const leastConsist = consistData.reduce((a,b)=>b.std>a.std?b:a);
+    const highModel = (c) => AI_MODELS.reduce((a,m)=>(c.ai_scores?.[m]??0)>(c.ai_scores?.[a]??0)?m:a, AI_MODELS[0]);
+    const leastConsistCand = candidates.find(c=>c.name===leastConsist.name);
+    const leastHighModel = leastConsistCand ? AI_LABELS[highModel(leastConsistCand)] : '';
+    html += summaryBox('후보별 AI 평가 일관성 종합 설명', [
+      `AI 평가 일관성 분석은 4개 AI 모델이 동일 후보를 얼마나 비슷하게 평가했는지를 수치로 보여줍니다. 편차(표준편차)가 낮을수록 AI 간 합의가 높고 신뢰도가 높으며, 높을수록 평가 관점에 따라 판단이 갈리는 '복합적 프로파일'을 가진 후보임을 나타냅니다.`,
+      `<strong>${mostConsist.name}</strong>(표준편차 ${mostConsist.std.toFixed(1)}, 범위 ${mostConsist.spread}점)은(는) AI 모델 간 일관성이 가장 높습니다. 이는 해당 후보의 역량이 어느 평가 관점에서 보더라도 유사하게 인정된다는 의미로, 유권자에게 '예측 가능하고 안정적인 후보'로 인식될 가능성이 높습니다.`,
+      `반면 <strong>${leastConsist.name}</strong>(표준편차 ${leastConsist.std.toFixed(1)}, 범위 ${leastConsist.spread}점)은 모델 간 점수 차이가 가장 크며, 특히 <strong>${leastHighModel}</strong>에서 높은 점수를 받았습니다. 이는 특정 평가 관점(해당 AI의 특성)에서 강하게 인정받는 역량이 있으나 다른 관점에서는 상대적으로 낮게 평가될 수 있음을 의미합니다.`,
+      `AI 일관성은 본 보고서 신뢰도의 핵심 지표입니다. 편차가 낮은 후보일수록 종합 점수가 실제 역량을 정확히 반영할 가능성이 높으며, 편차가 큰 후보는 추가적인 정성적 분석 — 현장 인터뷰, 시민 평가, 언론 모니터링 — 을 보완해야 더 정확한 판단이 가능합니다. 본 AI 분석은 의사결정의 참고 자료로 활용하시기 바랍니다.`
+    ]);
+  }
+
+  // ── 라인 차트 (모델별 추세) ──
+  html += `<div class="card"><div class="card-title">📈 AI 모델별 평가 추세 비교</div>
+    <div class="chart-container" style="height:300px">
+      <canvas id="lineChart"></canvas>
+    </div></div>`;
+
+  document.getElementById('page-content').innerHTML = html;
+
+  // ── 그룹 막대 차트 ──
+  new Chart(document.getElementById('aiGroupBar'), {
+    type: 'bar',
+    data: {
+      labels: candidates.map(c => c.name),
+      datasets: AI_MODELS.map(m => ({
+        label: AI_LABELS[m],
+        data: candidates.map(c => c.ai_scores?.[m] ?? 0),
+        backgroundColor: AI_BORDER[m] + '30',
+        borderColor: AI_BORDER[m],
+        borderWidth: 2,
+        borderRadius: 4,
+      }))
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      scales: {
+        x: { ticks: { font: { size: 12 } }, grid: { display: false } },
+        y: { min: 650, max: 900, ticks: { font: { size: 11 } }, grid: { color: '#f1f5f9' } }
+      },
+      plugins: { legend: { position: 'bottom', labels: { font: { size: 12 }, padding: 14 } } }
+    }
+  });
+
+  // ── 라인 차트 ──
+  new Chart(document.getElementById('lineChart'), {
+    type: 'line',
+    data: {
+      labels: AI_MODELS.map(m => AI_LABELS[m]),
+      datasets: candidates.map((c, i) => ({
+        label: c.name,
+        data: AI_MODELS.map(m => c.ai_scores?.[m] ?? 0),
+        borderColor: CANDIDATE_COLORS[i%5].border,
+        backgroundColor: CANDIDATE_COLORS[i%5].bg,
+        borderWidth: 2,
+        pointRadius: 6,
+        pointBackgroundColor: CANDIDATE_COLORS[i%5].border,
+        tension: 0.3,
+      }))
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      scales: {
+        x: { ticks: { font: { size: 13, weight: '600' } } },
+        y: { min: 650, max: 900, grid: { color: '#f1f5f9' } }
+      },
+      plugins: { legend: { position: 'bottom', labels: { font: { size: 12 }, padding: 16 } } }
+    }
+  });
+});
+</script>
+</body>
+</html>

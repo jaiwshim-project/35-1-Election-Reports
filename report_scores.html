@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>점수 상세 · ElectionAI</title>
+<link rel="stylesheet" href="css/style.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+.heatmap-cell {
+  font-weight: 700; font-size: 13px;
+  padding: 10px 14px !important;
+  transition: all 0.2s;
+}
+.metric-section { margin-bottom: 28px; }
+.metric-title {
+  font-size: 15px; font-weight: 700; color: var(--primary-dark);
+  margin-bottom: 10px; display: flex; align-items: center; gap: 8px;
+}
+.metric-bar-row { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+.metric-bar-name { width: 80px; font-size: 13px; font-weight: 600; flex-shrink: 0; }
+.metric-bar-wrap { flex: 1; }
+.metric-bar-score { width: 36px; text-align: right; font-size: 13px; font-weight: 700; }
+.avg-line { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
+</style>
+</head>
+<body>
+
+<header class="app-header">
+  <div class="header-inner">
+    <div class="header-logo">⚖️ Election<span>AI</span></div>
+    <div class="header-subtitle">AI 기반 선거 후보자 비교 분석 플랫폼</div>
+    <div class="header-date" id="header-date"></div>
+  </div>
+</header>
+<nav class="main-nav"><div class="nav-inner" id="main-nav"></div></nav>
+
+<div class="page-container">
+  <div class="page-title">
+    <h1>📈 10개 항목 상세 점수</h1>
+    <p>항목별 후보자 점수 비교 및 열지도 분석</p>
+  </div>
+  <div id="page-content"></div>
+</div>
+
+<button class="print-btn" onclick="window.open('report_full.html','_blank')" title="전체 PDF 보고서">📥</button>
+
+<script src="js/shared.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const data = requireData();
+  if (!data) return;
+
+  const { candidates } = data;
+  const n = candidates.length;
+  let html = '';
+
+  // ── 히트맵 테이블 ──
+  html += `<div class="card">
+    <div class="card-title">🔥 점수 히트맵 (항목 × 후보자)</div>
+    <div class="table-wrap"><table>
+      <thead><tr><th>평가 항목</th>`;
+  candidates.forEach((c,i) => {
+    html += `<th style="color:${CANDIDATE_COLORS[i%5].border}">${c.name}</th>`;
+  });
+  html += `<th>평균</th><th>최고</th><th>최저</th></tr></thead><tbody>`;
+
+  METRICS.forEach(m => {
+    const scores = candidates.map(c => c.metrics?.[m] ?? 0);
+    const avg = scores.reduce((a,b)=>a+b,0)/n;
+    const max = Math.max(...scores);
+    const min = Math.min(...scores);
+    html += `<tr><td><strong>${METRIC_LABELS[m]}</strong></td>`;
+    scores.forEach((s,i) => {
+      // 점수에 따른 배경색 계산
+      const ratio = (s - 50) / 50; // 50~100 범위를 0~1로 정규화
+      const col = CANDIDATE_COLORS[i%5];
+      const isMax = s === max;
+      const isMin = s === min;
+      const bg = isMax ? col.light : isMin ? '#fff7ed' : '';
+      const fw = isMax || isMin ? 'font-weight:800;' : '';
+      html += `<td class="heatmap-cell" style="background:${bg};${fw}">${s}${isMax?'▲':isMin?'▼':''}</td>`;
+    });
+    html += `<td style="color:var(--text-muted)">${avg.toFixed(1)}</td>
+      <td style="color:var(--success);font-weight:700">${max}</td>
+      <td style="color:var(--danger);font-weight:700">${min}</td></tr>`;
+  });
+
+  // 종합 행
+  html += `<tr style="background:#f8fafc;border-top:2px solid var(--border)">
+    <td><strong>종합 점수 (AI)</strong></td>`;
+  candidates.forEach(c => {
+    html += `<td style="font-weight:800;font-size:14px">${c.total_score || '-'}</td>`;
+  });
+  html += `<td colspan="3"></td></tr>`;
+
+  html += `</tbody></table></div>
+    <div class="insight-box">▲ 해당 항목 최고 점수 &nbsp;|&nbsp; ▼ 해당 항목 최저 점수</div>
+  </div>`;
+
+  // ── 히트맵 종합 설명 ──
+  {
+    const allAvgByMetric = METRICS.map(m => {
+      const scores = candidates.map(c=>c.metrics?.[m]??0);
+      return { m, avg: scores.reduce((a,b)=>a+b,0)/n, max: Math.max(...scores), min: Math.min(...scores) };
+    });
+    const highestMetric = allAvgByMetric.reduce((a,b)=>b.avg>a.avg?b:a);
+    const lowestMetric = allAvgByMetric.reduce((a,b)=>b.avg<a.avg?b:a);
+    const uniformHigh = candidates.filter(c => METRICS.every(m=>(c.metrics?.[m]??0)>=75)).map(c=>c.name);
+    html += summaryBox('점수 히트맵 종합 설명', [
+      `점수 히트맵은 10개 평가 항목과 각 후보의 점수를 교차 시각화하여 강점과 약점 패턴을 한눈에 파악할 수 있게 합니다. 강조 색상(▲)이 집중된 열의 후보는 해당 항목군에서 지속적 강점을 보이며, 반대로 ▼ 표시가 많은 후보는 그 항목들에서 개선이 필요합니다.`,
+      `항목별 평균 점수를 살펴보면 <strong>${METRIC_LABELS[highestMetric.m]}</strong> 항목이 평균 <strong>${highestMetric.avg.toFixed(1)}점</strong>으로 후보 전체에서 가장 높은 점수를 기록했습니다. 반면 <strong>${METRIC_LABELS[lowestMetric.m]}</strong> 항목은 평균 <strong>${lowestMetric.avg.toFixed(1)}점</strong>으로 가장 낮아, 후보들이 공통적으로 보완이 필요한 영역임을 시사합니다.`,
+      `${uniformHigh.length > 0 ? `<strong>${uniformHigh.join(', ')}</strong>은(는) 전 항목에서 75점 이상을 유지하며 균형 잡힌 역량을 보여줬습니다. 이처럼 히트맵에서 전반적으로 밝은 색조를 보이는 후보는 특정 이슈 공세에도 안정적으로 대응할 수 있는 구조적 강점을 지닙니다.` : `특정 항목에서 색상 대비가 뚜렷이 나타나는 후보는 강점 항목을 전략적으로 부각하면서 약점 항목은 적극적으로 보완하는 전략이 필요합니다.`}`,
+      `히트맵을 분석할 때는 단순히 높은 점수에만 집중하기보다, 경쟁 후보 대비 상대적으로 높은 항목(자신의 차별화 포인트)과 낮은 항목(상대가 공세할 수 있는 취약점)을 동시에 파악하는 것이 전략적으로 중요합니다. 특히 청렴성·윤리성 항목의 점수 분포는 유권자 신뢰도와 직결됩니다.`
+    ]);
+  }
+
+  // ── 그룹 막대 차트 ──
+  html += `<div class="card"><div class="card-title">📊 항목별 그룹 막대그래프</div>
+    <div class="chart-container" style="height:420px">
+      <canvas id="groupedBar"></canvas>
+    </div></div>`;
+
+  // ── 항목별 바 차트 (후보 비교) ──
+  html += `<div class="card"><div class="card-title">📋 항목별 후보자 점수 상세</div>`;
+  METRICS.forEach(m => {
+    const scores = candidates.map(c => c.metrics?.[m] ?? 0);
+    const avg = scores.reduce((a,b)=>a+b,0)/n;
+    html += `<div class="metric-section">
+      <div class="metric-title">${METRIC_LABELS[m]}</div>`;
+    candidates.forEach((c,i) => {
+      const s = c.metrics?.[m] ?? 0;
+      const col = CANDIDATE_COLORS[i%5];
+      html += `<div class="metric-bar-row">
+        <div class="metric-bar-name" style="color:${col.border}">${c.name}</div>
+        <div class="metric-bar-wrap">
+          <div class="progress-bar"><div class="progress-fill" style="width:${s}%;background:${col.border}"></div></div>
+        </div>
+        <div class="metric-bar-score" style="color:${col.border}">${s}</div>
+      </div>`;
+    });
+    html += `<div class="avg-line">항목 평균: ${avg.toFixed(1)}점</div></div>`;
+  });
+  html += `</div>`;
+
+  // ── 표준편차 분석 ──
+  html += `<div class="card"><div class="card-title">📐 항목별 편차 분석 (균형성)</div>
+    <div class="table-wrap"><table>
+      <thead><tr><th>후보자</th>`;
+  METRICS.forEach(m => { html += `<th>${METRIC_LABELS[m].split(' ')[0]}</th>`; });
+  html += `<th>표준편차</th><th>균형성</th></tr></thead><tbody>`;
+
+  candidates.forEach((c,i) => {
+    const scores = METRICS.map(m => c.metrics?.[m] ?? 0);
+    const avg = scores.reduce((a,b)=>a+b,0)/scores.length;
+    const std = Math.sqrt(scores.reduce((s,v)=>s+Math.pow(v-avg,2),0)/scores.length);
+    const col = CANDIDATE_COLORS[i%5];
+    html += `<tr><td style="color:${col.border};font-weight:700">${c.name}</td>`;
+    scores.forEach(s => { html += `<td>${s}</td>`; });
+    html += `<td style="font-weight:700">${std.toFixed(1)}</td>
+      <td>${std < 5 ? '🟢 균형' : std < 8 ? '🟡 보통' : '🔴 편중'}</td></tr>`;
+  });
+  html += `</tbody></table>
+    <div class="insight-box">표준편차가 낮을수록 항목 간 균형이 잡힌 후보입니다. 높을수록 특정 항목에 편중됩니다.</div>
+  </div>`;
+
+  // ── 균형성 분석 종합 설명 ──
+  {
+    const stdData = candidates.map((c,i) => {
+      const scores = METRICS.map(m=>c.metrics?.[m]??0);
+      const avg = scores.reduce((a,b)=>a+b,0)/scores.length;
+      const std = Math.sqrt(scores.reduce((s,v)=>s+Math.pow(v-avg,2),0)/scores.length);
+      return { name: c.name, party: c.party, std, avg };
+    });
+    const mostBalanced = stdData.reduce((a,b)=>b.std<a.std?b:a);
+    const leastBalanced = stdData.reduce((a,b)=>b.std>a.std?b:a);
+    const avgStd = stdData.reduce((a,b)=>a+b.std,0)/stdData.length;
+    html += summaryBox('균형성 분석(표준편차) 종합 설명', [
+      `균형성 분석은 각 후보가 10개 평가 항목에서 얼마나 고른 역량을 보이는지를 표준편차로 측정합니다. 표준편차가 <strong>5 미만이면 균형</strong>, 5~8이면 보통, 8 이상이면 특정 항목에 편중된 불균형 상태를 나타냅니다. 전체 후보의 평균 표준편차는 <strong>${avgStd.toFixed(1)}</strong>입니다.`,
+      `<strong>${mostBalanced.name}</strong>은(는) 표준편차 <strong>${mostBalanced.std.toFixed(1)}</strong>로 가장 균형 잡힌 역량 분포를 보였습니다. 이는 어느 한 항목에도 치우치지 않고 전 분야에서 안정적인 수준을 유지하고 있음을 의미합니다. 균형성이 높은 후보는 상대 후보의 특정 항목 공세에도 비교적 방어가 용이합니다.`,
+      `반면 <strong>${leastBalanced.name}</strong>은(는) 표준편차 <strong>${leastBalanced.std.toFixed(1)}</strong>로 항목 간 편차가 상대적으로 컸습니다. 이 경우 강점 항목에서는 독보적인 우위를 보이지만, 약점 항목이 노출될 경우 상대 후보의 공세에 취약해질 수 있습니다. 선거 캠프 입장에서는 약점 항목의 집중 개선 또는 강점 항목 극대화 전략 중 하나를 선택해야 합니다.`,
+      `균형성과 종합 점수는 서로 다른 차원의 지표입니다. 점수가 다소 낮더라도 균형성이 높은 후보는 안정적이고 예측 가능한 리더십을 보여주며, 이는 중도층 유권자에게 특히 긍정적으로 작용합니다. 반대로 편중된 후보는 특정 지지층에게 강력한 호소력을 발휘할 수 있습니다.`
+    ]);
+  }
+  html += `</div>`;
+
+  document.getElementById('page-content').innerHTML = html;
+
+  // ── 그룹 막대 차트 렌더링 ──
+  new Chart(document.getElementById('groupedBar'), {
+    type: 'bar',
+    data: {
+      labels: METRICS.map(m => METRIC_LABELS[m]),
+      datasets: candidates.map((c,i) => ({
+        label: c.name,
+        data: METRICS.map(m => c.metrics?.[m] ?? 0),
+        backgroundColor: CANDIDATE_COLORS[i%5].bg,
+        borderColor: CANDIDATE_COLORS[i%5].border,
+        borderWidth: 2,
+        borderRadius: 4,
+      }))
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      scales: {
+        x: { ticks: { font: { size: 11 } }, grid: { display: false } },
+        y: { min: 50, max: 100, ticks: { font: { size: 11 } }, grid: { color: '#f1f5f9' } }
+      },
+      plugins: { legend: { position: 'bottom', labels: { font: { size: 12 }, padding: 16 } } }
+    }
+  });
+});
+</script>
+</body>
+</html>

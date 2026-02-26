@@ -1,0 +1,396 @@
+/* ============================================
+   선거 후보자 비교 분석 플랫폼 - 공유 스타일
+   ============================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+  --primary: #1e40af;
+  --primary-light: #3b82f6;
+  --primary-dark: #1e3a8a;
+  --accent: #f59e0b;
+  --bg: #f1f5f9;
+  --card: #ffffff;
+  --border: #e2e8f0;
+  --text: #0f172a;
+  --text-muted: #64748b;
+  --text-light: #94a3b8;
+  --success: #16a34a;
+  --danger: #dc2626;
+  --warning: #d97706;
+  --shadow: 0 2px 12px rgba(0,0,0,0.08);
+  --shadow-lg: 0 8px 32px rgba(0,0,0,0.12);
+  --radius: 12px;
+  --radius-sm: 8px;
+
+  /* 후보자 색상 (최대 5명) */
+  --c1: #2563eb;
+  --c2: #dc2626;
+  --c3: #16a34a;
+  --c4: #d97706;
+  --c5: #7c3aed;
+  --c1-bg: rgba(37,99,235,0.1);
+  --c2-bg: rgba(220,38,38,0.1);
+  --c3-bg: rgba(22,163,74,0.1);
+  --c4-bg: rgba(217,119,6,0.1);
+  --c5-bg: rgba(124,58,237,0.1);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Noto Sans KR', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* ── 헤더 ── */
+.app-header {
+  background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 60%, #1d4ed8 100%);
+  color: white;
+  padding: 0 24px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.3);
+}
+.header-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  height: 60px;
+}
+.header-logo {
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  white-space: nowrap;
+}
+.header-logo span { color: var(--accent); }
+.header-subtitle {
+  font-size: 12px;
+  color: rgba(255,255,255,0.7);
+  flex: 1;
+}
+.header-date {
+  font-size: 12px;
+  color: rgba(255,255,255,0.6);
+}
+
+/* ── 내비게이션 ── */
+.main-nav {
+  background: var(--primary-dark);
+  padding: 0 24px;
+}
+.nav-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  gap: 2px;
+  overflow-x: auto;
+}
+.nav-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 16px;
+  color: rgba(255,255,255,0.7);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 500;
+  white-space: nowrap;
+  border-bottom: 3px solid transparent;
+  transition: all 0.2s;
+}
+.nav-item:hover { color: white; background: rgba(255,255,255,0.05); }
+.nav-item.active { color: white; border-bottom-color: var(--accent); }
+
+/* ── 메인 레이아웃 ── */
+.page-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 32px 24px 60px;
+}
+
+/* ── 페이지 타이틀 ── */
+.page-title {
+  margin-bottom: 28px;
+}
+.page-title h1 {
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--primary-dark);
+  margin-bottom: 6px;
+}
+.page-title p {
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+/* ── 카드 ── */
+.card {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 24px;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+  margin-bottom: 20px;
+}
+.card-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--primary-dark);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.card-title::before {
+  content: '';
+  display: inline-block;
+  width: 4px;
+  height: 18px;
+  background: var(--primary-light);
+  border-radius: 2px;
+}
+
+/* ── 그리드 ── */
+.grid-2 { display: grid; grid-template-columns: repeat(2,1fr); gap: 20px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; }
+.grid-4 { display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; }
+.grid-auto { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px,1fr)); gap: 20px; }
+
+/* ── 점수 배지 ── */
+.score-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  font-size: 18px;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+.score-badge.score-excellent { background: #dcfce7; color: #16a34a; }
+.score-badge.score-good { background: #dbeafe; color: #2563eb; }
+.score-badge.score-average { background: #fef3c7; color: #d97706; }
+.score-badge.score-low { background: #fee2e2; color: #dc2626; }
+
+/* ── 순위 태그 ── */
+.rank-tag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  font-size: 12px;
+  font-weight: 700;
+}
+.rank-1 { background: #fef3c7; color: #92400e; border: 2px solid #f59e0b; }
+.rank-2 { background: #f1f5f9; color: #475569; border: 2px solid #94a3b8; }
+.rank-3 { background: #fef3c7; color: #92400e; border: 2px solid #d97706; opacity:.7; }
+.rank-other { background: #f8fafc; color: #94a3b8; border: 2px solid #e2e8f0; }
+
+/* ── 프로그레스 바 ── */
+.progress-bar {
+  height: 8px;
+  background: var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-top: 4px;
+}
+.progress-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.6s ease;
+}
+
+/* ── 테이블 ── */
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+thead th {
+  background: var(--primary-dark);
+  color: white;
+  padding: 10px 14px;
+  text-align: center;
+  font-weight: 600;
+  white-space: nowrap;
+}
+thead th:first-child { text-align: left; }
+/* 후보자·AI 모델명 헤더 – 파란 배경 위 가독성 */
+thead th[style] { color: #fde047 !important; }
+tbody td {
+  padding: 9px 14px;
+  border-bottom: 1px solid var(--border);
+  text-align: center;
+}
+tbody td:first-child { text-align: left; font-weight: 500; }
+tbody tr:hover { background: #f8fafc; }
+tbody tr:last-child td { border-bottom: none; }
+
+/* ── 차트 컨테이너 ── */
+.chart-container { position: relative; width: 100%; }
+.chart-container canvas { max-width: 100%; }
+
+/* ── 강점/약점 태그 ── */
+.tag-list { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.tag {
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+}
+.tag-strength { background: #dcfce7; color: #166534; }
+.tag-weakness { background: #fee2e2; color: #991b1b; }
+
+/* ── 후보자 색상 헤더 ── */
+.candidate-header {
+  border-radius: var(--radius) var(--radius) 0 0;
+  padding: 16px 20px;
+  color: white;
+  font-weight: 700;
+  font-size: 15px;
+}
+
+/* ── 알림 ── */
+.alert {
+  padding: 12px 16px;
+  border-radius: var(--radius-sm);
+  margin-bottom: 16px;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.alert-info { background: #dbeafe; color: #1e40af; border: 1px solid #bfdbfe; }
+.alert-success { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
+.alert-error { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
+.alert-warning { background: #fef3c7; color: #92400e; border: 1px solid #fde68a; }
+
+/* ── 버튼 ── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 20px;
+  border-radius: var(--radius-sm);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s;
+  text-decoration: none;
+}
+.btn-primary { background: var(--primary); color: white; }
+.btn-primary:hover { background: var(--primary-dark); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(30,64,175,0.3); }
+.btn-primary:disabled { background: var(--text-light); cursor: not-allowed; transform: none; box-shadow: none; }
+.btn-outline { background: white; color: var(--primary); border: 2px solid var(--primary); }
+.btn-outline:hover { background: var(--primary); color: white; }
+.btn-sm { padding: 6px 12px; font-size: 12px; }
+.btn-success { background: var(--success); color: white; }
+
+/* ── 인사이트 박스 ── */
+.insight-box {
+  background: linear-gradient(135deg, #eff6ff, #dbeafe);
+  border: 1px solid #bfdbfe;
+  border-left: 4px solid var(--primary-light);
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+  margin-top: 12px;
+  font-size: 13px;
+  color: #1e3a8a;
+  line-height: 1.7;
+}
+
+/* ── 빈 데이터 메시지 ── */
+.no-data {
+  text-align: center;
+  padding: 60px 20px;
+}
+.no-data h3 { font-size: 20px; color: var(--text-muted); margin-bottom: 12px; }
+.no-data p { color: var(--text-light); margin-bottom: 24px; }
+
+/* ── 로딩 스피너 ── */
+.spinner {
+  width: 20px;
+  height: 20px;
+  border: 3px solid rgba(255,255,255,0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  display: inline-block;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── 인쇄 버튼 ── */
+.print-btn {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: var(--primary);
+  color: white;
+  border: none;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  font-size: 20px;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(30,64,175,0.4);
+  transition: all 0.2s;
+  z-index: 50;
+}
+.print-btn:hover { transform: scale(1.1); }
+
+/* ── 반응형 ── */
+@media (max-width: 768px) {
+  .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+  .page-container { padding: 20px 16px 40px; }
+  .page-title h1 { font-size: 20px; }
+  .header-logo { font-size: 16px; }
+}
+
+/* ── 종합 설명 박스 ── */
+.summary-section {
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  border: 1px solid #e2e8f0;
+  border-left: 4px solid #1e3a8a;
+  border-radius: var(--radius-sm);
+  padding: 20px 24px;
+  margin-top: 4px;
+  margin-bottom: 0;
+}
+.summary-section-title {
+  font-size: 13px;
+  font-weight: 800;
+  color: #1e3a8a;
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #dbeafe;
+}
+.summary-section p {
+  font-size: 13px;
+  line-height: 1.85;
+  color: #334155;
+  margin-bottom: 10px;
+}
+.summary-section p:last-child { margin-bottom: 0; }
+.summary-section strong { color: #1e3a8a; }
+
+/* ── 인쇄 스타일 ── */
+@media print {
+  .app-header, .main-nav, .print-btn { display: none !important; }
+  body { background: white; }
+  .card { box-shadow: none; border: 1px solid #ccc; break-inside: avoid; }
+  .page-container { padding: 16px; }
+}
