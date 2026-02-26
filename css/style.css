@@ -72,6 +72,9 @@ body {
   white-space: nowrap;
 }
 .header-logo span { color: var(--accent); }
+.logo-analysis { color: #93c5fd !important; }
+.logo-report   { color: #86efac !important; }
+.logo-ai       { color: #fcd34d !important; }
 .header-subtitle {
   font-size: 12px;
   color: rgba(255,255,255,0.7);
@@ -84,7 +87,10 @@ body {
 
 /* ── 내비게이션 ── */
 .main-nav {
-  background: var(--primary-dark);
+  background: rgba(15, 23, 42, 0.82);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
   padding: 0 24px;
 }
 .nav-inner {
@@ -99,16 +105,17 @@ body {
   align-items: center;
   gap: 6px;
   padding: 10px 16px;
-  color: rgba(255,255,255,0.7);
+  color: rgba(255,255,255,0.88);
   text-decoration: none;
   font-size: 13px;
-  font-weight: 500;
+  font-weight: 600;
   white-space: nowrap;
   border-bottom: 3px solid transparent;
   transition: all 0.2s;
+  letter-spacing: 0.1px;
 }
-.nav-item:hover { color: white; background: rgba(255,255,255,0.05); }
-.nav-item.active { color: white; border-bottom-color: var(--accent); }
+.nav-item:hover { color: white; background: rgba(255,255,255,0.1); }
+.nav-item.active { color: white; border-bottom-color: var(--accent); font-weight: 700; }
 
 /* ── 메인 레이아웃 ── */
 .page-container {
@@ -387,9 +394,162 @@ tbody tr:last-child td { border-bottom: none; }
 .summary-section p:last-child { margin-bottom: 0; }
 .summary-section strong { color: #1e3a8a; }
 
+/* ── 푸터 ── */
+.app-footer {
+  background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
+  color: rgba(255,255,255,0.75);
+  margin-top: 60px;
+  padding: 36px 24px 28px;
+}
+.footer-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.footer-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+.footer-brand .footer-logo {
+  font-size: 18px;
+  font-weight: 900;
+  color: white;
+  letter-spacing: -0.3px;
+  margin-bottom: 6px;
+}
+.footer-brand .footer-logo span { color: #f59e0b; }
+.footer-brand .footer-tagline {
+  font-size: 12px;
+  color: rgba(255,255,255,0.5);
+  line-height: 1.6;
+}
+.footer-contact {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  text-align: right;
+}
+.footer-contact-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 2px;
+}
+.footer-contact-items {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.footer-contact-item {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  font-size: 13px;
+  color: rgba(255,255,255,0.8);
+}
+.footer-contact-item a {
+  color: rgba(255,255,255,0.8);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.footer-contact-item a:hover { color: #f59e0b; }
+.footer-contact-icon {
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
+  background: rgba(255,255,255,0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  flex-shrink: 0;
+}
+.footer-divider {
+  height: 1px;
+  background: rgba(255,255,255,0.1);
+}
+.footer-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 11px;
+  color: rgba(255,255,255,0.35);
+}
+.footer-bottom strong { color: rgba(255,255,255,0.5); }
+
+@media (max-width: 600px) {
+  .footer-top { flex-direction: column; }
+  .footer-contact { text-align: left; }
+  .footer-contact-item { justify-content: flex-start; }
+  .footer-bottom { flex-direction: column; gap: 4px; }
+}
+
+/* ── 리포트 인쇄 전용 푸터 ── */
+.report-print-footer {
+  margin-top: 48px;
+  padding-top: 20px;
+  border-top: 2px solid #1e3a8a;
+}
+.rpf-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+.rpf-brand .rpf-logo {
+  font-size: 15px;
+  font-weight: 900;
+  color: #1e3a8a;
+  letter-spacing: -0.3px;
+  margin-bottom: 3px;
+}
+.rpf-brand .rpf-logo .logo-analysis { color: #2563eb; }
+.rpf-brand .rpf-logo .logo-report   { color: #16a34a; }
+.rpf-brand .rpf-logo .logo-ai       { color: #d97706; }
+.rpf-brand .rpf-tagline {
+  font-size: 10px;
+  color: #64748b;
+}
+.rpf-contact {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 3px;
+}
+.rpf-contact-name {
+  font-size: 13px;
+  font-weight: 800;
+  color: #1e3a8a;
+}
+.rpf-contact-items {
+  display: flex;
+  gap: 16px;
+  font-size: 11px;
+  color: #475569;
+}
+.rpf-contact-items span { display: flex; align-items: center; gap: 4px; }
+.rpf-bottom {
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px solid #e2e8f0;
+  font-size: 10px;
+  color: #94a3b8;
+  display: flex;
+  justify-content: space-between;
+}
+
 /* ── 인쇄 스타일 ── */
 @media print {
-  .app-header, .main-nav, .print-btn { display: none !important; }
+  .app-header, .main-nav, .print-btn, .app-footer { display: none !important; }
   body { background: white; }
   .card { box-shadow: none; border: 1px solid #ccc; break-inside: avoid; }
   .page-container { padding: 16px; }

@@ -50,6 +50,7 @@ const NAV_PAGES = [
   { href: 'report_ai.html',       icon: '🤖', label: 'AI 모델 비교' },
   { href: 'report_strategy.html', icon: '🏆', label: '당선 전략' },
   { href: 'report_full.html',     icon: '📥', label: 'PDF 전체 보고서' },
+  { href: 'report_pricing.html',  icon: '💰', label: '가격 산정' },
 ];
 
 function renderNav() {
@@ -152,8 +153,47 @@ function updateHeaderDate() {
   }
 }
 
+// ── 푸터 렌더링 ──
+function renderFooter() {
+  const footer = document.createElement('footer');
+  footer.className = 'app-footer';
+  footer.innerHTML = `
+    <div class="footer-inner">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <div class="footer-logo">Election<span class="logo-analysis">Analysis</span><span class="logo-report">Report</span><span class="logo-ai">AI</span></div>
+          <div class="footer-tagline">
+            선거 후보자 비교 분석 플랫폼<br>
+            AI 기반 전략 리포트 · 가격 산정 · 당선 전략 설계
+          </div>
+        </div>
+        <div class="footer-contact">
+          <div class="footer-contact-name">심재우 대표</div>
+          <div class="footer-contact-items">
+            <div class="footer-contact-item">
+              <span>010-2397-5734</span>
+              <div class="footer-contact-icon">📞</div>
+            </div>
+            <div class="footer-contact-item">
+              <a href="mailto:jaiwshim@gmail.com">jaiwshim@gmail.com</a>
+              <div class="footer-contact-icon">✉️</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="footer-divider"></div>
+      <div class="footer-bottom">
+        <span>© 2026 ElectionAI · 무단 복제 및 배포 금지</span>
+        <span><strong>ElectionAI Pricing Engine v1.0</strong> · Powered by Claude AI</span>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(footer);
+}
+
 // ── 초기화 ──
 document.addEventListener('DOMContentLoaded', () => {
   renderNav();
   updateHeaderDate();
+  renderFooter();
 });

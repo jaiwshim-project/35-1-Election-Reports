@@ -250,7 +250,7 @@
 <body>
 <header class="app-header no-print">
   <div class="header-inner">
-    <div class="header-logo">⚖️ Election<span>AI</span></div>
+    <div class="header-logo">⚖️ Election<span class="logo-analysis">Analysis</span><span class="logo-report">Report</span><span class="logo-ai">AI</span></div>
     <div class="header-subtitle">AI 기반 선거 후보자 비교 분석 플랫폼</div>
     <div class="header-date" id="header-date"></div>
   </div>
@@ -269,6 +269,27 @@
   </div>
 
   <div id="page-content"></div>
+
+  <!-- 리포트 하단 푸터 (화면 + PDF 모두 출력) -->
+  <div class="report-print-footer">
+    <div class="rpf-inner">
+      <div class="rpf-brand">
+        <div class="rpf-logo">⚖️ Election<span class="logo-analysis">Analysis</span><span class="logo-report">Report</span><span class="logo-ai">AI</span></div>
+        <div class="rpf-tagline">AI 기반 선거 후보자 비교 분석 플랫폼 · 당선 전략 보고서</div>
+      </div>
+      <div class="rpf-contact">
+        <div class="rpf-contact-name">심재우 대표</div>
+        <div class="rpf-contact-items">
+          <span>📞 010-2397-5734</span>
+          <span>✉️ jaiwshim@gmail.com</span>
+        </div>
+      </div>
+    </div>
+    <div class="rpf-bottom">
+      <span>© 2026 ElectionAnalysisReportAI · 무단 복제 및 배포 금지</span>
+      <span>Powered by Claude AI · ElectionAI Pricing Engine v1.0</span>
+    </div>
+  </div>
 </div>
 
 <script src="js/shared.js"></script>
@@ -397,7 +418,7 @@ function buildCover(target, col, rank, strat, district, analysis_date) {
   return `
   <div class="strat-cover">
     <div class="strat-label">AI 선거 전략 인텔리전스 리포트 · ${strat.title}</div>
-    <h1>${target.name} 후보<br>당선 전략 설계 보고서</h1>
+    <h1><span style="color:#fde047">${target.name}</span> 후보<br>당선 전략 설계 보고서</h1>
     <div class="subtitle">객관적 데이터 기반 분석 · 경쟁 후보 맞춤 대응 · 90일 실행 로드맵 · 리스크 대응 매뉴얼</div>
     <div class="strat-cover-meta">
       <div class="strat-cover-meta-item">

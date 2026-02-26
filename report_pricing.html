@@ -1,0 +1,1264 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>리포트 가격 산정 · ElectionAI</title>
+<link rel="stylesheet" href="css/style.css">
+<style>
+/* ── 히어로 배너 ── */
+.pricing-hero {
+  background: linear-gradient(140deg, #0f172a 0%, #1e3a8a 55%, #1d4ed8 100%);
+  color: white; border-radius: var(--radius); padding: 44px 44px 40px;
+  position: relative; overflow: hidden; margin-bottom: 28px;
+}
+.pricing-hero::before {
+  content: '💰'; font-size: 200px; opacity: .04;
+  position: absolute; right: -20px; top: -20px; line-height: 1;
+}
+.pricing-badge {
+  display: inline-block; background: rgba(245,158,11,.18);
+  border: 1px solid rgba(245,158,11,.45); color: #fcd34d;
+  padding: 4px 14px; border-radius: 20px;
+  font-size: 12px; font-weight: 700; margin-bottom: 16px; letter-spacing: .5px;
+}
+.pricing-hero h1 { font-size: 26px; font-weight: 900; line-height: 1.3; margin-bottom: 8px; }
+.pricing-hero .sub { font-size: 13px; opacity: .7; }
+
+/* ── 레이아웃 ── */
+.pricing-layout {
+  display: grid; grid-template-columns: 1fr 420px; gap: 24px; align-items: start;
+}
+@media (max-width: 900px) { .pricing-layout { grid-template-columns: 1fr; } }
+
+/* ── 입력 패널 ── */
+.input-panel {
+  background: white; border-radius: var(--radius);
+  border: 1px solid var(--border); overflow: hidden;
+}
+.panel-header {
+  background: linear-gradient(90deg, #1e3a8a, #2563eb);
+  color: white; padding: 16px 24px;
+  font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px;
+}
+.panel-body { padding: 24px; display: flex; flex-direction: column; gap: 20px; }
+
+.field-group { display: flex; flex-direction: column; gap: 6px; }
+.field-label {
+  font-size: 12px; font-weight: 700; color: var(--text-muted);
+  text-transform: uppercase; letter-spacing: .6px;
+  display: flex; align-items: center; gap: 6px;
+}
+.field-badge {
+  background: #eff6ff; color: #2563eb; border: 1px solid #bfdbfe;
+  font-size: 10px; font-weight: 800; padding: 1px 7px; border-radius: 10px;
+}
+.field-desc { font-size: 11px; color: var(--text-light); margin-top: 2px; }
+
+select, input[type=number], input[type=text] {
+  width: 100%; padding: 10px 14px;
+  border: 1.5px solid var(--border); border-radius: var(--radius-sm);
+  font-size: 14px; font-family: 'Noto Sans KR', sans-serif;
+  color: var(--text); background: #fafafa;
+  transition: border-color .2s, box-shadow .2s; appearance: auto;
+}
+select:focus, input:focus {
+  outline: none; border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37,99,235,.1); background: white;
+}
+input[readonly] {
+  background: #f0fdf4; border-color: #86efac; color: #166534; font-weight: 700;
+}
+
+/* ── 직위 선택 그리드 ── */
+.position-section {
+  background: linear-gradient(135deg, #f8fafc, #eff6ff);
+  border: 1.5px solid #bfdbfe; border-radius: var(--radius-sm);
+  padding: 16px; margin-bottom: 4px;
+}
+.position-section-title {
+  font-size: 11px; font-weight: 800; color: #1e3a8a;
+  text-transform: uppercase; letter-spacing: .8px;
+  margin-bottom: 12px; display: flex; align-items: center; gap: 6px;
+}
+.position-tier {
+  margin-bottom: 10px;
+}
+.position-tier-label {
+  font-size: 10px; font-weight: 700; color: var(--text-muted);
+  text-transform: uppercase; letter-spacing: .5px;
+  margin-bottom: 6px; padding-left: 2px;
+}
+.position-grid {
+  display: flex; flex-wrap: wrap; gap: 6px;
+}
+.pos-btn {
+  display: flex; align-items: center; gap: 6px;
+  padding: 7px 12px; border-radius: 20px;
+  border: 1.5px solid var(--border);
+  background: white; cursor: pointer;
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 12px; font-weight: 600; color: var(--text);
+  transition: all .15s; white-space: nowrap;
+}
+.pos-btn:hover { border-color: #2563eb; background: #eff6ff; color: #1e3a8a; }
+.pos-btn.active {
+  border-color: #2563eb; background: #1e3a8a; color: white;
+  box-shadow: 0 2px 8px rgba(30,58,138,.3);
+}
+.pos-btn .pos-f1 {
+  background: rgba(255,255,255,.2); font-size: 9px; font-weight: 900;
+  padding: 1px 5px; border-radius: 8px; letter-spacing: .3px;
+}
+.pos-btn:not(.active) .pos-f1 {
+  background: #eff6ff; color: #2563eb;
+}
+
+/* ── 선택 결과 표시 ── */
+.selection-chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: #dcfce7; border: 1px solid #86efac;
+  color: #166534; padding: 6px 12px; border-radius: 20px;
+  font-size: 12px; font-weight: 700;
+}
+.selection-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+
+/* ── 구분선 ── */
+.section-divider {
+  display: flex; align-items: center; gap: 10px;
+  color: var(--text-muted); font-size: 11px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .6px;
+}
+.section-divider::before, .section-divider::after {
+  content: ''; flex: 1; height: 1px; background: var(--border);
+}
+
+.voter-input-wrap { position: relative; }
+.voter-input-wrap input { padding-right: 50px; }
+.voter-unit {
+  position: absolute; right: 14px; top: 50%;
+  transform: translateY(-50%);
+  font-size: 12px; color: var(--text-muted); font-weight: 600;
+  pointer-events: none;
+}
+
+.voter-quick { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.voter-quick button {
+  background: #f0f9ff; border: 1px solid #bae6fd; color: #0369a1;
+  padding: 4px 10px; border-radius: 20px;
+  font-size: 11px; font-weight: 600; cursor: pointer;
+  font-family: 'Noto Sans KR', sans-serif; transition: all .15s;
+}
+.voter-quick button:hover { background: #0369a1; color: white; border-color: #0369a1; }
+
+.calc-btn {
+  width: 100%; padding: 14px;
+  background: linear-gradient(135deg, #1e40af, #2563eb);
+  color: white; border: none; border-radius: var(--radius-sm);
+  font-size: 16px; font-weight: 800;
+  font-family: 'Noto Sans KR', sans-serif;
+  cursor: pointer; letter-spacing: .3px;
+  transition: all .2s; box-shadow: 0 4px 12px rgba(37,99,235,.3);
+}
+.calc-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(37,99,235,.4); }
+.calc-btn:active { transform: translateY(0); }
+
+/* ── 결과 패널 ── */
+.result-panel { display: flex; flex-direction: column; gap: 16px; }
+
+.result-main {
+  background: linear-gradient(140deg, #0f172a 0%, #1e3a8a 60%, #1d4ed8 100%);
+  color: white; border-radius: var(--radius); padding: 28px 28px 24px;
+  text-align: center; position: relative; overflow: hidden;
+}
+.result-main::after {
+  content: '₩'; font-size: 180px; font-weight: 900; opacity: .04;
+  position: absolute; right: -10px; bottom: -30px; line-height: 1;
+  font-family: sans-serif;
+}
+.result-label { font-size: 11px; opacity: .6; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+.result-formula-label {
+  background: rgba(245,158,11,.15); border: 1px solid rgba(245,158,11,.35);
+  color: #fcd34d; font-size: 11px; font-weight: 700;
+  padding: 3px 12px; border-radius: 20px; display: inline-block; margin-bottom: 16px;
+}
+.result-price-official {
+  font-size: 36px; font-weight: 900; line-height: 1.1; margin-bottom: 4px; letter-spacing: -1px;
+}
+.result-note { font-size: 11px; opacity: .5; margin-top: 6px; }
+
+.result-sale {
+  background: white; border-radius: var(--radius); border: 2px solid #fbbf24; padding: 20px 24px;
+}
+.result-sale-header {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 12px; font-weight: 700; color: var(--text-muted);
+  text-transform: uppercase; letter-spacing: .6px; margin-bottom: 14px;
+}
+.sale-badge {
+  background: #fef3c7; color: #b45309; border: 1px solid #fcd34d;
+  font-size: 10px; font-weight: 800; padding: 2px 8px; border-radius: 10px;
+}
+.sale-range {
+  display: flex; align-items: baseline; gap: 6px;
+  font-size: 28px; font-weight: 900; color: #92400e; margin-bottom: 8px;
+}
+.sale-range .sep { font-size: 18px; color: var(--text-muted); font-weight: 400; }
+.sale-discount {
+  display: inline-block; background: #fef3c7; border: 1px solid #fcd34d;
+  color: #b45309; font-size: 11px; font-weight: 700;
+  padding: 2px 10px; border-radius: 12px; margin-bottom: 8px;
+}
+.sale-desc { font-size: 11px; color: var(--text-muted); line-height: 1.6; }
+
+.formula-card { background: white; border-radius: var(--radius); border: 1px solid var(--border); overflow: hidden; }
+.formula-card-header {
+  background: #f8fafc; border-bottom: 1px solid var(--border);
+  padding: 12px 18px; font-size: 12px; font-weight: 700;
+  color: var(--text-muted); display: flex; align-items: center; gap: 6px;
+}
+.formula-eq {
+  padding: 16px 18px; font-size: 13px; font-weight: 700; color: #1e3a8a;
+  background: #eff6ff; border-bottom: 1px solid #bfdbfe;
+  letter-spacing: .3px; font-family: monospace; line-height: 1.8;
+}
+.formula-rows { padding: 4px 0; }
+.formula-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 18px; border-bottom: 1px solid #f1f5f9; gap: 12px;
+}
+.formula-row:last-child { border-bottom: none; }
+.formula-row-left { display: flex; align-items: center; gap: 10px; flex: 1; }
+.formula-sym {
+  width: 32px; height: 32px; border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 900; flex-shrink: 0; font-family: monospace;
+}
+.formula-row-name { font-size: 12px; font-weight: 600; }
+.formula-row-desc { font-size: 11px; color: var(--text-muted); margin-top: 1px; }
+.formula-row-val { font-size: 18px; font-weight: 900; min-width: 60px; text-align: right; }
+
+.empty-result {
+  background: white; border-radius: var(--radius);
+  border: 2px dashed var(--border); padding: 48px 24px;
+  text-align: center; color: var(--text-muted);
+}
+.empty-result .icon { font-size: 48px; margin-bottom: 12px; }
+.empty-result p { font-size: 13px; }
+
+.guide-card { background: white; border-radius: var(--radius); border: 1px solid var(--border); overflow: hidden; }
+.guide-header {
+  background: #f8fafc; border-bottom: 1px solid var(--border);
+  padding: 12px 18px; font-size: 12px; font-weight: 700;
+  color: var(--text-muted); display: flex; align-items: center; gap: 6px;
+}
+.guide-body { padding: 18px; }
+.guide-tip {
+  display: flex; gap: 10px; align-items: flex-start;
+  padding: 10px 0; border-bottom: 1px solid #f1f5f9;
+}
+.guide-tip:last-child { border-bottom: none; padding-bottom: 0; }
+.guide-tip-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+.guide-tip-text { font-size: 12px; line-height: 1.6; color: var(--text); }
+.guide-tip-text strong { color: #1e3a8a; }
+
+.formula-banner {
+  background: linear-gradient(135deg, #eff6ff, #dbeafe);
+  border: 1.5px solid #bfdbfe; border-radius: var(--radius-sm);
+  padding: 14px 18px; margin-bottom: 20px;
+  font-family: monospace; font-size: 14px; font-weight: 700;
+  color: #1e3a8a; text-align: center; letter-spacing: .3px;
+}
+
+.coef-tables { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px; }
+@media (max-width: 600px) { .coef-tables { grid-template-columns: 1fr; } }
+.coef-table { background: white; border-radius: var(--radius-sm); border: 1px solid var(--border); overflow: hidden; }
+.coef-table-title {
+  background: #f1f5f9; border-bottom: 1px solid var(--border);
+  padding: 8px 12px; font-size: 11px; font-weight: 700; color: var(--text-muted);
+  text-transform: uppercase; letter-spacing: .6px;
+}
+.coef-table table { width: 100%; border-collapse: collapse; }
+.coef-table td { padding: 7px 12px; font-size: 12px; border-bottom: 1px solid #f8fafc; }
+.coef-table tr:last-child td { border-bottom: none; }
+.coef-table td:last-child { font-weight: 800; color: #1e3a8a; text-align: right; }
+</style>
+</head>
+<body>
+
+<header class="app-header">
+  <div class="header-inner">
+    <div class="header-logo">Election<span class="logo-analysis">Analysis</span><span class="logo-report">Report</span><span class="logo-ai">AI</span></div>
+    <div class="header-subtitle" id="header-date"></div>
+  </div>
+</header>
+<nav class="main-nav"><div class="nav-inner" id="main-nav"></div></nav>
+
+<main class="main-content">
+<div id="page-content">
+
+  <div class="pricing-hero">
+    <div class="pricing-badge">💰 ElectionAI Pricing Engine v1.0</div>
+    <h1>리포트 가격 산정 계산기</h1>
+    <p class="sub">직위와 지역구를 선택하면 유권자 수가 자동 입력됩니다.<br>경쟁 강도·구조 복잡도를 추가하면 전략 가치 기준 가격을 산출합니다.</p>
+  </div>
+
+  <div class="formula-banner">
+    P(V, T, C, X, S) &nbsp;=&nbsp; B &nbsp;×&nbsp; F₁ &nbsp;×&nbsp; √(V / 100,000) &nbsp;×&nbsp; F₃ &nbsp;×&nbsp; F₄ &nbsp;×&nbsp; F₅
+  </div>
+
+  <div class="pricing-layout">
+
+    <!-- 좌: 입력 패널 -->
+    <div>
+      <div class="input-panel">
+        <div class="panel-header">⚙️ 선거 정보 입력</div>
+        <div class="panel-body">
+
+          <!-- ① 직위 선택 -->
+          <div class="field-group">
+            <div class="field-label">🏷️ 직위 선택</div>
+            <div class="position-section">
+              <div id="position-buttons"></div>
+            </div>
+          </div>
+
+          <!-- ② 광역시도 선택 -->
+          <div class="field-group" id="fg-metro" style="display:none">
+            <div class="field-label">📍 광역시도</div>
+            <select id="sel-metro" onchange="onMetroChange()">
+              <option value="">-- 광역시도 선택 --</option>
+            </select>
+          </div>
+
+          <!-- ③ 시군구/선거구 선택 -->
+          <div class="field-group" id="fg-sub" style="display:none">
+            <div class="field-label" id="sub-label">🗺️ 시군구 / 선거구</div>
+            <select id="sel-sub" onchange="onSubChange()">
+              <option value="">-- 선택 --</option>
+            </select>
+            <div class="field-desc" id="sub-desc"></div>
+          </div>
+
+          <!-- 선택 결과 칩 -->
+          <div id="selection-chips" style="display:none">
+            <div class="selection-chips" id="chips-inner"></div>
+          </div>
+
+          <div class="section-divider">상세 조건</div>
+
+          <!-- 리포트 유형 -->
+          <div class="field-group">
+            <div class="field-label"><span class="field-badge">B · F₅</span> 리포트 유형</div>
+            <select id="sel-report">
+              <option value="basic_1">📄 Basic 분석 (기본 단가 300만 · F₅=1.0)</option>
+              <option value="basic_2_5">📊 Strategy 설계 (기본 단가 300만 · F₅=2.5)</option>
+              <option value="basic_4">⭐ Premium 실행 포함 (기본 단가 300만 · F₅=4.0)</option>
+              <option value="strat_1">📄 Basic 분석 — Strategy 기준 (기본 단가 1000만 · F₅=1.0)</option>
+              <option value="strat_2_5" selected>📊 Strategy 설계 — Strategy 기준 (기본 단가 1000만 · F₅=2.5)</option>
+              <option value="strat_4">⭐ Premium 실행 포함 — Strategy 기준 (기본 단가 1000만 · F₅=4.0)</option>
+            </select>
+            <div class="field-desc">기본 단가(B)와 전략 깊이 계수(F₅)가 함께 결정됩니다.</div>
+          </div>
+
+          <!-- 선거급 계수 -->
+          <div class="field-group">
+            <div class="field-label"><span class="field-badge">F₁</span> 선거 유형 (선거급 계수)</div>
+            <select id="sel-tier">
+              <option value="1.0">기초의원 &nbsp;(F₁ = 1.0)</option>
+              <option value="1.5">광역의원 &nbsp;(F₁ = 1.5)</option>
+              <option value="2.0">기초단체장 (F₁ = 2.0)</option>
+              <option value="3.0" selected>국회의원 &nbsp;(F₁ = 3.0)</option>
+              <option value="5.0">광역단체장·교육감 (F₁ = 5.0)</option>
+              <option value="10.0">대통령급 &nbsp;(F₁ = 10.0)</option>
+            </select>
+            <div class="field-desc">직위 선택 시 자동 설정됩니다. 직접 변경도 가능합니다.</div>
+          </div>
+
+          <!-- 유권자 수 -->
+          <div class="field-group">
+            <div class="field-label"><span class="field-badge">F₂</span> 유권자 수 (명)</div>
+            <div class="voter-input-wrap">
+              <input type="number" id="inp-voters" value="200000" min="1000" step="10000">
+              <span class="voter-unit">명</span>
+            </div>
+            <div class="voter-quick">
+              <button onclick="setVoters(50000)">5만</button>
+              <button onclick="setVoters(100000)">10만</button>
+              <button onclick="setVoters(200000)">20만</button>
+              <button onclick="setVoters(500000)">50만</button>
+              <button onclick="setVoters(1000000)">100만</button>
+              <button onclick="setVoters(3000000)">300만</button>
+              <button onclick="setVoters(5000000)">500만</button>
+              <button onclick="setVoters(8000000)">800만</button>
+              <button onclick="setVoters(12000000)">1200만</button>
+            </div>
+            <div class="field-desc">지역구 선택 시 자동 입력됩니다. F₂ = √(V / 100,000)</div>
+          </div>
+
+          <!-- 경쟁 강도 -->
+          <div class="field-group">
+            <div class="field-label"><span class="field-badge">F₃</span> 경쟁 강도 (판세)</div>
+            <select id="sel-competition">
+              <option value="0.9">안정적 1위 (F₃ = 0.9)</option>
+              <option value="1.0" selected>접전 (F₃ = 1.0)</option>
+              <option value="1.2">열세 (F₃ = 1.2)</option>
+              <option value="1.5">3~4위 역전 (F₃ = 1.5)</option>
+            </select>
+          </div>
+
+          <!-- 구조 복잡도 -->
+          <div class="field-group">
+            <div class="field-label"><span class="field-badge">F₄</span> 구조 복잡도</div>
+            <select id="sel-complexity">
+              <option value="1.0" selected>단일 지역구 (F₄ = 1.0)</option>
+              <option value="1.2">다권역 (F₄ = 1.2)</option>
+              <option value="1.5">정당 전국 이슈 연동 (F₄ = 1.5)</option>
+              <option value="2.0">초대형·다층 구조 (F₄ = 2.0)</option>
+            </select>
+          </div>
+
+          <!-- 후보 메모 -->
+          <div class="field-group">
+            <div class="field-label">📝 후보 메모 (선택)</div>
+            <input type="text" id="inp-memo" placeholder="예: 홍길동 후보" maxlength="40">
+          </div>
+
+          <button class="calc-btn" onclick="calculate()">💰 가격 산정하기</button>
+
+        </div>
+      </div>
+
+      <!-- 계수 참조표 -->
+      <div style="margin-top:16px;">
+        <div class="formula-card">
+          <div class="formula-card-header">📋 계수 참조표</div>
+          <div style="padding:16px;">
+            <div class="coef-tables">
+              <div class="coef-table">
+                <div class="coef-table-title">F₁ · 선거급</div>
+                <table>
+                  <tr><td>기초의원</td><td>1.0</td></tr>
+                  <tr><td>광역의원</td><td>1.5</td></tr>
+                  <tr><td>기초단체장</td><td>2.0</td></tr>
+                  <tr><td>국회의원</td><td>3.0</td></tr>
+                  <tr><td>광역단체장·교육감</td><td>5.0</td></tr>
+                  <tr><td>대통령</td><td>10.0</td></tr>
+                </table>
+              </div>
+              <div class="coef-table">
+                <div class="coef-table-title">F₂ · 유권자 규모</div>
+                <table>
+                  <tr><td>10만명</td><td>1.00</td></tr>
+                  <tr><td>50만명</td><td>2.24</td></tr>
+                  <tr><td>100만명</td><td>3.16</td></tr>
+                  <tr><td>300만명</td><td>5.48</td></tr>
+                  <tr><td>800만명</td><td>8.94</td></tr>
+                  <tr><td>1,200만명</td><td>10.95</td></tr>
+                </table>
+              </div>
+              <div class="coef-table">
+                <div class="coef-table-title">F₃ · 경쟁 강도</div>
+                <table>
+                  <tr><td>안정적 1위</td><td>0.9</td></tr>
+                  <tr><td>접전</td><td>1.0</td></tr>
+                  <tr><td>열세</td><td>1.2</td></tr>
+                  <tr><td>3~4위 역전</td><td>1.5</td></tr>
+                </table>
+              </div>
+              <div class="coef-table">
+                <div class="coef-table-title">F₄ · 구조 복잡도</div>
+                <table>
+                  <tr><td>단일 지역</td><td>1.0</td></tr>
+                  <tr><td>다권역</td><td>1.2</td></tr>
+                  <tr><td>전국 이슈 연동</td><td>1.5</td></tr>
+                  <tr><td>초대형·다층</td><td>2.0</td></tr>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 우: 결과 패널 -->
+    <div class="result-panel" id="result-area">
+
+      <div class="empty-result" id="empty-state">
+        <div class="icon">📊</div>
+        <p>직위와 지역구를 선택한 후<br><strong>가격 산정하기</strong>를 누르세요.</p>
+      </div>
+
+      <div id="result-content" style="display:none; flex-direction:column; gap:16px;">
+        <div class="result-main">
+          <div class="result-formula-label">📐 ElectionAI Pricing Engine</div>
+          <div id="res-memo" style="font-size:13px;opacity:.65;margin-bottom:10px;"></div>
+          <div class="result-label">공식 산정 전략 자산 가치</div>
+          <div class="result-price-official" id="res-official">-</div>
+          <div class="result-note">※ 이 가격은 전략 가치 산정 기준입니다</div>
+        </div>
+
+        <div class="result-sale">
+          <div class="result-sale-header">
+            <span>💼 실제 판매 권장가</span>
+            <span class="sale-badge">전략 가격</span>
+          </div>
+          <div class="sale-range">
+            <span id="res-sale-low">-</span>
+            <span class="sep">~</span>
+            <span id="res-sale-high">-</span>
+          </div>
+          <div class="sale-discount" id="res-discount-pct">-</div>
+          <div class="sale-desc" id="res-sale-desc"></div>
+        </div>
+
+        <div class="formula-card">
+          <div class="formula-card-header">🔢 공식 분해 상세</div>
+          <div class="formula-eq" id="res-formula-eq">-</div>
+          <div class="formula-rows" id="res-formula-rows"></div>
+        </div>
+
+        <div class="guide-card">
+          <div class="guide-header">💬 후보 제안 멘트</div>
+          <div class="guide-body">
+            <div style="background:#f8fafc;border:1px solid var(--border);border-radius:8px;padding:14px;font-size:12px;line-height:1.9;color:#1e3a8a;" id="res-pitch"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="guide-card">
+        <div class="guide-header">📌 가격 산정 활용 전략</div>
+        <div class="guide-body">
+          <div class="guide-tip">
+            <div class="guide-tip-icon">🎯</div>
+            <div class="guide-tip-text"><strong>공식 산정가는 협상의 앵커</strong>입니다. 공식 가치를 먼저 제시하고 전략 가격으로 제공한다는 논리로 가격 방어력을 높이세요.</div>
+          </div>
+          <div class="guide-tip">
+            <div class="guide-tip-icon">📊</div>
+            <div class="guide-tip-text"><strong>판세가 열세일수록</strong> F₃ 계수가 높아져 전략 가치가 상승합니다. 역전이 필요한 후보일수록 제안 가격이 납득됩니다.</div>
+          </div>
+          <div class="guide-tip">
+            <div class="guide-tip-icon">💡</div>
+            <div class="guide-tip-text"><strong>실판매가는 공식가의 20~30%</strong>로 설정합니다. 나머지는 "선거 성공 파트너십"으로 포지셔닝하면 고급화 전략이 됩니다.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</main>
+
+<script src="js/shared.js"></script>
+<script>
+// ════════════════════════════════════════════════
+// 직위 데이터
+// ════════════════════════════════════════════════
+const POSITION_TYPES = [
+  { id:'president',   label:'대통령',    icon:'🇰🇷', f1:10, tierVal:'10.0', level:'national' },
+  { id:'metro_mayor', label:'광역시장',  icon:'🏛️',  f1:5,  tierVal:'5.0',  level:'metro',    sub:'특별시장·광역시장' },
+  { id:'governor',    label:'도지사',    icon:'🏛️',  f1:5,  tierVal:'5.0',  level:'metro',    sub:'도지사·특별자치도지사' },
+  { id:'education',   label:'교육감',    icon:'🎓',  f1:5,  tierVal:'5.0',  level:'metro' },
+  { id:'natl_asm',    label:'국회의원',  icon:'🏛️',  f1:3,  tierVal:'3.0',  level:'assembly' },
+  { id:'sijang',      label:'시장',      icon:'🏢',  f1:2,  tierVal:'2.0',  level:'basic',    sub:'기초 시장' },
+  { id:'gucheong',    label:'구청장',    icon:'🏢',  f1:2,  tierVal:'2.0',  level:'basic',    sub:'자치구청장' },
+  { id:'gunsu',       label:'군수',      icon:'🏢',  f1:2,  tierVal:'2.0',  level:'basic' },
+  { id:'metro_cncl',  label:'광역의원',  icon:'📋',  f1:1.5,tierVal:'1.5',  level:'metro_council' },
+  { id:'basic_cncl',  label:'기초의원',  icon:'📋',  f1:1.0,tierVal:'1.0',  level:'basic_council' },
+];
+
+const TIER_GROUPS = [
+  { label:'국가', ids:['president'] },
+  { label:'광역 (F₁=5)', ids:['metro_mayor','governor','education'] },
+  { label:'국회·입법 (F₁=3)', ids:['natl_asm'] },
+  { label:'기초단체장 (F₁=2)', ids:['sijang','gucheong','gunsu'] },
+  { label:'의회 (F₁=1~1.5)', ids:['metro_cncl','basic_cncl'] },
+];
+
+// ════════════════════════════════════════════════
+// 광역시도 데이터
+// ════════════════════════════════════════════════
+const METRO_REGIONS = [
+  { id:'seoul',    name:'서울특별시',      voters:8326817 },
+  { id:'busan',    name:'부산광역시',      voters:2914802 },
+  { id:'daegu',    name:'대구광역시',      voters:2009781 },
+  { id:'incheon',  name:'인천광역시',      voters:2447871 },
+  { id:'gwangju',  name:'광주광역시',      voters:1168007 },
+  { id:'daejeon',  name:'대전광역시',      voters:1195388 },
+  { id:'ulsan',    name:'울산광역시',      voters:916421  },
+  { id:'sejong',   name:'세종특별자치시',  voters:281424  },
+  { id:'gyeonggi', name:'경기도',          voters:11047338},
+  { id:'gangwon',  name:'강원특별자치도',  voters:1276867 },
+  { id:'chungbuk', name:'충청북도',        voters:1274578 },
+  { id:'chungnam', name:'충청남도',        voters:1706048 },
+  { id:'jeonbuk',  name:'전북특별자치도',  voters:1478021 },
+  { id:'jeonnam',  name:'전라남도',        voters:1478912 },
+  { id:'gyeongbuk',name:'경상북도',        voters:2177178 },
+  { id:'gyeongnam',name:'경상남도',        voters:2680892 },
+  { id:'jeju',     name:'제주특별자치도',  voters:550002  },
+];
+
+// ════════════════════════════════════════════════
+// 기초자치단체 데이터 (시장·구청장·군수)
+// ════════════════════════════════════════════════
+const BASIC_DISTRICTS = {
+  seoul:[
+    {name:'종로구',type:'구청장',voters:128000},{name:'중구',type:'구청장',voters:110000},
+    {name:'용산구',type:'구청장',voters:210000},{name:'성동구',type:'구청장',voters:255000},
+    {name:'광진구',type:'구청장',voters:315000},{name:'동대문구',type:'구청장',voters:302000},
+    {name:'중랑구',type:'구청장',voters:343000},{name:'성북구',type:'구청장',voters:374000},
+    {name:'강북구',type:'구청장',voters:280000},{name:'도봉구',type:'구청장',voters:274000},
+    {name:'노원구',type:'구청장',voters:455000},{name:'은평구',type:'구청장',voters:403000},
+    {name:'서대문구',type:'구청장',voters:263000},{name:'마포구',type:'구청장',voters:333000},
+    {name:'양천구',type:'구청장',voters:384000},{name:'강서구',type:'구청장',voters:492000},
+    {name:'구로구',type:'구청장',voters:363000},{name:'금천구',type:'구청장',voters:210000},
+    {name:'영등포구',type:'구청장',voters:345000},{name:'동작구',type:'구청장',voters:325000},
+    {name:'관악구',type:'구청장',voters:414000},{name:'서초구',type:'구청장',voters:390000},
+    {name:'강남구',type:'구청장',voters:483000},{name:'송파구',type:'구청장',voters:573000},
+    {name:'강동구',type:'구청장',voters:375000},
+  ],
+  busan:[
+    {name:'중구',type:'구청장',voters:52000},{name:'서구',type:'구청장',voters:90000},
+    {name:'동구',type:'구청장',voters:82000},{name:'영도구',type:'구청장',voters:98000},
+    {name:'부산진구',type:'구청장',voters:330000},{name:'동래구',type:'구청장',voters:233000},
+    {name:'남구',type:'구청장',voters:233000},{name:'북구',type:'구청장',voters:263000},
+    {name:'해운대구',type:'구청장',voters:373000},{name:'사하구',type:'구청장',voters:273000},
+    {name:'금정구',type:'구청장',voters:214000},{name:'강서구',type:'구청장',voters:132000},
+    {name:'연제구',type:'구청장',voters:172000},{name:'수영구',type:'구청장',voters:174000},
+    {name:'사상구',type:'구청장',voters:210000},{name:'기장군',type:'군수',voters:152000},
+  ],
+  daegu:[
+    {name:'중구',type:'구청장',voters:68000},{name:'동구',type:'구청장',voters:365000},
+    {name:'서구',type:'구청장',voters:152000},{name:'남구',type:'구청장',voters:148000},
+    {name:'북구',type:'구청장',voters:392000},{name:'수성구',type:'구청장',voters:363000},
+    {name:'달서구',type:'구청장',voters:493000},{name:'달성군',type:'군수',voters:197000},
+  ],
+  incheon:[
+    {name:'중구',type:'구청장',voters:101000},{name:'동구',type:'구청장',voters:60000},
+    {name:'미추홀구',type:'구청장',voters:367000},{name:'연수구',type:'구청장',voters:303000},
+    {name:'남동구',type:'구청장',voters:443000},{name:'부평구',type:'구청장',voters:468000},
+    {name:'계양구',type:'구청장',voters:246000},{name:'서구',type:'구청장',voters:493000},
+    {name:'강화군',type:'군수',voters:55000},{name:'옹진군',type:'군수',voters:18000},
+  ],
+  gwangju:[
+    {name:'동구',type:'구청장',voters:88000},{name:'서구',type:'구청장',voters:271000},
+    {name:'남구',type:'구청장',voters:193000},{name:'북구',type:'구청장',voters:417000},
+    {name:'광산구',type:'구청장',voters:373000},
+  ],
+  daejeon:[
+    {name:'동구',type:'구청장',voters:198000},{name:'중구',type:'구청장',voters:212000},
+    {name:'서구',type:'구청장',voters:438000},{name:'유성구',type:'구청장',voters:308000},
+    {name:'대덕구',type:'구청장',voters:175000},
+  ],
+  ulsan:[
+    {name:'중구',type:'구청장',voters:195000},{name:'남구',type:'구청장',voters:283000},
+    {name:'동구',type:'구청장',voters:153000},{name:'북구',type:'구청장',voters:172000},
+    {name:'울주군',type:'군수',voters:192000},
+  ],
+  sejong:[], // 기초자치단체 없음
+  gyeonggi:[
+    {name:'수원시',type:'시장',voters:1060000},{name:'성남시',type:'시장',voters:800000},
+    {name:'의정부시',type:'시장',voters:430000},{name:'안양시',type:'시장',voters:520000},
+    {name:'부천시',type:'시장',voters:770000},{name:'광명시',type:'시장',voters:280000},
+    {name:'평택시',type:'시장',voters:470000},{name:'동두천시',type:'시장',voters:80000},
+    {name:'안산시',type:'시장',voters:630000},{name:'고양시',type:'시장',voters:930000},
+    {name:'과천시',type:'시장',voters:65000},{name:'구리시',type:'시장',voters:170000},
+    {name:'남양주시',type:'시장',voters:630000},{name:'오산시',type:'시장',voters:190000},
+    {name:'시흥시',type:'시장',voters:440000},{name:'군포시',type:'시장',voters:250000},
+    {name:'의왕시',type:'시장',voters:140000},{name:'하남시',type:'시장',voters:230000},
+    {name:'용인시',type:'시장',voters:920000},{name:'파주시',type:'시장',voters:400000},
+    {name:'이천시',type:'시장',voters:210000},{name:'안성시',type:'시장',voters:150000},
+    {name:'김포시',type:'시장',voters:430000},{name:'화성시',type:'시장',voters:620000},
+    {name:'광주시',type:'시장',voters:320000},{name:'양주시',type:'시장',voters:200000},
+    {name:'포천시',type:'시장',voters:130000},{name:'여주시',type:'시장',voters:100000},
+    {name:'양평군',type:'군수',voters:100000},{name:'가평군',type:'군수',voters:60000},
+    {name:'연천군',type:'군수',voters:40000},
+  ],
+  gangwon:[
+    {name:'춘천시',type:'시장',voters:240000},{name:'원주시',type:'시장',voters:330000},
+    {name:'강릉시',type:'시장',voters:200000},{name:'동해시',type:'시장',voters:85000},
+    {name:'태백시',type:'시장',voters:40000},{name:'속초시',type:'시장',voters:70000},
+    {name:'삼척시',type:'시장',voters:58000},{name:'홍천군',type:'군수',voters:55000},
+    {name:'횡성군',type:'군수',voters:40000},{name:'영월군',type:'군수',voters:35000},
+    {name:'평창군',type:'군수',voters:40000},{name:'정선군',type:'군수',voters:35000},
+    {name:'철원군',type:'군수',voters:42000},{name:'화천군',type:'군수',voters:24000},
+    {name:'양구군',type:'군수',voters:20000},{name:'인제군',type:'군수',voters:28000},
+    {name:'고성군',type:'군수',voters:25000},{name:'양양군',type:'군수',voters:26000},
+  ],
+  chungbuk:[
+    {name:'청주시',type:'시장',voters:660000},{name:'충주시',type:'시장',voters:190000},
+    {name:'제천시',type:'시장',voters:120000},{name:'보은군',type:'군수',voters:30000},
+    {name:'옥천군',type:'군수',voters:45000},{name:'영동군',type:'군수',voters:38000},
+    {name:'증평군',type:'군수',voters:33000},{name:'진천군',type:'군수',voters:75000},
+    {name:'괴산군',type:'군수',voters:32000},{name:'음성군',type:'군수',voters:80000},
+    {name:'단양군',type:'군수',voters:26000},
+  ],
+  chungnam:[
+    {name:'천안시',type:'시장',voters:500000},{name:'공주시',type:'시장',voters:95000},
+    {name:'보령시',type:'시장',voters:80000},{name:'아산시',type:'시장',voters:280000},
+    {name:'서산시',type:'시장',voters:135000},{name:'논산시',type:'시장',voters:100000},
+    {name:'계룡시',type:'시장',voters:40000},{name:'당진시',type:'시장',voters:130000},
+    {name:'금산군',type:'군수',voters:48000},{name:'부여군',type:'군수',voters:55000},
+    {name:'서천군',type:'군수',voters:45000},{name:'청양군',type:'군수',voters:27000},
+    {name:'홍성군',type:'군수',voters:80000},{name:'예산군',type:'군수',voters:65000},
+    {name:'태안군',type:'군수',voters:55000},
+  ],
+  jeonbuk:[
+    {name:'전주시',type:'시장',voters:540000},{name:'군산시',type:'시장',voters:225000},
+    {name:'익산시',type:'시장',voters:245000},{name:'정읍시',type:'시장',voters:100000},
+    {name:'남원시',type:'시장',voters:70000},{name:'김제시',type:'시장',voters:80000},
+    {name:'완주군',type:'군수',voters:80000},{name:'진안군',type:'군수',voters:22000},
+    {name:'무주군',type:'군수',voters:22000},{name:'장수군',type:'군수',voters:20000},
+    {name:'임실군',type:'군수',voters:24000},{name:'순창군',type:'군수',voters:24000},
+    {name:'고창군',type:'군수',voters:48000},{name:'부안군',type:'군수',voters:48000},
+  ],
+  jeonnam:[
+    {name:'목포시',type:'시장',voters:195000},{name:'여수시',type:'시장',voters:235000},
+    {name:'순천시',type:'시장',voters:245000},{name:'나주시',type:'시장',voters:90000},
+    {name:'광양시',type:'시장',voters:130000},{name:'담양군',type:'군수',voters:43000},
+    {name:'곡성군',type:'군수',voters:27000},{name:'구례군',type:'군수',voters:22000},
+    {name:'고흥군',type:'군수',voters:55000},{name:'보성군',type:'군수',voters:38000},
+    {name:'화순군',type:'군수',voters:55000},{name:'장흥군',type:'군수',voters:33000},
+    {name:'강진군',type:'군수',voters:30000},{name:'해남군',type:'군수',voters:58000},
+    {name:'영암군',type:'군수',voters:48000},{name:'무안군',type:'군수',voters:68000},
+    {name:'함평군',type:'군수',voters:30000},{name:'영광군',type:'군수',voters:47000},
+    {name:'장성군',type:'군수',voters:38000},{name:'완도군',type:'군수',voters:42000},
+    {name:'진도군',type:'군수',voters:27000},{name:'신안군',type:'군수',voters:38000},
+  ],
+  gyeongbuk:[
+    {name:'포항시',type:'시장',voters:430000},{name:'경주시',type:'시장',voters:200000},
+    {name:'김천시',type:'시장',voters:115000},{name:'안동시',type:'시장',voters:145000},
+    {name:'구미시',type:'시장',voters:340000},{name:'영주시',type:'시장',voters:95000},
+    {name:'영천시',type:'시장',voters:88000},{name:'상주시',type:'시장',voters:85000},
+    {name:'문경시',type:'시장',voters:62000},{name:'경산시',type:'시장',voters:235000},
+    {name:'군위군',type:'군수',voters:22000},{name:'의성군',type:'군수',voters:45000},
+    {name:'청송군',type:'군수',voters:23000},{name:'영양군',type:'군수',voters:15000},
+    {name:'영덕군',type:'군수',voters:30000},{name:'청도군',type:'군수',voters:38000},
+    {name:'고령군',type:'군수',voters:30000},{name:'성주군',type:'군수',voters:38000},
+    {name:'칠곡군',type:'군수',voters:100000},{name:'예천군',type:'군수',voters:48000},
+    {name:'봉화군',type:'군수',voters:28000},{name:'울진군',type:'군수',voters:43000},
+    {name:'울릉군',type:'군수',voters:8000},
+  ],
+  gyeongnam:[
+    {name:'창원시',type:'시장',voters:860000},{name:'진주시',type:'시장',voters:280000},
+    {name:'통영시',type:'시장',voters:110000},{name:'사천시',type:'시장',voters:100000},
+    {name:'김해시',type:'시장',voters:430000},{name:'밀양시',type:'시장',voters:95000},
+    {name:'거제시',type:'시장',voters:195000},{name:'양산시',type:'시장',voters:275000},
+    {name:'의령군',type:'군수',voters:25000},{name:'함안군',type:'군수',voters:63000},
+    {name:'창녕군',type:'군수',voters:55000},{name:'고성군',type:'군수',voters:45000},
+    {name:'남해군',type:'군수',voters:38000},{name:'하동군',type:'군수',voters:38000},
+    {name:'산청군',type:'군수',voters:30000},{name:'함양군',type:'군수',voters:35000},
+    {name:'거창군',type:'군수',voters:55000},{name:'합천군',type:'군수',voters:42000},
+  ],
+  jeju:[
+    {name:'제주시',type:'시장',voters:368000},{name:'서귀포시',type:'시장',voters:155000},
+  ],
+};
+
+// ════════════════════════════════════════════════
+// 국회의원 지역구 데이터 (22대 총선 기준)
+// ════════════════════════════════════════════════
+const ASSEMBLY_DISTRICTS = {
+  seoul:[
+    {name:'종로',voters:132000},{name:'중·성동갑',voters:166000},{name:'중·성동을',voters:166000},
+    {name:'용산',voters:218000},{name:'광진갑',voters:156000},{name:'광진을',voters:157000},
+    {name:'동대문갑',voters:149000},{name:'동대문을',voters:150000},
+    {name:'중랑갑',voters:168000},{name:'중랑을',voters:169000},
+    {name:'성북갑',voters:183000},{name:'성북을',voters:185000},
+    {name:'강북갑',voters:139000},{name:'강북을',voters:140000},
+    {name:'도봉갑',voters:135000},{name:'도봉을',voters:136000},
+    {name:'노원갑',voters:149000},{name:'노원을',voters:150000},{name:'노원병',voters:150000},
+    {name:'은평갑',voters:200000},{name:'은평을',voters:200000},
+    {name:'서대문갑',voters:130000},{name:'서대문을',voters:130000},
+    {name:'마포갑',voters:168000},{name:'마포을',voters:165000},
+    {name:'양천갑',voters:190000},{name:'양천을',voters:192000},
+    {name:'강서갑',voters:163000},{name:'강서을',voters:163000},{name:'강서병',voters:163000},
+    {name:'구로갑',voters:180000},{name:'구로을',voters:180000},
+    {name:'금천',voters:210000},{name:'영등포갑',voters:173000},{name:'영등포을',voters:173000},
+    {name:'동작갑',voters:163000},{name:'동작을',voters:163000},
+    {name:'관악갑',voters:208000},{name:'관악을',voters:208000},
+    {name:'서초갑',voters:196000},{name:'서초을',voters:196000},
+    {name:'강남갑',voters:160000},{name:'강남을',voters:160000},{name:'강남병',voters:163000},
+    {name:'송파갑',voters:191000},{name:'송파을',voters:191000},{name:'송파병',voters:192000},
+    {name:'강동갑',voters:186000},{name:'강동을',voters:186000},
+  ],
+  busan:[
+    {name:'중·영도',voters:148000},{name:'서·동',voters:170000},
+    {name:'부산진갑',voters:163000},{name:'부산진을',voters:165000},
+    {name:'동래',voters:230000},{name:'남갑',voters:115000},{name:'남을',voters:115000},
+    {name:'북·강서갑',voters:195000},{name:'북·강서을',voters:195000},
+    {name:'해운대갑',voters:185000},{name:'해운대을',voters:186000},
+    {name:'사하갑',voters:137000},{name:'사하을',voters:137000},
+    {name:'금정',voters:214000},{name:'연제',voters:172000},
+    {name:'수영',voters:174000},{name:'사상',voters:210000},{name:'기장',voters:152000},
+  ],
+  daegu:[
+    {name:'중남',voters:218000},{name:'동갑',voters:183000},{name:'동을',voters:183000},
+    {name:'서',voters:153000},{name:'북갑',voters:196000},{name:'북을',voters:196000},
+    {name:'수성갑',voters:180000},{name:'수성을',voters:183000},
+    {name:'달서갑',voters:163000},{name:'달서을',voters:163000},{name:'달서병',voters:165000},
+    {name:'달성',voters:197000},
+  ],
+  incheon:[
+    {name:'계양갑',voters:123000},{name:'계양을',voters:123000},
+    {name:'남동갑',voters:220000},{name:'남동을',voters:220000},
+    {name:'미추홀갑',voters:183000},{name:'미추홀을',voters:183000},
+    {name:'부평갑',voters:233000},{name:'부평을',voters:235000},
+    {name:'서갑',voters:246000},{name:'서을',voters:246000},
+    {name:'연수갑',voters:151000},{name:'연수을',voters:151000},
+    {name:'중·강화·옹진',voters:172000},
+  ],
+  gwangju:[
+    {name:'동남갑',voters:176000},{name:'동남을',voters:176000},
+    {name:'서갑',voters:136000},{name:'서을',voters:136000},
+    {name:'북갑',voters:208000},{name:'북을',voters:208000},
+    {name:'광산갑',voters:188000},{name:'광산을',voters:186000},
+  ],
+  daejeon:[
+    {name:'동구',voters:198000},{name:'중구',voters:212000},
+    {name:'서갑',voters:218000},{name:'서을',voters:218000},
+    {name:'유성갑',voters:153000},{name:'유성을',voters:153000},{name:'대덕',voters:175000},
+  ],
+  ulsan:[
+    {name:'중구',voters:195000},{name:'남갑',voters:141000},{name:'남을',voters:141000},
+    {name:'동구',voters:153000},{name:'북구',voters:172000},{name:'울주',voters:192000},
+  ],
+  sejong:[
+    {name:'세종갑',voters:141000},{name:'세종을',voters:141000},
+  ],
+  gyeonggi:[
+    {name:'고양갑',voters:153000},{name:'고양을',voters:153000},
+    {name:'고양병',voters:153000},{name:'고양정',voters:153000},
+    {name:'과천·의왕',voters:205000},{name:'광명갑',voters:140000},{name:'광명을',voters:140000},
+    {name:'광주',voters:320000},{name:'구리',voters:170000},
+    {name:'군포갑',voters:125000},{name:'군포을',voters:125000},
+    {name:'김포갑',voters:215000},{name:'김포을',voters:215000},
+    {name:'남양주갑',voters:210000},{name:'남양주을',voters:210000},{name:'남양주병',voters:210000},
+    {name:'동두천·연천',voters:119000},
+    {name:'부천갑',voters:192000},{name:'부천을',voters:192000},
+    {name:'부천병',voters:192000},{name:'부천정',voters:192000},
+    {name:'성남분당갑',voters:200000},{name:'성남분당을',voters:200000},
+    {name:'성남수정',voters:200000},{name:'성남중원',voters:200000},
+    {name:'수원갑',voters:212000},{name:'수원을',voters:212000},
+    {name:'수원병',voters:212000},{name:'수원정',voters:212000},
+    {name:'시흥갑',voters:220000},{name:'시흥을',voters:220000},
+    {name:'안산갑',voters:210000},{name:'안산을',voters:210000},{name:'안산병',voters:210000},
+    {name:'안성',voters:150000},{name:'안양동안갑',voters:130000},{name:'안양동안을',voters:130000},
+    {name:'안양만안',voters:260000},{name:'양주·동두천',voters:280000},
+    {name:'양평·가평',voters:160000},{name:'여주·양평',voters:200000},
+    {name:'오산',voters:190000},{name:'용인갑',voters:230000},{name:'용인을',voters:230000},
+    {name:'용인병',voters:230000},{name:'용인정',voters:230000},
+    {name:'의정부갑',voters:215000},{name:'의정부을',voters:215000},
+    {name:'이천',voters:210000},{name:'파주갑',voters:200000},{name:'파주을',voters:200000},
+    {name:'평택갑',voters:235000},{name:'평택을',voters:235000},
+    {name:'포천·가평',voters:190000},{name:'하남갑',voters:160000},{name:'하남을',voters:160000},
+    {name:'화성갑',voters:207000},{name:'화성을',voters:207000},
+    {name:'화성병',voters:207000},{name:'화성정',voters:207000},
+  ],
+  gangwon:[
+    {name:'춘천갑',voters:120000},{name:'춘천을',voters:120000},
+    {name:'원주갑',voters:165000},{name:'원주을',voters:165000},
+    {name:'강릉',voters:200000},{name:'동해·태백·삼척·정선',voters:172000},
+    {name:'속초·인제·고성·양양',voters:143000},
+    {name:'홍천·횡성·영월·평창',voters:150000},
+    {name:'철원·화천·양구·인제',voters:114000},
+  ],
+  chungbuk:[
+    {name:'청주상당',voters:165000},{name:'청주서원',voters:165000},
+    {name:'청주흥덕',voters:165000},{name:'청주청원',voters:165000},
+    {name:'충주',voters:190000},{name:'제천·단양',voters:146000},
+    {name:'보은·옥천·영동·괴산',voters:145000},
+    {name:'증평·진천·음성',voters:188000},
+  ],
+  chungnam:[
+    {name:'천안갑',voters:166000},{name:'천안을',voters:166000},{name:'천안병',voters:166000},
+    {name:'공주·부여·청양',voters:173000},{name:'보령·서천',voters:125000},
+    {name:'아산갑',voters:140000},{name:'아산을',voters:140000},
+    {name:'서산·태안',voters:190000},{name:'논산·계룡·금산',voters:188000},
+    {name:'당진',voters:130000},{name:'홍성·예산',voters:145000},
+  ],
+  jeonbuk:[
+    {name:'전주갑',voters:180000},{name:'전주을',voters:180000},{name:'전주병',voters:180000},
+    {name:'익산갑',voters:122000},{name:'익산을',voters:122000},
+    {name:'군산',voters:225000},{name:'정읍·고창',voters:148000},
+    {name:'남원·순창·임실·장수',voters:136000},
+    {name:'완주·진안·무주',voters:122000},{name:'부안·김제',voters:128000},
+  ],
+  jeonnam:[
+    {name:'목포',voters:195000},{name:'여수갑',voters:117000},{name:'여수을',voters:117000},
+    {name:'순천·광양·곡성·구례갑',voters:187000},{name:'순천·광양·곡성·구례을',voters:187000},
+    {name:'나주·화순',voters:145000},{name:'담양·함평·영광·장성',voters:148000},
+    {name:'고흥·보성·장흥·강진',voters:148000},
+    {name:'해남·완도·진도',voters:107000},{name:'무안·신안',voters:106000},
+  ],
+  gyeongbuk:[
+    {name:'포항갑',voters:215000},{name:'포항을',voters:215000},
+    {name:'경주',voters:200000},{name:'김천',voters:115000},
+    {name:'안동·예천',voters:193000},{name:'구미갑',voters:170000},{name:'구미을',voters:170000},
+    {name:'영주·영양·봉화·울진',voters:186000},
+    {name:'영천·청도',voters:126000},{name:'상주·문경',voters:147000},
+    {name:'경산',voters:235000},{name:'칠곡·군위·성주·고령',voters:190000},
+    {name:'의성·청송·영덕·울릉',voters:96000},
+  ],
+  gyeongnam:[
+    {name:'창원의창',voters:215000},{name:'창원성산',voters:215000},
+    {name:'창원마산합포',voters:215000},{name:'창원마산회원',voters:215000},
+    {name:'창원진해',voters:215000},
+    {name:'진주갑',voters:140000},{name:'진주을',voters:140000},
+    {name:'통영·고성',voters:155000},{name:'사천·남해·하동',voters:176000},
+    {name:'김해갑',voters:215000},{name:'김해을',voters:215000},
+    {name:'밀양·의령·함안·창녕',voters:183000},
+    {name:'거제',voters:195000},{name:'양산갑',voters:138000},{name:'양산을',voters:138000},
+    {name:'산청·함양·거창·합천',voters:162000},
+  ],
+  jeju:[
+    {name:'제주갑',voters:183000},{name:'제주을',voters:183000},{name:'서귀포',voters:155000},
+  ],
+};
+
+// ════════════════════════════════════════════════
+// 상태 변수
+// ════════════════════════════════════════════════
+let selectedPosition = null;
+
+// ════════════════════════════════════════════════
+// 직위 버튼 렌더링
+// ════════════════════════════════════════════════
+function renderPositionButtons() {
+  const container = document.getElementById('position-buttons');
+  container.innerHTML = TIER_GROUPS.map(group => `
+    <div class="position-tier">
+      <div class="position-tier-label">${group.label}</div>
+      <div class="position-grid">
+        ${group.ids.map(id => {
+          const p = POSITION_TYPES.find(x => x.id === id);
+          return `<button class="pos-btn" id="pos-${p.id}" onclick="onPositionClick('${p.id}')">
+            ${p.icon} ${p.label}
+            <span class="pos-f1">F₁=${p.f1}</span>
+          </button>`;
+        }).join('')}
+      </div>
+    </div>
+  `).join('');
+}
+
+// ════════════════════════════════════════════════
+// 직위 클릭
+// ════════════════════════════════════════════════
+function onPositionClick(posId) {
+  selectedPosition = POSITION_TYPES.find(p => p.id === posId);
+
+  // 버튼 활성화
+  document.querySelectorAll('.pos-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('pos-' + posId).classList.add('active');
+
+  // F₁ 자동 설정
+  document.getElementById('sel-tier').value = selectedPosition.tierVal;
+
+  const level = selectedPosition.level;
+
+  // 대통령: 바로 완료
+  if (level === 'national') {
+    document.getElementById('inp-voters').value = 44247515;
+    document.getElementById('inp-voters').removeAttribute('readonly');
+    hideSub();
+    hideMetro();
+    updateMemo();
+    showChips('대통령', null, null, 44247515);
+    return;
+  }
+
+  // 광역/교육감: 광역시도만 선택
+  if (level === 'metro' || level === 'metro_council') {
+    showMetro();
+    hideSub();
+    populateMetro();
+    return;
+  }
+
+  // 국회의원: 광역→선거구
+  if (level === 'assembly') {
+    showMetro();
+    hideSub();
+    populateMetro();
+    return;
+  }
+
+  // 기초단체장/기초의원: 광역→시군구
+  if (level === 'basic' || level === 'basic_council') {
+    showMetro();
+    hideSub();
+    populateMetro();
+    return;
+  }
+}
+
+function showMetro() { document.getElementById('fg-metro').style.display = 'flex'; }
+function hideMetro() { document.getElementById('fg-metro').style.display = 'none'; document.getElementById('sel-metro').value = ''; }
+function showSub()   { document.getElementById('fg-sub').style.display = 'flex'; }
+function hideSub()   { document.getElementById('fg-sub').style.display = 'none'; document.getElementById('sel-sub').value = ''; }
+
+function populateMetro() {
+  const sel = document.getElementById('sel-metro');
+  const level = selectedPosition.level;
+
+  // 광역시장: 광역시(특별시/광역시/특별자치시)만
+  const metroOnlyIds = ['seoul','busan','daegu','incheon','gwangju','daejeon','ulsan','sejong'];
+  // 도지사: 도 단위만
+  const provinceIds  = ['gyeonggi','gangwon','chungbuk','chungnam','jeonbuk','jeonnam','gyeongbuk','gyeongnam','jeju'];
+
+  let filtered = METRO_REGIONS;
+  if (level === 'metro') {
+    if (selectedPosition.id === 'metro_mayor') filtered = METRO_REGIONS.filter(r => metroOnlyIds.includes(r.id));
+    else if (selectedPosition.id === 'governor') filtered = METRO_REGIONS.filter(r => provinceIds.includes(r.id));
+    // 교육감: 전체 17개
+  }
+
+  sel.innerHTML = '<option value="">-- 광역시도 선택 --</option>' +
+    filtered.map(r => `<option value="${r.id}" data-voters="${r.voters}">${r.name}</option>`).join('');
+  sel.value = '';
+}
+
+// ════════════════════════════════════════════════
+// 광역시도 선택
+// ════════════════════════════════════════════════
+function onMetroChange() {
+  const sel   = document.getElementById('sel-metro');
+  const metroId = sel.value;
+  if (!metroId) { hideSub(); return; }
+
+  const metroData = METRO_REGIONS.find(r => r.id === metroId);
+  const level = selectedPosition.level;
+
+  // 광역단체장·교육감·광역의원: 시도 자체가 선거구 → 바로 확정
+  if (level === 'metro' || level === 'metro_council') {
+    let voters = metroData.voters;
+    if (level === 'metro_council') voters = Math.round(voters / 8); // 광역의원 선거구 평균 추정
+    document.getElementById('inp-voters').value = voters;
+    hideSub();
+    updateMemo();
+    showChips(selectedPosition.label, metroData.name, null, voters);
+    if (level === 'metro_council') {
+      document.getElementById('field-desc-voters')
+      // note
+    }
+    return;
+  }
+
+  // 국회의원: 하위 선거구 선택
+  if (level === 'assembly') {
+    const list = ASSEMBLY_DISTRICTS[metroId] || [];
+    if (!list.length) {
+      document.getElementById('inp-voters').value = metroData.voters;
+      hideSub(); showChips(selectedPosition.label, metroData.name, null, metroData.voters);
+      return;
+    }
+    populateSub(list, '선거구', '선거구 선택');
+    return;
+  }
+
+  // 기초단체장·기초의원
+  if (level === 'basic' || level === 'basic_council') {
+    const list = BASIC_DISTRICTS[metroId] || [];
+    if (!list.length) {
+      // 세종 등 기초 없음
+      document.getElementById('inp-voters').value = metroData.voters;
+      hideSub();
+      showChips(selectedPosition.label, metroData.name, '(기초단체 없음)', metroData.voters);
+      return;
+    }
+    // 직위별 필터링
+    let filtered = list;
+    if (selectedPosition.id === 'sijang')    filtered = list.filter(d => d.type === '시장');
+    if (selectedPosition.id === 'gucheong')  filtered = list.filter(d => d.type === '구청장');
+    if (selectedPosition.id === 'gunsu')     filtered = list.filter(d => d.type === '군수');
+    if (!filtered.length) filtered = list; // fallback
+
+    const label = level === 'basic_council' ? '시군구' : '시군구';
+    populateSub(filtered, label, '시군구 선택');
+    return;
+  }
+}
+
+function populateSub(list, labelText, placeholder) {
+  document.getElementById('sub-label').textContent = '🗺️ ' + labelText;
+  const sel = document.getElementById('sel-sub');
+  sel.innerHTML = `<option value="">-- ${placeholder} --</option>` +
+    list.map((d,i) => {
+      const typeTag = d.type ? ` [${d.type}]` : '';
+      const v = d.voters;
+      const vStr = v >= 10000 ? Math.round(v/10000).toLocaleString()+'만명' : v.toLocaleString()+'명';
+      return `<option value="${i}" data-voters="${v}" data-name="${d.name}" data-type="${d.type||''}">${d.name}${typeTag} · ${vStr}</option>`;
+    }).join('');
+  sel.value = '';
+
+  // 기초의원 안내
+  const level = selectedPosition.level;
+  if (level === 'basic_council') {
+    document.getElementById('sub-desc').textContent = '※ 기초의원은 시군구 내 세부 선거구로 나뉩니다. 유권자 수 자동 입력 후 실제 선거구 규모에 맞게 조정하세요.';
+  } else {
+    document.getElementById('sub-desc').textContent = '';
+  }
+  showSub();
+}
+
+// ════════════════════════════════════════════════
+// 시군구/선거구 선택
+// ════════════════════════════════════════════════
+function onSubChange() {
+  const sel = document.getElementById('sel-sub');
+  const opt = sel.options[sel.selectedIndex];
+  if (!opt || !opt.value) return;
+
+  const voters  = parseInt(opt.dataset.voters);
+  const name    = opt.dataset.name;
+  const type    = opt.dataset.type;
+  const metroName = document.getElementById('sel-metro').options[document.getElementById('sel-metro').selectedIndex].text;
+
+  document.getElementById('inp-voters').value = voters;
+
+  updateMemo();
+  showChips(selectedPosition.label, metroName, name + (type ? ' ' + type : ''), voters);
+}
+
+// ════════════════════════════════════════════════
+// 칩 표시
+// ════════════════════════════════════════════════
+function showChips(posLabel, metro, sub, voters) {
+  const el = document.getElementById('chips-inner');
+  const voterStr = voters >= 10000
+    ? Math.round(voters/10000).toLocaleString() + '만명'
+    : voters.toLocaleString() + '명';
+
+  let html = `<div class="selection-chip">🏷️ ${posLabel}</div>`;
+  if (metro) html += `<div class="selection-chip">📍 ${metro}</div>`;
+  if (sub)   html += `<div class="selection-chip">🗺️ ${sub}</div>`;
+  html += `<div class="selection-chip">👥 유권자 ${voterStr}</div>`;
+  el.innerHTML = html;
+  document.getElementById('selection-chips').style.display = 'block';
+}
+
+function updateMemo() {
+  if (!selectedPosition) return;
+  const metroSel = document.getElementById('sel-metro');
+  const subSel   = document.getElementById('sel-sub');
+  const metroName = metroSel.value
+    ? metroSel.options[metroSel.selectedIndex].text : '';
+  const subName = subSel.value
+    ? subSel.options[subSel.selectedIndex].dataset.name || '' : '';
+  const parts = [metroName, subName].filter(Boolean).join(' ');
+  const memo = document.getElementById('inp-memo');
+  if (!memo.value || memo.dataset.auto === '1') {
+    memo.value = parts ? parts + ' ' + selectedPosition.label : selectedPosition.label;
+    memo.dataset.auto = '1';
+  }
+}
+
+document.getElementById('inp-memo').addEventListener('input', function() {
+  this.dataset.auto = '0';
+});
+
+// ════════════════════════════════════════════════
+// 유틸
+// ════════════════════════════════════════════════
+function setVoters(v) {
+  document.getElementById('inp-voters').value = v;
+  document.getElementById('inp-voters').removeAttribute('readonly');
+}
+
+function fmtMoney(won) {
+  if (won >= 100000000) {
+    const eok = won / 100000000;
+    if (eok >= 10) return Math.round(eok) + '억원';
+    const int = Math.floor(eok);
+    const man = Math.round((eok - int) * 10000 / 1000);
+    if (man === 0) return int + '억원';
+    return int + '억 ' + (man * 1000).toLocaleString() + '만원';
+  }
+  if (won >= 10000) return Math.round(won / 10000).toLocaleString() + '만원';
+  return won.toLocaleString() + '원';
+}
+
+// ════════════════════════════════════════════════
+// 메인 계산
+// ════════════════════════════════════════════════
+function calculate() {
+  const reportVal = document.getElementById('sel-report').value;
+  const tier      = parseFloat(document.getElementById('sel-tier').value);
+  const voters    = parseInt(document.getElementById('inp-voters').value) || 100000;
+  const comp      = parseFloat(document.getElementById('sel-competition').value);
+  const complex   = parseFloat(document.getElementById('sel-complexity').value);
+  const memo      = document.getElementById('inp-memo').value.trim();
+
+  const REPORT_MAP = {
+    'basic_1':   { B:3000000,  F5:1.0, label:'Basic 분석',        base_label:'300만원 기준' },
+    'basic_2_5': { B:3000000,  F5:2.5, label:'Strategy 설계',     base_label:'300만원 기준' },
+    'basic_4':   { B:3000000,  F5:4.0, label:'Premium 실행 포함', base_label:'300만원 기준' },
+    'strat_1':   { B:10000000, F5:1.0, label:'Basic 분석',        base_label:'1,000만원 기준' },
+    'strat_2_5': { B:10000000, F5:2.5, label:'Strategy 설계',     base_label:'1,000만원 기준' },
+    'strat_4':   { B:10000000, F5:4.0, label:'Premium 실행 포함', base_label:'1,000만원 기준' },
+  };
+  const report = REPORT_MAP[reportVal];
+  const B = report.B, F5 = report.F5, F1 = tier;
+  const F2 = Math.sqrt(voters / 100000);
+  const F3 = comp, F4 = complex;
+  const P = B * F1 * F2 * F3 * F4 * F5;
+  const saleMin = P * 0.20, saleMax = P * 0.30;
+
+  const TIER_LABELS = {'1':'기초의원','1.5':'광역의원','2':'기초단체장','3':'국회의원','5':'광역단체장·교육감','10':'대통령'};
+  const tierLabel = TIER_LABELS[String(F1)] || `F₁=${F1}`;
+  const COMP_LABELS = {'0.9':'안정적 1위','1':'접전','1.2':'열세','1.5':'3~4위 역전'};
+  const compLabel = COMP_LABELS[String(F3)] || `F₃=${F3}`;
+  const CMPLX_LABELS = {'1':'단일 지역구','1.2':'다권역','1.5':'전국 이슈 연동','2':'초대형·다층'};
+  const cmplxLabel = CMPLX_LABELS[String(F4)] || `F₄=${F4}`;
+
+  document.getElementById('empty-state').style.display = 'none';
+  const rc = document.getElementById('result-content');
+  rc.style.display = 'flex'; rc.style.flexDirection = 'column'; rc.style.gap = '16px';
+
+  const voterStr = voters >= 10000 ? Math.round(voters/10000).toLocaleString()+'만' : voters.toLocaleString();
+  const displayName = memo || tierLabel;
+
+  document.getElementById('res-official').innerHTML = fmtMoney(Math.round(P));
+  document.getElementById('res-memo').textContent = `📍 ${displayName} · 유권자 ${voters.toLocaleString()}명`;
+  document.getElementById('res-sale-low').textContent  = fmtMoney(Math.round(saleMin/100000)*100000);
+  document.getElementById('res-sale-high').textContent = fmtMoney(Math.round(saleMax/100000)*100000);
+  document.getElementById('res-discount-pct').textContent = '공식가 대비 약 20~30% 수준 (전략 할인 70~80%)';
+  document.getElementById('res-sale-desc').innerHTML =
+    `<strong>${displayName}</strong> 선거의 전략 자산 가치는 <strong>${fmtMoney(Math.round(P))}</strong>으로 산정됩니다.` +
+    ` 실판매 권장가는 <strong>${fmtMoney(Math.round(saleMin/100000)*100000)} ~ ${fmtMoney(Math.round(saleMax/100000)*100000)}</strong> 구간입니다.`;
+
+  document.getElementById('res-formula-eq').innerHTML =
+    `P = ${(B/10000).toLocaleString()}만 × ${F1} × √(${voterStr}/10만) × ${F3} × ${F4} × ${F5}<br>` +
+    `&nbsp;&nbsp;= ${(B/10000).toLocaleString()}만 × ${F1} × ${F2.toFixed(2)} × ${F3} × ${F4} × ${F5}<br>` +
+    `&nbsp;&nbsp;≈ <strong>${fmtMoney(Math.round(P))}</strong>`;
+
+  document.getElementById('res-formula-rows').innerHTML = [
+    {sym:'B',  color:'#1e3a8a',bg:'#eff6ff', name:'기본 단가',   desc:report.base_label, val:(B/10000).toLocaleString()+'만', vc:'#1e3a8a'},
+    {sym:'F₁', color:'#166534',bg:'#dcfce7', name:'선거급 계수', desc:tierLabel,          val:F1.toFixed(1),                  vc:'#166534'},
+    {sym:'F₂', color:'#0369a1',bg:'#e0f2fe', name:'유권자 규모', desc:`√(${voterStr}/10만)`,val:F2.toFixed(2),               vc:'#0369a1'},
+    {sym:'F₃', color:'#92400e',bg:'#fef3c7', name:'경쟁 강도',   desc:compLabel,          val:F3.toFixed(1),                  vc:'#92400e'},
+    {sym:'F₄', color:'#6d28d9',bg:'#ede9fe', name:'구조 복잡도', desc:cmplxLabel,          val:F4.toFixed(1),                  vc:'#6d28d9'},
+    {sym:'F₅', color:'#9d174d',bg:'#fce7f3', name:'전략 깊이',   desc:report.label,       val:F5.toFixed(1),                  vc:'#9d174d'},
+  ].map(r => `
+    <div class="formula-row">
+      <div class="formula-row-left">
+        <div class="formula-sym" style="background:${r.bg};color:${r.color}">${r.sym}</div>
+        <div><div class="formula-row-name">${r.name}</div><div class="formula-row-desc">${r.desc}</div></div>
+      </div>
+      <div class="formula-row-val" style="color:${r.vc}">${r.val}</div>
+    </div>`).join('');
+
+  document.getElementById('res-pitch').innerHTML =
+    `"${displayName}님의 이번 선거에 대한<br>ElectionAI 전략 자산 분석 결과,<br>` +
+    `귀 선거의 전략적 가치는 <strong>${fmtMoney(Math.round(P))}</strong> 규모로 산정됩니다.<br><br>` +
+    `저희는 선거 성공을 함께 만들어가는 파트너로서<br>` +
+    `이 가치를 <strong>${fmtMoney(Math.round(saleMin/100000)*100000)} ~ ${fmtMoney(Math.round(saleMax/100000)*100000)}</strong>의 전략 가격으로 제공해드립니다."`;
+}
+
+// ════════════════════════════════════════════════
+// 초기화
+// ════════════════════════════════════════════════
+renderPositionButtons();
+</script>
+</body>
+</html>
