@@ -127,6 +127,26 @@ document.addEventListener('DOMContentLoaded', () => {
   });
   html += `</tbody></table></div></div>`;
 
+  // ── 항목별 상세 격차 종합 설명 ──
+  {
+    const gapByMetric = METRICS.map(m => {
+      const leaderScore = leader.metrics?.[m]??0;
+      const othersGaps = sorted.slice(1).map(c=>(c.metrics?.[m]??0)-leaderScore);
+      const maxGap = Math.max(...othersGaps.map(g=>Math.abs(g)));
+      return { m, leaderScore, maxGap, avgGap: othersGaps.reduce((a,b)=>a+b,0)/othersGaps.length };
+    });
+    const biggestGap = gapByMetric.reduce((a,b)=>b.maxGap>a.maxGap?b:a);
+    const smallestGap = gapByMetric.reduce((a,b)=>b.maxGap<a.maxGap?b:a);
+    const closest = sorted.length > 1 ? sorted[1] : null;
+    const closestGap = closest ? leader.total_score - closest.total_score : 0;
+    html += summaryBox('항목별 상세 격차 종합 설명', [
+      `항목별 상세 격차 테이블은 1위 <strong>${leader.name}(${leader.total_score}점)</strong>을 기준으로 각 후보가 10개 항목 각각에서 얼마나 앞서거나 뒤처지는지를 수치로 보여줍니다. 음수(-)는 1위 대비 부족한 점수, 양수(+)는 특정 항목에서 1위를 앞선 수치입니다.`,
+      `격차가 가장 큰 항목은 <strong>${METRIC_LABELS[biggestGap.m]}</strong>(최대 ${biggestGap.maxGap}점 차이)으로, 이 항목에서의 성과 격차가 후보 간 역량 차이를 가장 뚜렷하게 드러냅니다. 반면 <strong>${METRIC_LABELS[smallestGap.m]}</strong> 항목은 격차가 ${smallestGap.maxGap}점으로 가장 작아 후보 간 경쟁이 팽팽하며, 이 영역에서의 미세한 성과 차이가 전체 판세에 영향을 줄 수 있습니다.`,
+      `${closest ? `2위 <strong>${closest.name}</strong>과의 종합 점수 격차는 <strong>${closestGap}점</strong>입니다. ${closestGap <= 15 ? `이 격차는 단 1~2개 항목의 집중 개선으로 역전 가능한 범위에 해당합니다. 특히 2위 후보가 앞서는 개별 항목이 있다면, 해당 항목을 공략 포인트로 삼는 전략이 효과적입니다.` : `이 격차를 좁히기 위해서는 복수 항목에 걸친 체계적인 역량 개선이 필요합니다.`}` : ''}`,
+      `이 분석의 핵심 활용 포인트는 '역전 가능한 항목'을 찾는 것입니다. 격차가 5점 이내인 항목은 단기간의 집중 노력으로 순위 역전이 가능한 '공략 목표'가 됩니다. 선거 캠프는 이 테이블을 기반으로 어느 항목에 자원을 집중 투입할지 우선순위를 설정하는 데 활용할 수 있습니다.`
+    ]);
+  }
+
   // ── 경쟁 우위 매트릭스 ──
   if (n >= 2) {
     html += `<div class="card"><div class="card-title">⚔️ 항목별 경쟁 우위 매트릭스</div>
@@ -146,6 +166,28 @@ document.addEventListener('DOMContentLoaded', () => {
       </tr>`;
     });
     html += `</tbody></table></div></div>`;
+
+    // ── 경쟁 우위 매트릭스 종합 설명 ──
+    {
+      const compData = METRICS.map(m => {
+        const scores = candidates.map((c,i)=>({name:c.name,s:c.metrics?.[m]??0,i})).sort((a,b)=>b.s-a.s);
+        const gap = scores[0].s - scores[1].s;
+        const intensity = gap<=1?'매우 치열':gap<=3?'치열':gap<=6?'우세':'압도적';
+        return { m, leader: scores[0], gap, intensity };
+      });
+      const fierce = compData.filter(x=>x.intensity==='매우 치열'||x.intensity==='치열');
+      const dominant = compData.filter(x=>x.intensity==='압도적');
+      const topLeaderInMatrix = (() => {
+        const cnt = {}; compData.forEach(x=>{ cnt[x.leader.name]=(cnt[x.leader.name]||0)+1; });
+        return Object.entries(cnt).sort((a,b)=>b[1]-a[1])[0];
+      })();
+      html += summaryBox('항목별 경쟁 우위 매트릭스 종합 설명', [
+        `경쟁 우위 매트릭스는 10개 항목별로 '현재 1위 후보'와 '경쟁 강도'를 동시에 파악하는 분석 도구입니다. <strong>${topLeaderInMatrix[0]}</strong>이(가) 총 <strong>${topLeaderInMatrix[1]}개 항목</strong>에서 경쟁 우위를 보이며 가장 광범위한 영역에서 선두를 달리고 있습니다.`,
+        `경쟁 강도를 기준으로 보면, ${fierce.length > 0 ? `<strong>${fierce.map(x=>METRIC_LABELS[x.m]).join(', ')}</strong> 항목은 '치열' 이상의 경쟁 강도를 보여 어느 후보도 안심할 수 없는 '무주공산' 구간입니다.` : '매우 치열한 구간이 없어 항목별 우위가 비교적 명확하게 구분됩니다.'} ${dominant.length > 0 ? `반면 <strong>${dominant.map(x=>METRIC_LABELS[x.m]).join(', ')}</strong>은(는) '압도적 우위' 구간으로, 해당 항목의 1위 후보가 현 순위를 방어하기 위해 이 항목을 핵심 차별화 자산으로 유지해야 합니다.` : ''}`,
+        `경쟁 강도가 '매우 치열'인 항목들은 선거 전략에서 가장 중요한 의미를 가집니다. 단 1~2점의 차이로 1위가 결정되는 이 항목들에서의 미세한 성과 개선이 전체 순위를 바꿀 수 있습니다. 각 후보는 이 항목들에서 구체적이고 검증 가능한 성과를 제시하는 것이 경쟁력 강화의 핵심입니다.`,
+        `매트릭스 분석을 통해 각 후보의 '독점 강점 항목'(압도적 우위)과 '공략 가능 항목'(치열한 경쟁) 지도를 작성할 수 있습니다. 이 지도는 유권자가 각 후보를 어떤 기준으로 비교해야 하는지, 그리고 각 후보가 어떤 메시지를 강조해야 하는지를 결정하는 데 핵심적인 근거가 됩니다.`
+      ]);
+    }
   }
 
   // ── 인사이트 ──

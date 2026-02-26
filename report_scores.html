@@ -98,6 +98,23 @@ document.addEventListener('DOMContentLoaded', () => {
     <div class="insight-box">▲ 해당 항목 최고 점수 &nbsp;|&nbsp; ▼ 해당 항목 최저 점수</div>
   </div>`;
 
+  // ── 히트맵 종합 설명 ──
+  {
+    const allAvgByMetric = METRICS.map(m => {
+      const scores = candidates.map(c=>c.metrics?.[m]??0);
+      return { m, avg: scores.reduce((a,b)=>a+b,0)/n, max: Math.max(...scores), min: Math.min(...scores) };
+    });
+    const highestMetric = allAvgByMetric.reduce((a,b)=>b.avg>a.avg?b:a);
+    const lowestMetric = allAvgByMetric.reduce((a,b)=>b.avg<a.avg?b:a);
+    const uniformHigh = candidates.filter(c => METRICS.every(m=>(c.metrics?.[m]??0)>=75)).map(c=>c.name);
+    html += summaryBox('점수 히트맵 종합 설명', [
+      `점수 히트맵은 10개 평가 항목과 각 후보의 점수를 교차 시각화하여 강점과 약점 패턴을 한눈에 파악할 수 있게 합니다. 강조 색상(▲)이 집중된 열의 후보는 해당 항목군에서 지속적 강점을 보이며, 반대로 ▼ 표시가 많은 후보는 그 항목들에서 개선이 필요합니다.`,
+      `항목별 평균 점수를 살펴보면 <strong>${METRIC_LABELS[highestMetric.m]}</strong> 항목이 평균 <strong>${highestMetric.avg.toFixed(1)}점</strong>으로 후보 전체에서 가장 높은 점수를 기록했습니다. 반면 <strong>${METRIC_LABELS[lowestMetric.m]}</strong> 항목은 평균 <strong>${lowestMetric.avg.toFixed(1)}점</strong>으로 가장 낮아, 후보들이 공통적으로 보완이 필요한 영역임을 시사합니다.`,
+      `${uniformHigh.length > 0 ? `<strong>${uniformHigh.join(', ')}</strong>은(는) 전 항목에서 75점 이상을 유지하며 균형 잡힌 역량을 보여줬습니다. 이처럼 히트맵에서 전반적으로 밝은 색조를 보이는 후보는 특정 이슈 공세에도 안정적으로 대응할 수 있는 구조적 강점을 지닙니다.` : `특정 항목에서 색상 대비가 뚜렷이 나타나는 후보는 강점 항목을 전략적으로 부각하면서 약점 항목은 적극적으로 보완하는 전략이 필요합니다.`}`,
+      `히트맵을 분석할 때는 단순히 높은 점수에만 집중하기보다, 경쟁 후보 대비 상대적으로 높은 항목(자신의 차별화 포인트)과 낮은 항목(상대가 공세할 수 있는 취약점)을 동시에 파악하는 것이 전략적으로 중요합니다. 특히 청렴성·윤리성 항목의 점수 분포는 유권자 신뢰도와 직결됩니다.`
+    ]);
+  }
+
   // ── 그룹 막대 차트 ──
   html += `<div class="card"><div class="card-title">📊 항목별 그룹 막대그래프</div>
     <div class="chart-container" style="height:420px">
@@ -145,7 +162,27 @@ document.addEventListener('DOMContentLoaded', () => {
   });
   html += `</tbody></table>
     <div class="insight-box">표준편차가 낮을수록 항목 간 균형이 잡힌 후보입니다. 높을수록 특정 항목에 편중됩니다.</div>
-  </div></div>`;
+  </div>`;
+
+  // ── 균형성 분석 종합 설명 ──
+  {
+    const stdData = candidates.map((c,i) => {
+      const scores = METRICS.map(m=>c.metrics?.[m]??0);
+      const avg = scores.reduce((a,b)=>a+b,0)/scores.length;
+      const std = Math.sqrt(scores.reduce((s,v)=>s+Math.pow(v-avg,2),0)/scores.length);
+      return { name: c.name, party: c.party, std, avg };
+    });
+    const mostBalanced = stdData.reduce((a,b)=>b.std<a.std?b:a);
+    const leastBalanced = stdData.reduce((a,b)=>b.std>a.std?b:a);
+    const avgStd = stdData.reduce((a,b)=>a+b.std,0)/stdData.length;
+    html += summaryBox('균형성 분석(표준편차) 종합 설명', [
+      `균형성 분석은 각 후보가 10개 평가 항목에서 얼마나 고른 역량을 보이는지를 표준편차로 측정합니다. 표준편차가 <strong>5 미만이면 균형</strong>, 5~8이면 보통, 8 이상이면 특정 항목에 편중된 불균형 상태를 나타냅니다. 전체 후보의 평균 표준편차는 <strong>${avgStd.toFixed(1)}</strong>입니다.`,
+      `<strong>${mostBalanced.name}</strong>은(는) 표준편차 <strong>${mostBalanced.std.toFixed(1)}</strong>로 가장 균형 잡힌 역량 분포를 보였습니다. 이는 어느 한 항목에도 치우치지 않고 전 분야에서 안정적인 수준을 유지하고 있음을 의미합니다. 균형성이 높은 후보는 상대 후보의 특정 항목 공세에도 비교적 방어가 용이합니다.`,
+      `반면 <strong>${leastBalanced.name}</strong>은(는) 표준편차 <strong>${leastBalanced.std.toFixed(1)}</strong>로 항목 간 편차가 상대적으로 컸습니다. 이 경우 강점 항목에서는 독보적인 우위를 보이지만, 약점 항목이 노출될 경우 상대 후보의 공세에 취약해질 수 있습니다. 선거 캠프 입장에서는 약점 항목의 집중 개선 또는 강점 항목 극대화 전략 중 하나를 선택해야 합니다.`,
+      `균형성과 종합 점수는 서로 다른 차원의 지표입니다. 점수가 다소 낮더라도 균형성이 높은 후보는 안정적이고 예측 가능한 리더십을 보여주며, 이는 중도층 유권자에게 특히 긍정적으로 작용합니다. 반대로 편중된 후보는 특정 지지층에게 강력한 호소력을 발휘할 수 있습니다.`
+    ]);
+  }
+  html += `</div>`;
 
   document.getElementById('page-content').innerHTML = html;
 

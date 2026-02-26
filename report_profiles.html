@@ -155,6 +155,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
   html += `</div>`;
 
+  // ── 프로파일 카드 종합 설명 ──
+  {
+    const totalRanksArr = [...candidates].map((c,i)=>({...c,i})).sort((a,b)=>b.total_score-a.total_score);
+    const top = totalRanksArr[0];
+    const topCol = CANDIDATE_COLORS[top.i%5];
+    const topMetrics = METRICS.map(m=>({m,s:top.metrics?.[m]??0})).sort((a,b)=>b.s-a.s).slice(0,3);
+    const avgAll = Math.round(candidates.reduce((a,c)=>a+c.total_score,0)/candidates.length);
+    const aboveAvg = candidates.filter(c=>c.total_score>=avgAll).map(c=>c.name);
+    html += summaryBox('후보자 프로파일 종합 설명', [
+      `각 후보자 프로파일 카드는 종합 점수, AI 모델별 점수, 10개 항목 레이더 차트, 강점·약점 키워드를 통합적으로 제시합니다. <strong>${top.name}</strong>(${top.party})이(가) <strong>${top.total_score}점</strong>으로 1위를 기록했으며, 특히 <strong>${topMetrics.map(x=>METRIC_LABELS[x.m]).join(', ')}</strong> 항목에서 두드러진 역량을 보였습니다.`,
+      `전체 후보 평균 점수인 <strong>${avgAll}점</strong> 이상을 기록한 후보는 <strong>${aboveAvg.join(', ')}</strong>입니다. 각 후보의 미니 레이더 차트에서는 개인별로 강조되는 역량과 개선이 필요한 영역이 시각적으로 구분되어, 후보자 간 역량 구조의 차이를 직관적으로 파악할 수 있습니다.`,
+      `AI 모델 4개(Claude, ChatGPT, Gemini, Grok)가 각각 부여한 점수를 카드 하단에서 확인할 수 있습니다. 모델 간 점수 차이가 큰 후보는 평가 기준에 따라 판단이 갈리는 '논쟁적 프로파일'을 가지며, 점수 차이가 작은 후보는 AI 모델 전체에 걸쳐 일관적으로 평가되는 '안정적 프로파일'을 보입니다.`,
+      `강점·약점 태그는 해당 후보의 공개된 활동 기록과 AI 분석을 기반으로 도출된 것입니다. 강점 항목은 유권자 소통에서 적극적으로 활용할 수 있는 메시지 자원이 되며, 약점 항목은 상대 후보의 공세 대상이 될 수 있어 사전 대응 전략 수립이 필요합니다.`
+    ]);
+  }
+
   // ── 항목별 최고/최저 ──
   html += `<div class="card" style="margin-top:24px">
     <div class="card-title">📊 10개 항목 개인별 비교 분석</div>
@@ -178,6 +194,24 @@ document.addEventListener('DOMContentLoaded', () => {
     html += `<td style="color:var(--text-muted)">${avg.toFixed(1)}</td></tr>`;
   });
   html += `</tbody></table></div></div>`;
+
+  // ── 교차분석 종합 설명 ──
+  {
+    const metricLeaders = METRICS.map(m => {
+      const scores = candidates.map((c,i)=>({name:c.name,s:c.metrics?.[m]??0,i}));
+      const max = Math.max(...scores.map(x=>x.s));
+      return { m, leader: scores.find(x=>x.s===max), max, min: Math.min(...scores.map(x=>x.s)), gap: max - Math.min(...scores.map(x=>x.s)) };
+    });
+    const topCompetitive = metricLeaders.sort((a,b)=>a.gap-b.gap).slice(0,2);
+    const topDominant = [...metricLeaders].sort((a,b)=>b.gap-a.gap).slice(0,2);
+    const uniqueLeaders = [...new Set(metricLeaders.map(x=>x.leader.name))];
+    html += summaryBox('10개 항목 개인별 교차분석 종합 설명', [
+      `10개 항목 개인별 교차분석표는 각 후보의 항목별 점수를 나란히 배치하여, 어느 항목에서 누가 앞서고 뒤처지는지를 직접 비교할 수 있게 합니다. 항목별 1위를 차지하는 후보가 분산되어 있을수록 선거 경쟁 구도가 다원화됩니다. 이번 분석에서는 <strong>${uniqueLeaders.join(', ')}</strong>이(가) 항목별 1위를 나눠 가졌습니다.`,
+      `항목 간 경쟁이 가장 치열한 구간은 <strong>${topCompetitive.map(x=>METRIC_LABELS[x.m]).join(', ')}</strong>으로, 후보 간 점수 차이가 ${topCompetitive.map(x=>x.gap+'점').join(', ')}에 불과합니다. 이 항목들은 선거 결과에 결정적 영향을 미칠 수 있는 '승부처'로, 해당 항목에서의 인상적인 공약 이행 또는 이미지 개선이 전체 순위를 뒤흔들 수 있습니다.`,
+      `반대로 <strong>${topDominant.map(x=>METRIC_LABELS[x.m]).join(', ')}</strong> 항목에서는 후보 간 격차가 ${topDominant.map(x=>x.gap+'점').join(', ')}으로 특정 후보의 우위가 뚜렷합니다. 이 항목들은 리더 후보의 핵심 차별화 자산이 되며, 나머지 후보들에게는 장기적 역전을 위해 집중 공략이 필요한 영역입니다.`,
+      `항목 평균값과 개인 점수를 대조하면 전체 수준 대비 각 후보의 상대적 위치를 파악할 수 있습니다. 항목 평균 이상을 지속적으로 유지하는 후보는 전략적 안정성이 높고, 특정 항목에서만 평균을 상회하는 후보는 해당 역량을 집중 홍보하는 '선택과 집중' 전략이 효과적입니다.`
+    ]);
+  }
 
   document.getElementById('page-content').innerHTML = html;
 

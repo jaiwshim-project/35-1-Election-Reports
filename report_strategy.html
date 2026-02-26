@@ -130,6 +130,102 @@
 .index-bar-fill { height:100%; border-radius:5px; transition:width .4s; }
 .index-bar-val { width:36px; text-align:right; font-size:12px; font-weight:700; }
 
+/* ── 경쟁 후보 대응 카드 ── */
+.comp-card {
+  background:white; border-radius:var(--radius-sm); border:1px solid var(--border);
+  padding:18px; margin-bottom:14px;
+}
+.comp-card-header {
+  display:flex; align-items:center; gap:12px; margin-bottom:14px;
+  padding-bottom:12px; border-bottom:1px solid #f1f5f9;
+}
+.comp-name { font-size:16px; font-weight:800; }
+.comp-badge { font-size:11px; font-weight:700; padding:3px 10px; border-radius:10px; }
+.comp-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:12px; }
+.comp-col-title { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.5px; margin-bottom:8px; }
+.comp-tag {
+  display:inline-block; font-size:11px; padding:3px 8px;
+  border-radius:6px; margin:2px; font-weight:600;
+}
+.comp-strategy-row {
+  font-size:13px; padding:7px 12px; border-radius:6px;
+  background:#f8fafc; margin-top:4px; border-left:3px solid;
+}
+
+/* ── 지지율 전환 모델 ── */
+.support-model {
+  background:white; border-radius:var(--radius-sm); border:1px solid var(--border);
+  padding:16px 18px; margin-bottom:10px;
+}
+.support-bar-row { display:flex; align-items:center; gap:10px; margin-bottom:8px; }
+.support-bar-label { font-size:12px; font-weight:600; width:100px; flex-shrink:0; }
+.support-bar-track {
+  flex:1; height:14px; background:#f1f5f9; border-radius:7px; overflow:hidden;
+  position:relative;
+}
+.support-bar-fill { height:100%; border-radius:7px; transition:width .5s; }
+.support-bar-val { font-size:12px; font-weight:700; width:90px; text-align:right; }
+
+/* ── 메시지 전략 ── */
+.msg-slogan-box {
+  background:linear-gradient(135deg,#1e3a8a,#3b82f6); color:white;
+  border-radius:var(--radius-sm); padding:18px 22px; margin-bottom:10px;
+}
+.msg-slogan-label { font-size:10px; opacity:.7; text-transform:uppercase; letter-spacing:1px; margin-bottom:6px; }
+.msg-slogan-text { font-size:18px; font-weight:900; line-height:1.4; }
+.msg-slogan-sub { font-size:12px; opacity:.8; margin-top:6px; }
+.keyword-grid { display:flex; flex-wrap:wrap; gap:6px; margin-top:8px; }
+.keyword-chip { font-size:12px; font-weight:700; padding:5px 12px; border-radius:20px; }
+.speak-row {
+  display:flex; gap:12px; padding:10px 0;
+  border-bottom:1px solid #f1f5f9; align-items:flex-start;
+}
+.speak-row:last-child { border-bottom:none; }
+.speak-label {
+  font-size:11px; font-weight:700; padding:3px 8px; border-radius:6px;
+  white-space:nowrap; flex-shrink:0; width:60px; text-align:center;
+}
+.speak-text { font-size:13px; color:var(--text-muted); flex:1; line-height:1.5; }
+.sns-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:12px; }
+.sns-card {
+  background:white; border-radius:var(--radius-sm); border:1px solid var(--border); padding:14px;
+}
+.sns-platform { font-size:13px; font-weight:800; margin-bottom:8px; }
+.sns-rule { font-size:11px; color:var(--text-muted); padding:3px 0; line-height:1.4; }
+
+/* ── 캠프 조직별 분배 ── */
+.org-table-wrap { overflow-x:auto; }
+.org-table { width:100%; border-collapse:collapse; font-size:13px; }
+.org-table th {
+  background:#1e3a8a; color:white; padding:9px 14px;
+  text-align:left; font-size:11px; font-weight:700; letter-spacing:.3px;
+}
+.org-table td { padding:10px 14px; border-bottom:1px solid #f1f5f9; vertical-align:top; }
+.org-table tr:last-child td { border-bottom:none; }
+.org-table tr:nth-child(even) td { background:#f8fafc; }
+.org-role { font-weight:700; }
+.org-task-list { list-style:none; padding:0; margin:0; }
+.org-task-list li { font-size:12px; color:var(--text-muted); padding:2px 0; }
+.org-task-list li::before { content:'· '; font-weight:700; }
+
+/* ── 리스크 매뉴얼 ── */
+.risk-card {
+  background:white; border-radius:var(--radius-sm);
+  overflow:hidden; margin-bottom:12px; border:1px solid var(--border);
+}
+.risk-header {
+  padding:12px 18px; color:white; font-weight:800; font-size:14px;
+  display:flex; align-items:center; gap:10px;
+}
+.risk-body { padding:14px 18px; }
+.risk-timeline { display:flex; flex-direction:column; gap:10px; }
+.risk-step { display:flex; gap:12px; align-items:flex-start; }
+.risk-step-time {
+  font-size:11px; font-weight:700; padding:4px 8px; border-radius:10px;
+  white-space:nowrap; flex-shrink:0; min-width:72px; text-align:center;
+}
+.risk-step-text { font-size:13px; color:var(--text-muted); flex:1; line-height:1.5; padding-top:3px; }
+
 /* ── 인쇄 ── */
 @page {
   size: A4;
@@ -254,7 +350,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const { candidates, district, analysis_date } = data;
   const targetIdx = getTargetIdx();
 
-  // targetIdx 검증
   if (targetIdx === null || targetIdx >= candidates.length) {
     document.getElementById('page-content').innerHTML = `
       <div class="no-data" style="text-align:center;padding:60px 20px">
@@ -269,7 +364,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const target = candidates[targetIdx];
   const col = CANDIDATE_COLORS[targetIdx % 5];
 
-  // 순위 계산
   const sorted = [...candidates]
     .map((c,i) => ({...c, origIdx: i}))
     .sort((a,b) => b.total_score - a.total_score);
@@ -285,14 +379,15 @@ document.addEventListener('DOMContentLoaded', () => {
     buildCover(target, col, rank, strat, district, analysis_date) +
     buildSection1_Position(target, col, rank, sorted, candidates) +
     buildSection2_Strategy(target, col, rank, strat, sorted, candidates) +
-    buildSection3_Causes(target, col, rank, leader, candidates) +
-    buildSection4_Simulation(target, col, rank, sorted, candidates) +
-    buildSection5_Attack(target, col, candidates) +
-    buildSection6_Plan(target, col, rank, strat);
+    buildSection3_CompetitorResponse(target, col, rank, sorted, candidates) +
+    buildSection4_Causes(target, col, rank, leader, candidates) +
+    buildSection5_Simulation(target, col, rank, sorted, candidates) +
+    buildSection6_Message(target, col, rank, strat) +
+    buildSection7_Attack(target, col, candidates) +
+    buildSection8_Plan(target, col, rank, strat) +
+    buildSection9_RiskManual(target, col);
 
   document.getElementById('page-content').innerHTML = html;
-
-  // 레이더 차트 렌더링
   renderRadar(target, col, candidates);
 });
 
@@ -303,7 +398,7 @@ function buildCover(target, col, rank, strat, district, analysis_date) {
   <div class="strat-cover">
     <div class="strat-label">AI 선거 전략 인텔리전스 리포트 · ${strat.title}</div>
     <h1>${target.name} 후보<br>당선 전략 설계 보고서</h1>
-    <div class="subtitle">객관적 데이터 기반 분석 · 전략적 선택지 제시 · 의사결정 지원</div>
+    <div class="subtitle">객관적 데이터 기반 분석 · 경쟁 후보 맞춤 대응 · 90일 실행 로드맵 · 리스크 대응 매뉴얼</div>
     <div class="strat-cover-meta">
       <div class="strat-cover-meta-item">
         <div class="lbl">대상 후보</div>
@@ -321,6 +416,10 @@ function buildCover(target, col, rank, strat, district, analysis_date) {
         <div class="lbl">분석 일자</div>
         <div class="val">${analysis_date || new Date().toISOString().split('T')[0]}</div>
       </div>
+      <div class="strat-cover-meta-item">
+        <div class="lbl">보고서 구성</div>
+        <div class="val">9개 섹션 · 전략 설계 완성형</div>
+      </div>
     </div>
   </div>`;
 }
@@ -331,7 +430,6 @@ function buildSection1_Position(target, col, rank, sorted, candidates) {
   const leader = sorted[0];
   const gapToLeader = target.total_score - leader.total_score;
 
-  // 강점 유지 지수: 상위 3 메트릭 평균 / 전체 평균
   const metScores = METRICS.map(m => target.metrics?.[m] ?? 0);
   const avgAll = metScores.reduce((a,b)=>a+b,0) / metScores.length;
   const top3 = [...metScores].sort((a,b)=>b-a).slice(0,3);
@@ -339,23 +437,20 @@ function buildSection1_Position(target, col, rank, sorted, candidates) {
   const strengthIdx = Math.round((top3.reduce((a,b)=>a+b,0)/3 - avgAll + 30) / 60 * 100);
   const riskIdx = Math.round((avgAll - bot3.reduce((a,b)=>a+b,0)/3) / avgAll * 100);
 
-  // 상대 위치: 각 메트릭에서 몇 위인지
   const metricRanks = METRICS.map(m => {
     const sc = target.metrics?.[m] ?? 0;
     const others = candidates.map(c => c.metrics?.[m] ?? 0);
     return others.filter(s => s > sc).length + 1;
   });
   const avg1stCount = metricRanks.filter(r => r === 1).length;
-
   const rankLabel = ['','1위','2위','3위','4위','5위'][rank];
 
   return `
   <div class="report-section">
     <div class="s-header" style="background:linear-gradient(90deg,#1e3a8a,#1d4ed8)">
-      <div class="s-num">1</div>📍 포지션 진단
+      <div class="s-num">1</div>📍 포지션 정밀 진단
     </div>
 
-    <!-- 핵심 지표 카드 -->
     <div class="pos-grid">
       <div class="pos-card">
         <div class="pc-label">종합 순위</div>
@@ -392,13 +487,10 @@ function buildSection1_Position(target, col, rank, sorted, candidates) {
     </div>
 
     <div class="two-col" style="display:grid;grid-template-columns:1fr 1fr;gap:18px">
-      <!-- 레이더 차트 -->
       <div class="card" style="padding:18px">
         <div class="card-title" style="font-size:13px">🕸️ 10개 항목 상대 위치</div>
         <div style="height:260px"><canvas id="stratRadar"></canvas></div>
       </div>
-
-      <!-- 항목별 강점/리스크 바 -->
       <div class="card" style="padding:18px">
         <div class="card-title" style="font-size:13px">📊 강점·리스크 분포</div>
         <div class="index-bars">
@@ -419,20 +511,18 @@ function buildSection1_Position(target, col, rank, sorted, candidates) {
       </div>
     </div>
 
-    <!-- 상대 후보 대비 테이블 -->
     <div class="card">
       <div class="card-title">📋 후보자 간 종합 순위 현황</div>
       <div class="table-wrap"><table>
         <thead><tr><th>순위</th><th>후보자</th><th>정당</th><th>종합 점수</th><th>${target.name} 대비</th><th>격차</th></tr></thead>
         <tbody>
           ${sorted.map((c, r) => {
-            const isTarget = c.origIdx === sorted.find(x=>x.origIdx===candidates.indexOf(target))?.origIdx
-              || candidates[c.origIdx] === target;
+            const isTarget = candidates[c.origIdx] === target;
             const gap = c.total_score - target.total_score;
             const cCol = CANDIDATE_COLORS[c.origIdx % 5];
-            return `<tr style="${candidates[c.origIdx]===target?`background:${col.light}`:``}">
+            return `<tr style="${isTarget?`background:${col.light}`:''}">
               <td>${rankTag(r+1)}</td>
-              <td style="font-weight:700;color:${cCol.border}">${c.name}${candidates[c.origIdx]===target?' ★':''}</td>
+              <td style="font-weight:700;color:${cCol.border}">${c.name}${isTarget?' ★':''}</td>
               <td style="font-size:12px;color:var(--text-muted)">${c.party}</td>
               <td style="font-weight:800">${c.total_score}점</td>
               <td style="font-weight:700;color:${gap===0?'var(--text-muted)':gap>0?'#dc2626':'#16a34a'}">
@@ -444,16 +534,28 @@ function buildSection1_Position(target, col, rank, sorted, candidates) {
         </tbody>
       </table></div>
     </div>
+    ${(()=>{
+      const rankLabel=['','1위','2위','3위','4위','5위'][rank];
+      const gapToLeader = target.total_score - sorted[0].total_score;
+      const metScores = METRICS.map(m=>({m,s:target.metrics?.[m]??0}));
+      const topM = [...metScores].sort((a,b)=>b.s-a.s).slice(0,3).map(x=>METRIC_LABELS[x.m]).join(', ');
+      const botM = [...metScores].sort((a,b)=>a.s-b.s).slice(0,2).map(x=>METRIC_LABELS[x.m]).join(', ');
+      return summaryBox('포지션 진단 종합 설명', [
+        `<strong>${target.name}</strong>(${target.party})은(는) 현재 ${candidates.length}명 중 <strong>${rankLabel}(${target.total_score}점)</strong>을 기록하고 있습니다. 1위와의 점수 격차는 <strong>${Math.abs(gapToLeader)}점</strong>으로, ${gapToLeader===0?'현재 선두를 달리고 있어 리드 유지 전략이 핵심입니다.':Math.abs(gapToLeader)<=20?'소수 항목의 집중 개선으로 역전이 가능한 범위에 있습니다.':'상당한 격차를 극복하기 위해 전략적 포지셔닝과 핵심 항목 집중 개선이 필요합니다.'}`,
+        `강점 항목은 <strong>${topM}</strong>으로, 이 영역에서의 우위를 유권자 소통에 적극 활용해야 합니다. 개선 필요 항목인 <strong>${botM}</strong>은 상대 후보의 공세 대상이 될 수 있어 사전 방어 전략 수립이 필요합니다. 강점 유지 지수와 약점 리스크 지수를 함께 확인하여 방어와 공세의 균형을 설정하십시오.`,
+        `레이더 차트에서 ${target.name}의 다각형이 경쟁 후보(점선) 대비 넓게 펼쳐진 항목이 핵심 차별화 영역이며, 반대로 좁아진 항목은 집중 보강이 필요한 취약점입니다. 항목별 강점·리스크 바 차트에서 초록 막대(1위 항목)는 선거 메시지의 핵심 소재로, 빨간 막대(최하위 항목)는 리스크 관리 대상으로 분류하십시오.`,
+        `후보자 간 종합 순위 현황 테이블은 각 경쟁 후보와의 점수 차이를 명확히 보여줍니다. 우위인 후보와는 현재 리드를 방어하고, 열세인 후보와는 역전 가능한 항목을 찾는 방식으로 전략을 분화할 수 있습니다. 이 포지션 진단은 이하 모든 전략 섹션의 출발점이 됩니다.`
+      ]);
+    })()}
   </div>`;
 }
 
-/* ── Section 2: 전략 유형 분기 ── */
+/* ── Section 2: 전략 유형 분기 + 중도층 흡수 ── */
 function buildSection2_Strategy(target, col, rank, strat, sorted, candidates) {
   const leader = sorted[0];
   let stratContent = '';
 
   if (rank === 1) {
-    // 1위: 방어 전략
     const metScores = METRICS.map(m => ({ m, s: target.metrics?.[m]??0 })).sort((a,b)=>a.s-b.s);
     const vulnerable = metScores.slice(0,3);
     const challenger = sorted[1];
@@ -489,7 +591,6 @@ function buildSection2_Strategy(target, col, rank, strat, sorted, candidates) {
     </div>`;
 
   } else if (rank === 2) {
-    // 2위: 역전 전략
     const gapToLeader = leader.total_score - target.total_score;
     const overturnTargets = METRICS.map(m => ({
       m,
@@ -530,7 +631,6 @@ function buildSection2_Strategy(target, col, rank, strat, sorted, candidates) {
     </div>` : ''}`;
 
   } else {
-    // 3-4위: 리빌딩 전략
     const uniqueStrength = METRICS.map(m => ({
       m, s: target.metrics?.[m]??0,
       avgOthers: candidates.filter((_,i)=>candidates[i]!==target).reduce((a,c)=>(c.metrics?.[m]??0)+a,0)/(candidates.length-1)
@@ -568,6 +668,26 @@ function buildSection2_Strategy(target, col, rank, strat, sorted, candidates) {
     </div>`;
   }
 
+  // 중도층 흡수 전략 (모든 순위 공통)
+  const midVoterStrategy = `
+  <div class="card">
+    <div class="card-title">🎯 중도층 흡수 전략</div>
+    <div class="insight-box" style="margin-bottom:14px">
+      중도층은 <strong>지지 후보가 없거나 결정하지 않은 유권자</strong>입니다.
+      이들은 정책·이미지·신뢰도에 민감하게 반응합니다.
+    </div>
+    <div class="table-wrap"><table>
+      <thead><tr><th>공략 방향</th><th>구체 실행안</th><th>핵심 메시지</th></tr></thead>
+      <tbody>
+        <tr><td><strong>정책 구체화</strong></td><td>추상적 공약을 "수치+기한" 형식으로 전환 발표</td><td>"검증 가능한 약속"</td></tr>
+        <tr><td><strong>이미지 중립화</strong></td><td>극단적 당파성 언급 자제, 초당적 현안 해결 강조</td><td>"지역 주민을 위한 후보"</td></tr>
+        <tr><td><strong>직접 접촉 확대</strong></td><td>전통시장·학교·아파트 단지 등 중도층 밀집지 방문</td><td>"현장에서 만납니다"</td></tr>
+        <tr><td><strong>SNS 감성 소통</strong></td><td>일상·진정성 콘텐츠로 인간적 면모 노출</td><td>"나도 주민입니다"</td></tr>
+        <tr><td><strong>제3자 추천</strong></td><td>정치적 중립 인사(전문가·시민단체) 지지 선언 유도</td><td>"믿을 수 있는 후보"</td></tr>
+      </tbody>
+    </table></div>
+  </div>`;
+
   return `
   <div class="report-section">
     <div class="s-header" style="background:${strat.bg}">
@@ -581,12 +701,143 @@ function buildSection2_Strategy(target, col, rank, strat, sorted, candidates) {
       </div>
     </div>
     ${stratContent}
+    ${midVoterStrategy}
+    ${(()=>{
+      const stratDesc = strat.goal;
+      const leaderName = sorted[0].name;
+      const topM = METRICS.map(m=>({m,s:target.metrics?.[m]??0})).sort((a,b)=>b.s-a.s).slice(0,2).map(x=>METRIC_LABELS[x.m]).join(', ');
+      return summaryBox(`${strat.title} 종합 설명`, [
+        `${rank===1?`1위 유지 방어 전략의 핵심 목표는 '${stratDesc}'입니다. 선두를 달리고 있는 ${target.name}에게 가장 큰 위협은 지지층의 이완과 2위 후보의 역전 시도입니다. 현재의 점수 우위를 유지하기 위해서는 취약 지표를 방어하면서 핵심 지지층을 결집하는 이중 전략이 필요합니다.`:rank===2?`2위 역전 추격 전략의 핵심 목표는 '${stratDesc}'입니다. 1위 ${leaderName}과의 격차를 분석한 결과, 3점 이내 차이의 '역전 가능 항목'을 집중 공략하는 것이 가장 빠른 역전 경로입니다. 점수 차이가 가장 작은 항목부터 순차적으로 뒤집어 나가는 단계별 추격 전략이 효과적입니다.`:`${rank}위 포지션 리빌딩 전략의 핵심 목표는 '${stratDesc}'입니다. 현재 순위 구조에서 단기 도약을 이루려면 전 항목의 균등 개선보다는 ${target.name}만이 가진 차별화 강점을 극대화하고 타겟 유권자층을 세밀하게 설정하는 집중 전략이 필요합니다.`}`,
+        `중도층 흡수 전략은 모든 순위의 후보에게 공통적으로 중요합니다. 중도층은 정책의 구체성, 후보의 청렴성, 직접 소통 여부에 민감하게 반응합니다. <strong>${topM}</strong> 항목에서 확보된 강점을 중도층이 이해하기 쉬운 언어와 수치로 전달하는 것이 핵심입니다. 추상적 공약보다 '○년까지 ○○ 달성'과 같은 측정 가능한 목표 제시가 신뢰를 높입니다.`,
+        `전략 유형별 성공 조건을 요약하면: 1위는 '실수 없는 안정적 운용', 2위는 '승부처 항목 집중 공략', 3~4위는 '강점 극대화와 메시지 재포지셔닝'입니다. 어느 전략이든 캠프 내부의 신속한 의사결정과 일관된 메시지 관리가 선행되어야 합니다.`,
+        `이 섹션의 전략 방향은 이하 격차 원인 분해(4번), 시뮬레이션(5번), 메시지 설계(6번), 90일 로드맵(8번) 섹션과 연계하여 통합적으로 적용하십시오. 각 섹션에서 제시된 구체적 실행안은 본 전략 방향을 현장에서 구현하는 실행 매뉴얼로 활용됩니다.`
+      ]);
+    })()}
   </div>`;
 }
 
-/* ── Section 3: 격차 원인 분해 ── */
-function buildSection3_Causes(target, col, rank, leader, candidates) {
-  // 1위 대비 뒤처지는 지표 (또는 1위면 하위 3개)
+/* ── Section 3: 경쟁 후보별 맞춤 대응 전략 (NEW) ── */
+function buildSection3_CompetitorResponse(target, col, rank, sorted, candidates) {
+  const targetIdx = candidates.indexOf(target);
+  const competitors = sorted.filter(c => c.origIdx !== targetIdx);
+
+  const cards = competitors.map((comp) => {
+    const cCol = CANDIDATE_COLORS[comp.origIdx % 5];
+    const compObj = candidates[comp.origIdx];
+    const compRank = sorted.findIndex(c => c.origIdx === comp.origIdx) + 1;
+    const scoreGap = target.total_score - comp.total_score;
+
+    // 상대가 우리보다 높은 항목 (공격 가능성)
+    const theirAdvantages = METRICS.map(m => ({
+      m,
+      theirScore: compObj.metrics?.[m]??0,
+      myScore: target.metrics?.[m]??0,
+      gap: (compObj.metrics?.[m]??0) - (target.metrics?.[m]??0)
+    })).filter(x => x.gap > 0).sort((a,b)=>b.gap-a.gap).slice(0,3);
+
+    // 우리가 상대보다 높은 항목 (공략 포인트)
+    const ourAdvantages = METRICS.map(m => ({
+      m,
+      myScore: target.metrics?.[m]??0,
+      theirScore: compObj.metrics?.[m]??0,
+      gap: (target.metrics?.[m]??0) - (compObj.metrics?.[m]??0)
+    })).filter(x => x.gap > 0).sort((a,b)=>b.gap-a.gap).slice(0,3);
+
+    let stratMsg = '';
+    let stratColor = '#1e3a8a';
+    let stratBg = '#eff6ff';
+    if (scoreGap > 30) {
+      stratMsg = `<strong>${comp.name}</strong>과의 격차가 <strong>+${scoreGap}점</strong>으로 충분합니다. 리드 관리에 집중하고 자극적 대응은 자제하세요.`;
+      stratColor = '#166534'; stratBg = '#f0fdf4';
+    } else if (scoreGap > 5) {
+      stratMsg = `<strong>${comp.name}</strong>이 근접 추격 중입니다(${scoreGap}점 차). <strong>${theirAdvantages.map(x=>METRIC_LABELS[x.m]).join(', ')}</strong> 분야 공세를 사전 차단하세요.`;
+      stratColor = '#92400e'; stratBg = '#fffbeb';
+    } else if (scoreGap >= -5) {
+      stratMsg = `<strong>${comp.name}</strong>과 사실상 동점(±${Math.abs(scoreGap)}점)입니다. <strong>${ourAdvantages.map(x=>METRIC_LABELS[x.m]).join(', ')}</strong>에서 결정적 차이를 만드세요.`;
+      stratColor = '#9f1239'; stratBg = '#fff1f2';
+    } else {
+      stratMsg = `<strong>${comp.name}</strong>에게 ${Math.abs(scoreGap)}점 뒤처져 있습니다. <strong>${ourAdvantages.map(x=>METRIC_LABELS[x.m]).join(', ')}</strong> 강점을 극대화해 역전 기회를 노리세요.`;
+      stratColor = '#7c3aed'; stratBg = '#faf5ff';
+    }
+
+    // 차별화 메시지
+    const diffMsg = ourAdvantages.length > 0
+      ? `"${target.name}은 ${METRIC_LABELS[ourAdvantages[0].m]} 분야에서 ${ourAdvantages[0].gap}점 앞서 있습니다"`
+      : `"${target.name}만의 차별화된 지역 비전을 제시합니다"`;
+
+    return `
+    <div class="comp-card">
+      <div class="comp-card-header">
+        <div style="width:40px;height:40px;border-radius:50%;background:${cCol.light};display:flex;align-items:center;justify-content:center;font-weight:900;color:${cCol.border};font-size:16px;flex-shrink:0">
+          ${compRank}
+        </div>
+        <div style="flex:1">
+          <div class="comp-name" style="color:${cCol.border}">${comp.name}
+            <span style="font-size:12px;font-weight:400;color:var(--text-muted)"> · ${compObj.party}</span>
+          </div>
+          <div style="font-size:12px;color:var(--text-muted);margin-top:2px">${compRank}위 · ${comp.total_score}점</div>
+        </div>
+        <span class="comp-badge" style="background:${scoreGap>=0?'#dcfce7':'#fee2e2'};color:${scoreGap>=0?'#166534':'#991b1b'}">
+          ${scoreGap>=0?`우리가 +${scoreGap}점 우위`:`${scoreGap}점 열세`}
+        </span>
+      </div>
+
+      <div class="insight-box" style="background:${stratBg};border-color:${stratColor}33;color:${stratColor};margin-bottom:12px">
+        ${stratMsg}
+      </div>
+
+      <div class="comp-grid">
+        <div>
+          <div class="comp-col-title" style="color:#dc2626">🔴 상대 공세 예상 포인트</div>
+          ${theirAdvantages.length > 0 ? theirAdvantages.map(x => `
+            <div style="display:flex;align-items:center;gap:8px;padding:5px 0">
+              <span class="comp-tag" style="background:#fee2e2;color:#991b1b">${METRIC_LABELS[x.m]}</span>
+              <span style="font-size:11px;color:#dc2626;font-weight:600">상대 +${x.gap}점 → 공세 가능</span>
+            </div>`) .join('') : `<div style="font-size:12px;color:var(--text-muted);padding:8px 0">공세 가능 포인트 없음 (전 항목 열세)</div>`}
+        </div>
+        <div>
+          <div class="comp-col-title" style="color:#16a34a">🟢 우리 차별화 공략 포인트</div>
+          ${ourAdvantages.length > 0 ? ourAdvantages.map(x => `
+            <div style="display:flex;align-items:center;gap:8px;padding:5px 0">
+              <span class="comp-tag" style="background:#dcfce7;color:#166534">${METRIC_LABELS[x.m]}</span>
+              <span style="font-size:11px;color:#16a34a;font-weight:600">우리 +${x.gap}점 → 강조 가능</span>
+            </div>`).join('') : `<div style="font-size:12px;color:var(--text-muted);padding:8px 0">차별화 포인트 없음</div>`}
+        </div>
+      </div>
+
+      <div class="comp-strategy-row" style="border-color:${cCol.border}">
+        💬 <strong>대응 메시지 제안:</strong> ${diffMsg}
+      </div>
+    </div>`;
+  }).join('');
+
+  return `
+  <div class="report-section">
+    <div class="s-header" style="background:linear-gradient(90deg,#7f1d1d,#dc2626)">
+      <div class="s-num">3</div>⚔️ 경쟁 후보별 맞춤 대응 전략
+    </div>
+    <div class="insight-box" style="background:#fff1f2;border-color:#fda4af;color:#9f1239;margin-bottom:16px">
+      각 경쟁 후보의 강점·약점을 분석하여 <strong>후보별 맞춤형 대응 메시지와 방어·공략 전략</strong>을 설계합니다.
+    </div>
+    ${cards}
+    ${(()=>{
+      const n2 = candidates.length;
+      const competitors = sorted.filter(c=>c.origIdx!==candidates.indexOf(target));
+      const ahead = competitors.filter(c=>c.total_score>target.total_score).length;
+      const behind = competitors.filter(c=>c.total_score<target.total_score).length;
+      const closestComp = competitors.reduce((a,b)=>Math.abs(b.total_score-target.total_score)<Math.abs(a.total_score-target.total_score)?b:a, competitors[0]);
+      return summaryBox('경쟁 후보별 맞춤 대응 전략 종합 설명', [
+        `경쟁 후보별 맞춤 대응 분석에서는 ${target.name}이(가) ${ahead}명의 후보보다 뒤처지고 ${behind}명보다 앞서 있는 현재 구도를 상세히 해부합니다. 각 후보와의 항목별 강·약점 비교를 통해 '공세 당할 수 있는 영역'과 '우리가 공략할 수 있는 영역'을 명확히 구분하는 것이 이 분석의 핵심 목적입니다.`,
+        `${closestComp ? `가장 가까운 경쟁자인 <strong>${closestComp.name}</strong>(${Math.abs(closestComp.total_score-target.total_score)}점 차이)은 가장 즉각적인 대응이 필요한 상대입니다. 이 후보가 앞서는 항목은 해당 후보의 공세 예상 포인트이므로 사전 방어 메시지를 준비해야 하며, 우리가 앞서는 항목은 비교 우위 메시지로 적극 활용해야 합니다.` : ''}`,
+        `맞춤 대응 전략의 핵심 원칙은 '공세와 방어를 동시에 준비하되, 감정적 반응 대신 데이터로 대응한다'는 것입니다. 상대 후보의 강점 항목에서 직접 충돌하는 것은 불리하며, 대신 우리의 차별화 항목을 더욱 부각하여 유권자의 판단 기준을 바꾸는 '프레임 전환' 전략이 효과적입니다.`,
+        `각 후보별 '대응 메시지 제안'은 현장 상황에 맞게 조정하되, 수치와 구체적 사례를 반드시 포함시키십시오. 막연한 비교 발언은 오히려 역효과를 낳을 수 있습니다. 이 분석을 캠프 전체가 공유하여 일관된 대응 메시지를 유지하는 것이 선거 운동의 통일성을 확보하는 기반이 됩니다.`
+      ]);
+    })()}
+  </div>`;
+}
+
+/* ── Section 4: 격차 원인 분해 (구 Section 3) ── */
+function buildSection4_Causes(target, col, rank, leader, candidates) {
   const gapItems = rank === 1
     ? METRICS.map(m => ({ m, gap: 0, myScore: target.metrics?.[m]??0, leaderScore: target.metrics?.[m]??0 }))
         .sort((a,b) => a.myScore - b.myScore).slice(0, 5)
@@ -601,11 +852,22 @@ function buildSection3_Causes(target, col, rank, leader, candidates) {
     const db = GAP_CAUSES[x.m];
     const gapColor = rank === 1 ? (x.myScore >= 80 ? '#16a34a' : x.myScore >= 70 ? '#d97706' : '#dc2626') : '#dc2626';
     const gapText = rank === 1 ? `현재 ${x.myScore}점` : `격차 -${x.gap}점`;
+
+    // 요인 분류 (감성/정책/이미지)
+    const factorMap = {
+      공익성:'정책', 정책실행력:'정책', 전문성:'이미지',
+      대응성:'소통', 책임성:'이미지', 소통능력:'소통',
+      리더십:'이미지', 비전명확성:'정책', 청렴성:'이미지', 윤리성:'이미지'
+    };
+    const factor = factorMap[x.m] || '정책';
+    const factorColor = factor==='정책'?'#2563eb':factor==='소통'?'#16a34a':'#7c3aed';
+
     return `
     <div class="cause-item">
       <div class="cause-header">
         <span class="cause-metric">${METRIC_LABELS[x.m]}</span>
         <span class="cause-gap" style="background:${gapColor}22;color:${gapColor}">${gapText}</span>
+        <span style="font-size:11px;font-weight:700;padding:2px 8px;border-radius:10px;background:${factorColor}22;color:${factorColor}">${factor} 요인</span>
         ${rank !== 1 ? `<span style="font-size:11px;color:var(--text-muted)">${target.name} ${x.myScore}점 vs ${leader.name} ${x.leaderScore}점</span>` : ''}
       </div>
       <ul class="cause-reasons" style="border-color:${gapColor}">
@@ -618,30 +880,41 @@ function buildSection3_Causes(target, col, rank, leader, candidates) {
   return `
   <div class="report-section">
     <div class="s-header" style="background:linear-gradient(90deg,#1e3a8a,#1d4ed8)">
-      <div class="s-num">3</div>🔍 격차 원인 분해 분석
+      <div class="s-num">4</div>🔍 격차 원인 분해 분석
     </div>
     <div class="insight-box" style="margin-bottom:16px">
       ${rank === 1
-        ? `1위 후보로서 하위 지표의 <strong>원인과 개선 방향</strong>을 분석합니다. 약점 노출을 사전에 차단하세요.`
-        : `1위 <strong>${leader.name}</strong> 대비 뒤처지는 항목의 <strong>원인과 실행 전략</strong>을 분석합니다.`}
+        ? `1위 후보로서 하위 지표의 <strong>원인(정책·이미지·소통 요인 분류)과 개선 방향</strong>을 분석합니다.`
+        : `1위 <strong>${leader.name}</strong> 대비 뒤처지는 항목의 <strong>원인(요인 분류)과 실행 전략</strong>을 분석합니다.`}
     </div>
     ${items}
+    ${(()=>{
+      const gapCount = rank===1 ? 0 : gapItems.length;
+      const topCause = gapItems.length > 0 ? METRIC_LABELS[gapItems[0].m] : '';
+      const factorMap = {공익성:'정책',정책실행력:'정책',전문성:'이미지',대응성:'소통',책임성:'이미지',소통능력:'소통',리더십:'이미지',비전명확성:'정책',청렴성:'이미지',윤리성:'이미지'};
+      const factors = gapItems.reduce((acc,x)=>{const f=factorMap[x.m]||'기타';acc[f]=(acc[f]||0)+1;return acc;},{});
+      const dominantFactor = Object.entries(factors).sort((a,b)=>b[1]-a[1])[0];
+      return summaryBox('격차 원인 분해 분석 종합 설명', [
+        `${rank===1?`1위 ${target.name}의 격차 원인 분해 분석에서는 하위 지표의 원인과 개선 방향을 도출합니다. 선두를 유지하면서도 낮은 점수를 보이는 항목들은 상대 후보의 공세 대상이 될 수 있으므로, 이를 사전에 강화하는 것이 방어 전략의 핵심입니다.`:`${gapCount}개의 격차 항목 분석에서 <strong>${topCause}</strong>이(가) 가장 큰 격차를 보였습니다. 이 항목들의 원인을 정책·이미지·소통 요인으로 분류하면, ${dominantFactor?`<strong>${dominantFactor[0]} 요인</strong>이 ${dominantFactor[1]}개 항목에서 주요 원인으로 작용하고 있어 해당 분야의 집중 개선이 우선 과제입니다.`:'복합적 요인이 작용하고 있습니다.'}`}`,
+        `각 항목별 원인 분석에서 제시된 '개선 실행안'은 캠프가 즉시 적용 가능한 구체적 행동 지침입니다. 예를 들어 정책실행력 항목의 개선 실행안은 '공약 이행률 리포트 발행'처럼 검증 가능한 수치를 동반한 활동을 포함합니다. 이러한 수치화된 성과는 유권자 신뢰를 직접적으로 향상시킵니다.`,
+        `요인 분류(정책·이미지·소통)에 따라 대응 방식을 달리해야 합니다. 정책 요인의 개선은 구체적 수치와 이행 계획이 필요하고, 이미지 요인은 스토리텔링과 미디어 전략이 중심이 되며, 소통 요인은 직접 접촉 빈도와 채널 다양화가 핵심입니다. 요인별로 담당 팀을 분리하여 병렬 추진하는 것이 효율적입니다.`,
+        `격차 원인 분석은 단순한 점수 비교를 넘어 '왜 이 점수가 나왔는가'를 해명하는 분석입니다. 이 인사이트를 기반으로 90일 로드맵(8번 섹션)의 실행 항목을 우선순위 순으로 배치하고, 메시지 설계(6번 섹션)에서 강조할 키워드를 선정하는 데 직접 활용하십시오.`
+      ]);
+    })()}
   </div>`;
 }
 
-/* ── Section 4: 점수 개선 시뮬레이션 ── */
-function buildSection4_Simulation(target, col, rank, sorted, candidates) {
-  // 하위 5개 메트릭에 대해 +5점 시뮬레이션
+/* ── Section 5: 점수 개선 시뮬레이션 + 지지율 전환 모델 (구 Section 4) ── */
+function buildSection5_Simulation(target, col, rank, sorted, candidates) {
   const metList = METRICS.map(m => ({ m, s: target.metrics?.[m]??0 })).sort((a,b)=>a.s-b.s).slice(0,5);
+  const targetIdx = candidates.indexOf(target);
 
   const rows = metList.map(x => {
-    const delta = Math.min(5, 100 - x.s); // 최대 100점까지만
+    const delta = Math.min(5, 100 - x.s);
     const newTotal = target.total_score + delta;
-    // 새 순위 계산
-    const newRank = sorted.filter(c => c.origIdx !== candidates.indexOf(target) && c.total_score > newTotal).length + 1;
+    const newRank = sorted.filter(c => c.origIdx !== targetIdx && c.total_score > newTotal).length + 1;
     const rankChange = rank - newRank;
     const probPct = Math.min(95, Math.round(50 + rankChange * 20 + delta * 2));
-
     const probColor = probPct >= 70 ? '#16a34a' : probPct >= 45 ? '#d97706' : '#dc2626';
     const probLabel = probPct >= 70 ? '높음' : probPct >= 45 ? '보통' : '낮음';
 
@@ -661,16 +934,40 @@ function buildSection4_Simulation(target, col, rank, sorted, candidates) {
     </div>`;
   }).join('');
 
-  // 복합 시나리오: 상위 3개 동시 개선
+  // 복합 시나리오
   const top3Targets = metList.slice(0,3);
   const combinedDelta = top3Targets.reduce((a,x) => a + Math.min(5, 100-x.s), 0);
   const combinedNew = target.total_score + combinedDelta;
-  const combinedRank = sorted.filter(c => c.origIdx !== candidates.indexOf(target) && c.total_score > combinedNew).length + 1;
+  const combinedRank = sorted.filter(c => c.origIdx !== targetIdx && c.total_score > combinedNew).length + 1;
+
+  // 지지율 전환 추정 모델
+  const scores = candidates.map(c => c.total_score);
+  const minScore = Math.min(...scores);
+  const maxScore = Math.max(...scores);
+  const scoreRange = maxScore - minScore || 1;
+  const totalVoteShare = 85; // 가용 지지율 총합 (%)
+  const baseShare = Math.round(((target.total_score - minScore) / scoreRange) * 40 + 15);
+  const improvedShare = Math.round(((target.total_score + combinedDelta - minScore) / scoreRange) * 40 + 15);
+  const gainShare = improvedShare - baseShare;
+
+  const supportRows = candidates.map((c, i) => {
+    const cCol = CANDIDATE_COLORS[i % 5];
+    const share = Math.round(((c.total_score - minScore) / scoreRange) * 40 + 15);
+    const isTarget = c === target;
+    return `
+    <div class="support-bar-row">
+      <div class="support-bar-label" style="color:${cCol.border};font-weight:${isTarget?'800':'600'}">${c.name}${isTarget?' ★':''}</div>
+      <div class="support-bar-track">
+        <div class="support-bar-fill" style="width:${share}%;background:${isTarget?col.border:cCol.border+'80'}"></div>
+      </div>
+      <div class="support-bar-val" style="color:${cCol.border}">${share}% 추정</div>
+    </div>`;
+  }).join('');
 
   return `
   <div class="report-section">
     <div class="s-header" style="background:linear-gradient(90deg,#1e3a8a,#1d4ed8)">
-      <div class="s-num">4</div>📈 점수 개선 시뮬레이션
+      <div class="s-num">5</div>📈 점수 개선 시뮬레이션 · 지지율 전환 추정
     </div>
     <div class="insight-box" style="margin-bottom:16px">
       각 항목을 <strong>5점 개선</strong>했을 때 종합 순위와 역전 가능성을 시뮬레이션합니다.
@@ -678,7 +975,6 @@ function buildSection4_Simulation(target, col, rank, sorted, candidates) {
     </div>
     ${rows}
 
-    <!-- 복합 시나리오 -->
     <div class="card" style="background:linear-gradient(135deg,#1e3a8a11,#dbeafe);border:2px solid #3b82f6;margin-top:4px">
       <div class="card-title">🚀 복합 시나리오: 하위 3개 항목 동시 개선</div>
       <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;padding:4px 0">
@@ -702,11 +998,177 @@ function buildSection4_Simulation(target, col, rank, sorted, candidates) {
         </div>
       </div>
     </div>
+
+    <!-- 지지율 전환 추정 모델 -->
+    <div class="card" style="margin-top:4px">
+      <div class="card-title">📊 지지율 전환 추정 모델</div>
+      <div class="insight-box" style="margin-bottom:14px">
+        종합 점수를 기반으로 후보별 <strong>추정 지지율 분포</strong>를 시뮬레이션합니다.
+        개선 시 <strong>${target.name}</strong>의 지지율은 <span style="color:#16a34a;font-weight:700">약 +${gainShare}%p</span> 향상이 기대됩니다.
+      </div>
+      <div class="support-model">
+        <div style="font-size:13px;font-weight:700;margin-bottom:12px">현재 지지율 추정 분포</div>
+        ${supportRows}
+      </div>
+      <div class="support-model" style="border:2px solid #16a34a">
+        <div style="font-size:13px;font-weight:700;margin-bottom:12px;color:#16a34a">개선 후 ${target.name} 예상 지지율</div>
+        <div class="support-bar-row">
+          <div class="support-bar-label" style="color:${col.border};font-weight:800">${target.name} (현재)</div>
+          <div class="support-bar-track">
+            <div class="support-bar-fill" style="width:${baseShare}%;background:${col.border}80"></div>
+          </div>
+          <div class="support-bar-val" style="color:var(--text-muted)">${baseShare}%</div>
+        </div>
+        <div class="support-bar-row">
+          <div class="support-bar-label" style="color:#16a34a;font-weight:800">${target.name} (개선 후)</div>
+          <div class="support-bar-track">
+            <div class="support-bar-fill" style="width:${improvedShare}%;background:#16a34a"></div>
+          </div>
+          <div class="support-bar-val" style="color:#16a34a;font-weight:800">${improvedShare}% (+${gainShare}%p)</div>
+        </div>
+        <div style="font-size:11px;color:var(--text-muted);margin-top:8px">
+          ※ 추정 모델은 현재 점수 기반 통계적 추정이며, 실제 여론조사와 다를 수 있습니다.
+        </div>
+      </div>
+    </div>
+    ${summaryBox('점수 개선 시뮬레이션 · 지지율 전환 모델 종합 설명', [
+      `점수 개선 시뮬레이션은 각 하위 항목을 5점 개선했을 때 종합 순위와 역전 가능성을 수치로 예측합니다. 역전 가능성이 높은 항목은 단기 집중 투자 대상이 되며, 낮은 항목은 중장기 과제로 분류하여 자원 배분의 우선순위를 결정할 수 있습니다.`,
+      `복합 시나리오(하위 3개 항목 동시 개선)는 캠프의 전략적 역량이 한 곳에 집중될 때와 분산될 때의 차이를 보여줍니다. 동시 개선의 누적 효과는 개별 개선보다 훨씬 크지만, 캠프의 에너지와 자원을 분산시킬 위험도 있습니다. 현실적인 실행 가능성을 고려하여 1~2개 항목에 집중하는 것이 단기 전략으로 효과적입니다.`,
+      `지지율 전환 추정 모델은 점수 기반 통계적 추정치로, 점수 개선이 실제 여론 변화에 미치는 영향을 가시화합니다. 종합 점수 10점 개선이 지지율 약 ${gainShare > 0 ? Math.round(gainShare/3) : 1}~${gainShare}%p 향상으로 이어질 수 있음을 시사합니다. 단, 이 모델은 이상적 조건을 가정한 추정이며 선거 결과를 보장하지 않습니다.`,
+      `이 시뮬레이션의 가장 중요한 활용 방식은 '어느 항목을 언제 개선할 것인가'에 대한 의사결정 지원입니다. 선거까지 남은 기간, 캠프 역량, 여론의 관심 이슈를 종합적으로 고려하여 시뮬레이션 결과를 해석하고, 이후 90일 로드맵(8번 섹션)에 반영하십시오.`
+    ])}
   </div>`;
 }
 
-/* ── Section 5: 공격 시나리오 분석 ── */
-function buildSection5_Attack(target, col, candidates) {
+/* ── Section 6: 메시지 구조 설계 (NEW) ── */
+function buildSection6_Message(target, col, rank, strat) {
+  const topMetrics = METRICS.map(m => ({m, s: target.metrics?.[m]??0})).sort((a,b)=>b.s-a.s).slice(0,3);
+  const botMetrics = METRICS.map(m => ({m, s: target.metrics?.[m]??0})).sort((a,b)=>a.s-b.s).slice(0,3);
+
+  const slogans = [
+    {
+      tag: '정책 실행형',
+      text: `검증된 실행력, ${target.name}이 만드는 변화`,
+      sub: `${METRIC_LABELS[topMetrics[0].m]}·${METRIC_LABELS[topMetrics[1]?.m||topMetrics[0].m]} 강점 기반 메시지`
+    },
+    {
+      tag: '신뢰·청렴형',
+      text: `약속을 지키는 후보, ${target.name}`,
+      sub: '책임성·청렴성 강조 — 중도층 흡수에 효과적'
+    },
+    {
+      tag: '비전 도약형',
+      text: `${target.name}과 함께, 우리 지역의 미래`,
+      sub: '비전 명확성·리더십 강조 — 지지층 결집에 효과적'
+    }
+  ];
+
+  const KEYWORD_DB = {
+    공익성: ['주민 중심', '모두를 위한 정치', '소외 없는 행정'],
+    정책실행력: ['완수하는 정치', '공약 이행률 1위', '약속을 실천'],
+    전문성: ['전문가 후보', '검증된 역량', '현장 경험 20년'],
+    대응성: ['빠른 응답', '24시간 민원 처리', '현장 즉답'],
+    책임성: ['책임지는 정치', '투명한 행정', '결과로 증명'],
+    소통능력: ['함께 만드는 정치', '직접 소통', '경청하는 후보'],
+    리더십: ['결단력 있는 리더', '위기를 이끄는 힘', '지역을 바꿉니다'],
+    비전명확성: ['5년 후 우리 지역', '구체적인 목표', '숫자로 말하는 정치'],
+    청렴성: ['깨끗한 정치', '이해충돌 없음', '청렴 서약'],
+    윤리성: ['원칙을 지키는 후보', '도덕적 리더십', '행동하는 양심']
+  };
+
+  const positiveKeywords = topMetrics.flatMap(x => KEYWORD_DB[x.m] || []);
+  const avoidTopics = botMetrics.map(x => METRIC_LABELS[x.m]);
+
+  const SPEAK_DO = [
+    '공약·정책은 항상 "수치+기한"을 붙여서 말하기 (예: "2028년까지 30% 달성")',
+    '상대 후보 비판 시 반드시 대안 함께 제시 ("A가 문제입니다" → "A는 B로 해결합니다")',
+    '지역 현안 언급 시 직접 방문·확인한 구체 사례 인용',
+    `강점 지표(${topMetrics.map(x=>METRIC_LABELS[x.m]).join(', ')}) 관련 발언은 자신 있게, 수치로 뒷받침`,
+    '유권자의 말을 먼저 경청 → 공감 → 해결책 순서로 소통'
+  ];
+
+  const SPEAK_DONT = [
+    `${avoidTopics.join(', ')} 관련 즉흥 발언 금지 — 사전 준비된 답변 사용 필수`,
+    '데이터·근거 없는 비교 발언 (예: "저만이 유일하게…") 금지',
+    '감정적 반응·고성·반말·인신공격 절대 금지',
+    '미확인 정보 기반 발언, 확인 전 의혹 언급 금지',
+    '약점 항목 방어적 태도 — 오히려 공세를 유발함, 인정 후 개선 계획 제시'
+  ];
+
+  const SNS_RULES = [
+    { platform: '유튜브', icon: '📹', color:'#dc2626', rules: ['60초 쇼츠 우선 제작', '정책 설명 + 현장 스토리 결합', '댓글 직접 답변 (주 2회 이상)', '라이브 방송 월 1회'] },
+    { platform: '인스타그램', icon: '📸', color:'#e1306c', rules: ['감성 사진 + 슬로건 카드뉴스', '스토리 일상 공유 (1일 1~2회)', '릴스 현장 방문 영상', '해시태그 전략 설정'] },
+    { platform: '페이스북', icon: '👥', color:'#2563eb', rules: ['5060세대 타겟 정책 텍스트', '지역 행사·민원 처리 공유', '지지자 그룹 관리', '링크 기사 공유 집중'] },
+    { platform: 'X(트위터)', icon: '🐦', color:'#1da1f2', rules: ['이슈 선제 대응 (1시간 내)', '140자 핵심 메시지 훈련', '언론 기사 링크 + 한줄 입장', '경쟁 후보 대응 신중하게'] }
+  ];
+
+  return `
+  <div class="report-section">
+    <div class="s-header" style="background:linear-gradient(90deg,#1e3a8a,#7c3aed)">
+      <div class="s-num">6</div>💬 메시지 구조 설계
+    </div>
+
+    <div class="card">
+      <div class="card-title">🎯 슬로건 후보 3안</div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        ${slogans.map((s,i) => `
+        <div class="msg-slogan-box" style="${i===1?'opacity:.88':i===2?'opacity:.78':''}">
+          <div class="msg-slogan-label">안 ${i+1} · ${s.tag}</div>
+          <div class="msg-slogan-text">"${s.text}"</div>
+          <div class="msg-slogan-sub">${s.sub}</div>
+        </div>`).join('')}
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🔑 핵심 메시지 키워드 뱅크</div>
+      <div style="margin-bottom:16px">
+        <div style="font-size:12px;font-weight:700;color:#16a34a;margin-bottom:6px">✅ 적극 사용 키워드 (강점 기반)</div>
+        <div class="keyword-grid">
+          ${positiveKeywords.map(k => `<span class="keyword-chip" style="background:#dcfce7;color:#166534">${k}</span>`).join('')}
+        </div>
+      </div>
+      <div>
+        <div style="font-size:12px;font-weight:700;color:#dc2626;margin-bottom:6px">⚠️ 신중 접근 영역 (약점 노출 방지)</div>
+        <div class="keyword-grid">
+          ${avoidTopics.map(k => `<span class="keyword-chip" style="background:#fee2e2;color:#991b1b">${k} 관련 즉흥 발언</span>`).join('')}
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🗣️ 발언 가이드</div>
+      <div style="margin-bottom:18px">
+        <div style="font-size:12px;font-weight:700;color:#16a34a;margin-bottom:8px">✅ DO — 이렇게 말하세요</div>
+        ${SPEAK_DO.map(t => `<div class="speak-row"><span class="speak-label" style="background:#dcfce7;color:#166534">DO</span><span class="speak-text">${t}</span></div>`).join('')}
+      </div>
+      <div>
+        <div style="font-size:12px;font-weight:700;color:#dc2626;margin-bottom:8px">❌ DON'T — 피해야 할 발언</div>
+        ${SPEAK_DONT.map(t => `<div class="speak-row"><span class="speak-label" style="background:#fee2e2;color:#991b1b">DON'T</span><span class="speak-text">${t}</span></div>`).join('')}
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">📱 플랫폼별 SNS 톤앤매너 가이드</div>
+      <div class="sns-grid">
+        ${SNS_RULES.map(s => `
+        <div class="sns-card" style="border-top:3px solid ${s.color}">
+          <div class="sns-platform" style="color:${s.color}">${s.icon} ${s.platform}</div>
+          ${s.rules.map(r => `<div class="sns-rule">• ${r}</div>`).join('')}
+        </div>`).join('')}
+      </div>
+    </div>
+    ${summaryBox('메시지 구조 설계 종합 설명', [
+      `메시지 구조 설계 섹션은 ${target.name} 후보의 강점 항목에서 도출된 슬로건 3안, 키워드 뱅크, 발언 가이드, SNS 톤앤매너로 구성됩니다. 슬로건 3안은 각각 '정책 실행형', '신뢰·청렴형', '비전 도약형'으로 타겟 유권자층과 선거 시기에 따라 선택적으로 활용하십시오. 단일 슬로건을 고집하기보다 상황에 맞게 조합하는 것이 효과적입니다.`,
+      `키워드 뱅크에서 '적극 사용 키워드'는 강점 항목에서 직접 추출된 것으로, 언론 인터뷰·유세·SNS 모든 채널에서 일관되게 활용해야 합니다. 반대로 '신중 접근 영역'에 표시된 항목 관련 즉흥 발언은 상대 후보의 공세 소재가 될 수 있으므로 반드시 사전 준비된 답변만 사용하십시오.`,
+      `발언 가이드의 DO/DON'T 원칙은 캠프 전체가 숙지해야 하는 기본 규칙입니다. 특히 수치 없는 비교 발언, 감정적 반응, 미확인 정보 언급은 선거 운동에서 가장 흔한 실수이자 치명적인 리스크입니다. 캠프 내 모든 대변인과 유세 스태프가 이 가이드를 공유하여 일관된 메시지를 유지하십시오.`,
+      `SNS 플랫폼별 톤앤매너는 각 플랫폼의 주요 이용자층과 콘텐츠 소비 방식에 맞게 설계되었습니다. 유튜브는 쇼츠·라이브, 인스타그램은 감성 이미지, 페이스북은 정책 텍스트, X는 이슈 선제 대응에 집중하십시오. 플랫폼별로 동일 메시지를 형식만 바꿔 공유하는 '크로스포스팅'을 기본 운영 방식으로 설정하는 것을 권장합니다.`
+    ])}
+  </div>`;
+}
+
+/* ── Section 7: 공격 시나리오 분석 (구 Section 5) ── */
+function buildSection7_Attack(target, col, candidates) {
   const ATTACK_DB = {
     공익성: { point: '지역 소외 계층 방치 의혹', scenario: '"특정 지역·계층만 챙긴다"는 프레임 공세 예상', defense: '공익 사업 수혜 대상 데이터 공개, 소외 지역 방문 일정 선제 홍보' },
     정책실행력: { point: '공약 불이행 공격', scenario: '"말만 많고 이행률이 낮다"는 이전 공약 체크리스트 공세 예상', defense: '공약 이행률 현황 선제 공개, 미이행 건 이유 및 대안 명확 설명' },
@@ -722,7 +1184,7 @@ function buildSection5_Attack(target, col, candidates) {
 
   const riskMetrics = METRICS.map(m => ({ m, s: target.metrics?.[m]??0 })).sort((a,b)=>a.s-b.s).slice(0,5);
 
-  const cards = riskMetrics.map((x, i) => {
+  const cards = riskMetrics.map((x) => {
     const db = ATTACK_DB[x.m];
     const level = x.s < 70 ? { label:'고위험', color:'#dc2626', bg:'#fee2e2' }
                 : x.s < 78 ? { label:'중위험', color:'#d97706', bg:'#fffbeb' }
@@ -742,18 +1204,29 @@ function buildSection5_Attack(target, col, candidates) {
   return `
   <div class="report-section">
     <div class="s-header" style="background:linear-gradient(90deg,#7f1d1d,#dc2626)">
-      <div class="s-num">5</div>⚔️ 공격 시나리오 분석 · 방어 전략
+      <div class="s-num">7</div>⚔️ 공격 시나리오 분석 · 방어 전략
     </div>
     <div class="insight-box" style="background:#fff1f2;border-color:#fda4af;color:#9f1239;margin-bottom:16px">
       하위 점수 항목은 <strong>상대 후보의 공격 포인트</strong>가 될 수 있습니다.
       예상 공격 시나리오와 방어 전략을 사전에 준비하세요.
     </div>
     ${cards}
+    ${(()=>{
+      const riskMetrics = METRICS.map(m=>({m,s:target.metrics?.[m]??0})).sort((a,b)=>a.s-b.s).slice(0,3);
+      const highRisk = riskMetrics.filter(x=>x.s<70).map(x=>METRIC_LABELS[x.m]);
+      const midRisk = riskMetrics.filter(x=>x.s>=70&&x.s<78).map(x=>METRIC_LABELS[x.m]);
+      return summaryBox('공격 시나리오 분석 · 방어 전략 종합 설명', [
+        `공격 시나리오 분석은 ${target.name}의 하위 점수 항목에서 상대 후보가 어떤 방식으로 공세를 가할 수 있는지를 사전 시뮬레이션합니다. ${highRisk.length>0?`특히 <strong>${highRisk.join(', ')}</strong>은(는) 70점 미만의 '고위험' 항목으로, 공격이 시작될 경우 즉각 대응할 수 있는 방어 자료를 미리 준비해야 합니다.`:'현재 모든 항목이 70점 이상으로 고위험 항목은 없습니다.'}`,
+        `${midRisk.length>0?`<strong>${midRisk.join(', ')}</strong>은(는) '중위험' 항목입니다. 공격이 예상되는 시점(주요 토론회, 언론 집중 기간)에 앞서 선제적 해명 자료와 수치 근거를 배포함으로써 공격의 효과를 사전 차단하는 '방어적 선제 공개' 전략이 효과적입니다.`:'중위험 항목에 대해서도 방어 태세를 유지하십시오.'}`,
+        `방어 전략의 핵심 원칙은 '공격받은 후 해명하는 것보다 공격받기 전 투명하게 공개하는 것이 낫다'는 것입니다. 약점 항목에 대한 데이터와 개선 계획을 먼저 공개함으로써 '숨길 것이 없는 후보'라는 이미지를 구축하면 상대의 공세 소재를 무력화할 수 있습니다.`,
+        `각 공격 시나리오에 대해 캠프 대변인은 30초 내 즉답 가능한 '핵심 방어 메시지'를 암기하고, 상세 자료는 보도자료 형태로 사전 준비해두십시오. 위기 상황에서의 초기 대응 속도가 여론의 흐름을 결정합니다. 구체적인 위기 단계별 대응 방법은 리스크 대응 매뉴얼(9번 섹션)을 참조하십시오.`
+      ]);
+    })()}
   </div>`;
 }
 
-/* ── Section 6: 90일 실행 플랜 ── */
-function buildSection6_Plan(target, col, rank, strat) {
+/* ── Section 8: 90일 실행 플랜 + 캠프 조직별 분배 (구 Section 6) ── */
+function buildSection8_Plan(target, col, rank, strat) {
   const plans = {
     1: [
       { phase:'1~30일 (즉시 실행)', color:'#dc2626', tasks:[
@@ -828,14 +1301,43 @@ function buildSection6_Plan(target, col, rank, strat) {
 
   const planData = plans[rank <= 2 ? rank : 3];
 
+  // 캠프 조직별 실행 분배
+  const orgRows = [
+    { role: '선대위장·총괄', icon: '👑', color:'#1e3a8a',
+      p1: '전략 방향 확정, 핵심 이슈 의사결정',
+      p2: '전략 조정 회의 주재 (주 1회)',
+      p3: '최종 결과 점검, 투표율 관리' },
+    { role: '홍보·언론팀', icon: '📡', color:'#7c3aed',
+      p1: '보도자료 배포 (주 3회), 언론 인터뷰 세팅',
+      p2: '이슈 선점 기사 집중 배포, 반박문 준비',
+      p3: '마무리 긍정 기사 집중, TV 출연 조율' },
+    { role: 'SNS·디지털팀', icon: '📱', color:'#2563eb',
+      p1: '일일 콘텐츠 제작, 댓글 모니터링',
+      p2: '바이럴 영상 캠페인, 광고 집행',
+      p3: '투표 독려 콘텐츠 집중, 라이브 방송' },
+    { role: '정책·공약팀', icon: '📋', color:'#16a34a',
+      p1: '공약 수치화, 이행률 추적 자료 준비',
+      p2: '토론회 답변 준비, 정책 팩트체크 대응',
+      p3: '최종 공약집 배포, 수치형 성과 정리' },
+    { role: '현장·조직팀', icon: '🏘️', color:'#d97706',
+      p1: '지역구 행사 관리, 지지자 DB 구축',
+      p2: '타겟 지역 집중 방문, 간담회 운영',
+      p3: '지지층 투표 독려 직접 연락' },
+    { role: '법무·리스크팀', icon: '⚖️', color:'#dc2626',
+      p1: '선거법 검토, 리스크 이슈 사전 스크리닝',
+      p2: '상대 공세 법적 대응 검토',
+      p3: '위반 사항 최종 점검, 선거 당일 법적 대응 준비' }
+  ];
+
   return `
   <div class="report-section">
     <div class="s-header" style="background:linear-gradient(90deg,#1e3a8a,#1d4ed8)">
-      <div class="s-num">6</div>📅 90일 실행 플랜
+      <div class="s-num">8</div>📅 90일 액션 로드맵 · 캠프 조직별 실행 분배
     </div>
     <div class="insight-box" style="margin-bottom:16px">
       데이터 기반 전략적 선택지를 제시합니다. 구체적 실행은 현장 상황에 맞게 조정하세요.
     </div>
+
     ${planData.map(p => `
     <div class="plan-phase">
       <div class="plan-phase-header" style="background:${p.color}">
@@ -846,13 +1348,134 @@ function buildSection6_Plan(target, col, rank, strat) {
       </div>
     </div>`).join('')}
 
-    <!-- 면책 조항 -->
+    <!-- 캠프 조직별 실행 분배표 -->
+    <div class="card" style="margin-top:8px">
+      <div class="card-title">🏛️ 캠프 조직별 실행 분배표</div>
+      <div class="org-table-wrap">
+        <table class="org-table">
+          <thead>
+            <tr>
+              <th>조직</th>
+              <th>1~30일</th>
+              <th>31~60일</th>
+              <th>61~90일</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${orgRows.map(r => `
+            <tr>
+              <td><span class="org-role" style="color:${r.color}">${r.icon} ${r.role}</span></td>
+              <td style="font-size:12px;color:var(--text-muted)">${r.p1}</td>
+              <td style="font-size:12px;color:var(--text-muted)">${r.p2}</td>
+              <td style="font-size:12px;color:var(--text-muted)">${r.p3}</td>
+            </tr>`).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
     <div class="insight-box" style="background:#f8fafc;border-color:var(--border);color:var(--text-muted);font-size:12px;margin-top:16px">
       ⚠️ <strong>중요 안내:</strong> 본 보고서는 공개된 데이터 기반의 객관적 분석이며,
       특정 후보에 대한 지지 또는 선거 결과를 보장하지 않습니다.
       전략적 선택지 제시와 의사결정 지원을 목적으로 합니다.
       선거 관련 법령 준수는 후보자와 캠프의 책임입니다.
     </div>
+    ${summaryBox('90일 액션 로드맵 · 캠프 조직별 분배 종합 설명', [
+      `90일 로드맵은 선거 캠프가 지금 당장 실행해야 할 과제를 30일 단위로 구분하여 제시합니다. 1~30일은 '즉시 실행' 단계로 긴급 대응과 방향 설정에 집중하고, 31~60일은 '강화 및 확장' 단계로 전략을 심화하며, 61~90일은 '마무리 집중' 단계로 투표율 극대화에 총력을 기울이는 구조입니다.`,
+      `캠프 조직별 실행 분배표는 각 부서가 30일 단위로 무엇을 해야 하는지를 명확히 정의합니다. 역할 중복과 공백을 없애는 것이 조직 운영의 핵심입니다. 선대위장은 전략 방향과 최종 의사결정에 집중하고, 각 팀장은 소관 업무의 일정 준수와 결과 보고에 책임을 지는 수직적-수평적 협업 구조를 구축하십시오.`,
+      `로드맵 실행에서 가장 흔한 실패 원인은 '계획은 있으나 실행 책임자가 불명확한 것'입니다. 각 태스크마다 담당자와 완료 기준을 명시하고, 주 1회 진행 상황을 점검하는 '전략 점검 미팅'을 정례화하십시오. 실행 결과를 지속적으로 피드백하여 중간에 전략을 유연하게 조정할 수 있는 체계를 갖추는 것이 중요합니다.`,
+      `90일 로드맵은 고정된 계획이 아닌 '살아있는 전략 문서'입니다. 여론 변화, 경쟁 후보의 움직임, 이슈 발생 등 외부 변수에 따라 우선순위를 신속하게 재조정해야 합니다. 이 로드맵을 기반으로 리스크 발생 시 대응 매뉴얼(9번 섹션)과 연계하여 위기 상황에서도 전략의 일관성을 유지하십시오.`
+    ])}
+  </div>`;
+}
+
+/* ── Section 9: 리스크 발생 시 대응 매뉴얼 (NEW) ── */
+function buildSection9_RiskManual(target, col) {
+  const risks = [
+    {
+      type: '발언 실수·논란 발생',
+      icon: '🔊', color: '#dc2626',
+      steps: [
+        { time: '즉시 (1시간 내)', text: '관련자·캠프 상황 파악, SNS 확산 모니터링 시작, 외부 미디어 대응 일원화(대변인만)' },
+        { time: '6시간 내', text: '팩트 확인 완료 후 공식 해명 또는 사과문 초안 작성 (법률팀 검토)' },
+        { time: '24시간 내', text: '공식 입장문 발표, 기자 브리핑 또는 SNS 직접 입장 공지, 후속 질문 사전 준비' },
+        { time: '72시간 내', text: '현장 방문·긍정 행사로 이미지 복구, 지지층 안심 메시지 발송, 모니터링 지속' }
+      ]
+    },
+    {
+      type: '경쟁 후보 허위 공세·흑색선전',
+      icon: '⚔️', color: '#7c3aed',
+      steps: [
+        { time: '즉시', text: '허위 내용 스크린샷·아카이브 수집, 법률팀 대응 검토 시작, 확산 범위 파악' },
+        { time: '6시간 내', text: '반박 팩트 자료 준비 (허위 포인트별 근거 첨부), 공식 반박문 작성' },
+        { time: '24시간 내', text: '보도자료 배포 + SNS 반박 게시, 경우에 따라 선관위 신고·법적 대응 검토' },
+        { time: '72시간 내', text: '지지자 안심 소통 메시지 발송, 이슈 전환 긍정 콘텐츠 집중 배포' }
+      ]
+    },
+    {
+      type: '여론조사 하락·지지율 급락',
+      icon: '📉', color: '#d97706',
+      steps: [
+        { time: '즉시', text: '조사 표본·방법론 검토, 하락 원인 내부 분석 회의 소집, 패닉 금지' },
+        { time: '6시간 내', text: '핵심 지지층 대상 긴급 소통 (전화·문자), 하락 요인 관련 공약 입장 정리' },
+        { time: '24시간 내', text: '현장 방문·민심 청취 행사 기획, 언론 선제 인터뷰 추진, 포지션 재강조' },
+        { time: '72시간 내', text: '지지층 결집 이벤트 개최, 중도층 흡수 새 공약 발표 검토' }
+      ]
+    },
+    {
+      type: '내부 갈등·조직 분열 유출',
+      icon: '💥', color: '#dc2626',
+      steps: [
+        { time: '즉시', text: '관련자 소집 비공개 회의, 언론 접촉 일원화 (대변인만), 외부 확산 차단' },
+        { time: '6시간 내', text: '내부 갈등 봉합 협의, 사실관계 정리, 상대 캠프 활용 가능성 차단' },
+        { time: '24시간 내', text: '통합 메시지 발표 (내부 결속 강조), 필요시 역할 구조 조정' },
+        { time: '72시간 내', text: '전략 회의 재정비, 재발 방지 내규 설정, 지지층 신뢰 회복 메시지' }
+      ]
+    },
+    {
+      type: '언론 악성 보도·프레임 설정',
+      icon: '📰', color: '#1e3a8a',
+      steps: [
+        { time: '즉시', text: '보도 내용 팩트 체크, 오보 여부 확인, 해당 매체 편집국 항의 여부 검토' },
+        { time: '6시간 내', text: '반박 보도자료 발송, 우호 언론매체 역보도·인터뷰 요청' },
+        { time: '24시간 내', text: '직접 SNS 해명 게시, 유튜브·라이브 등 직접 소통 채널로 사실 전달' },
+        { time: '72시간 내', text: '프레임 전환을 위한 새 이슈 선점, 보도 모니터링 강화' }
+      ]
+    }
+  ];
+
+  const cards = risks.map(r => `
+  <div class="risk-card">
+    <div class="risk-header" style="background:${r.color}">
+      ${r.icon} ${r.type}
+    </div>
+    <div class="risk-body">
+      <div class="risk-timeline">
+        ${r.steps.map(s => `
+        <div class="risk-step">
+          <span class="risk-step-time" style="background:${r.color}22;color:${r.color}">${s.time}</span>
+          <span class="risk-step-text">${s.text}</span>
+        </div>`).join('')}
+      </div>
+    </div>
+  </div>`).join('');
+
+  return `
+  <div class="report-section">
+    <div class="s-header" style="background:linear-gradient(90deg,#7f1d1d,#dc2626)">
+      <div class="s-num">9</div>🚨 리스크 발생 시 대응 매뉴얼
+    </div>
+    <div class="insight-box" style="background:#fff1f2;border-color:#fda4af;color:#9f1239;margin-bottom:16px">
+      위기는 예고 없이 옵니다. <strong>유형별 단계별 대응 매뉴얼</strong>을 사전에 숙지하고 캠프 전체가 공유하세요.
+      골든타임을 놓치면 이슈가 굳어집니다.
+    </div>
+    ${cards}
+    ${summaryBox('리스크 발생 시 대응 매뉴얼 종합 설명', [
+      `리스크 대응 매뉴얼은 발언 실수, 상대 후보 공세, 지지율 급락, 내부 갈등, 언론 악성 보도 등 5가지 위기 유형별로 즉시·6시간·24시간·72시간의 4단계 대응 절차를 제시합니다. 위기 대응에서 가장 중요한 것은 '속도'와 '일관성'입니다. 첫 대응이 느리거나 혼선이 생기면 이슈가 증폭되어 통제 불능 상태로 악화됩니다.`,
+      `각 위기 단계에서 '즉시(1시간 내)' 조치는 확산 차단과 상황 파악에 집중하며, 이 시점에서의 어떤 공식 발언도 외부로 나가서는 안 됩니다. 모든 언론 및 SNS 대응은 반드시 대변인을 통해 일원화하십시오. '6시간 내'에는 팩트 확인을 완료하고 공식 입장을 결정하며, '24시간 내'에는 공식 발표로 이슈를 매듭짓는 것이 목표입니다.`,
+      `내부 갈등 유출과 발언 실수는 선거 운동에서 가장 빈번하게 발생하는 위기 유형입니다. 이를 예방하기 위해 캠프 내 정보 공유 원칙을 명확히 하고, 모든 공개 발언 전 대변인 검토 절차를 의무화하십시오. 예방이 사후 대응보다 훨씬 효과적이고 자원 소모가 적습니다.`,
+      `이 매뉴얼을 캠프 전체가 인쇄하여 비치하고 정기적으로 시뮬레이션 훈련을 실시하는 것을 권장합니다. 실제 위기 상황에서는 판단력이 저하되므로 매뉴얼대로 움직이는 '루틴화된 위기 대응'이 최선입니다. 본 보고서 전반에 걸친 전략을 종합 이행함으로써 위기 발생 가능성 자체를 낮추는 것이 궁극적인 목표입니다.`
+    ])}
   </div>`;
 }
 
