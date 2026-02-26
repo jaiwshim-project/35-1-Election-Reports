@@ -112,6 +112,14 @@ function scoreGrade(score) {
 // ── 점수 숫자 포맷 ──
 function fmtScore(v) { return v == null ? '-' : Math.round(v); }
 
+// ── 종합 설명 박스 ──
+function summaryBox(title, paras) {
+  return `<div class="summary-section">
+    <div class="summary-section-title">📝 ${title}</div>
+    ${paras.map(p => `<p>${p}</p>`).join('')}
+  </div>`;
+}
+
 // ── 항목별 순위 계산 ──
 function calcMetricRankings(candidates) {
   const rankings = {};

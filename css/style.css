@@ -224,6 +224,8 @@ thead th {
   white-space: nowrap;
 }
 thead th:first-child { text-align: left; }
+/* 후보자·AI 모델명 헤더 – 파란 배경 위 가독성 */
+thead th[style] { color: #fde047 !important; }
 tbody td {
   padding: 9px 14px;
   border-bottom: 1px solid var(--border);
@@ -354,6 +356,36 @@ tbody tr:last-child td { border-bottom: none; }
   .page-title h1 { font-size: 20px; }
   .header-logo { font-size: 16px; }
 }
+
+/* ── 종합 설명 박스 ── */
+.summary-section {
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  border: 1px solid #e2e8f0;
+  border-left: 4px solid #1e3a8a;
+  border-radius: var(--radius-sm);
+  padding: 20px 24px;
+  margin-top: 4px;
+  margin-bottom: 0;
+}
+.summary-section-title {
+  font-size: 13px;
+  font-weight: 800;
+  color: #1e3a8a;
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #dbeafe;
+}
+.summary-section p {
+  font-size: 13px;
+  line-height: 1.85;
+  color: #334155;
+  margin-bottom: 10px;
+}
+.summary-section p:last-child { margin-bottom: 0; }
+.summary-section strong { color: #1e3a8a; }
 
 /* ── 인쇄 스타일 ── */
 @media print {
