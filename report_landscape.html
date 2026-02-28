@@ -414,20 +414,24 @@
     </div>
     <div class="ls-gemini-title-sub">선거구·선거명을 입력하면 해당 선거에 특화된 판세 분석을 AI가 생성합니다.</div>
 
-    <!-- 폼 -->
+    <!-- 자동 인식 영역 -->
     <div id="ls-api-form">
-      <div class="ls-form-row">
-        <label>선거구 / 선거명</label>
-        <input id="ls-district-input" placeholder="예: 서울시장 선거, 부산시 교육감 선거, 사이판 시장 선거" />
-      </div>
-      <div class="ls-form-row">
-        <label>Gemini API Key</label>
-        <input id="ls-gemini-key" type="password" placeholder="AIzaSy..." autocomplete="off" />
+      <div id="ls-district-display" style="display:flex;align-items:center;gap:10px;margin-bottom:16px;padding:12px 16px;background:#f5f3ff;border-radius:8px;border:1px solid #ddd6fe">
+        <span style="font-size:18px">🗺️</span>
+        <div>
+          <div style="font-size:11px;font-weight:700;color:#6d28d9;margin-bottom:2px">홈에서 설정된 선거구</div>
+          <div id="ls-district-name" style="font-size:15px;font-weight:800;color:#1e1b4b">-</div>
+        </div>
       </div>
       <div class="ls-form-actions">
-        <button class="ls-gen-btn" id="ls-gen-btn" onclick="generateCustomAnalysis()">🤖 AI 분석 생성</button>
+        <button class="ls-gen-btn" id="ls-gen-btn" onclick="generateCustomAnalysis()">🤖 AI 맞춤 분석 생성</button>
       </div>
-      <div class="ls-api-note">💡 Gemini API 키는 <strong>Google AI Studio (aistudio.google.com)</strong>에서 무료로 발급받을 수 있습니다.</div>
+      <div id="ls-no-key-warn" style="display:none;margin-top:10px" class="alert alert-warning">
+        ⚠️ Gemini API 키가 설정되지 않았습니다. <a href="index.html" style="color:inherit;font-weight:700">홈 페이지 Step 1</a>에서 API 키를 먼저 저장해주세요.
+      </div>
+      <div id="ls-no-data-warn" style="display:none;margin-top:10px" class="alert alert-info">
+        📂 분석 데이터가 없습니다. <a href="index.html" style="color:inherit;font-weight:700">홈 페이지</a>에서 후보자 분석을 먼저 완료해주세요.
+      </div>
     </div>
 
     <!-- 로딩 -->
@@ -996,21 +1000,27 @@
    Gemini 선거구 맞춤 분석 함수
    ══════════════════════════════════════ */
 
-function getGeminiKey() { return localStorage.getItem('gemini_api_key') || ''; }
-function setGeminiKey(k) { localStorage.setItem('gemini_api_key', k); }
-
 function initGeminiForm() {
   const data = getData();
-  const districtEl = document.getElementById('ls-district-input');
-  const keyEl = document.getElementById('ls-gemini-key');
-  if (data && data.district && districtEl) districtEl.value = data.district;
-  if (keyEl) keyEl.value = getGeminiKey();
+  const apiKey = getApiKey();
 
-  // 캐시 확인 — district + 저장된 key가 있으면 자동 표시
-  const district = districtEl ? districtEl.value.trim() : '';
+  // 선거구 표시
+  const district = data?.district || '';
+  const districtNameEl = document.getElementById('ls-district-name');
+  if (districtNameEl) districtNameEl.textContent = district || '선거구 미설정';
+
+  // 경고 표시
+  if (!data || !data.candidates || data.candidates.length === 0) {
+    document.getElementById('ls-no-data-warn').style.display = 'block';
+    document.getElementById('ls-gen-btn').disabled = true;
+  } else if (!apiKey) {
+    document.getElementById('ls-no-key-warn').style.display = 'block';
+    document.getElementById('ls-gen-btn').disabled = true;
+  }
+
+  // 캐시 확인 — 있으면 자동 표시
   if (district) {
-    const cacheKey = 'landscape_gemini_' + district;
-    const cached = localStorage.getItem(cacheKey);
+    const cached = localStorage.getItem('landscape_gemini_' + district);
     if (cached) {
       try { renderCustomAnalysis(JSON.parse(cached), district, true); return; } catch(e){}
     }
@@ -1018,11 +1028,11 @@ function initGeminiForm() {
 }
 
 async function generateCustomAnalysis(forceRegen) {
-  const district = document.getElementById('ls-district-input').value.trim();
-  const apiKey   = document.getElementById('ls-gemini-key').value.trim();
-  if (!district) { alert('선거구 / 선거명을 입력해주세요.'); return; }
-  if (!apiKey)   { alert('Gemini API Key를 입력해주세요.'); return; }
-  setGeminiKey(apiKey);
+  const data = getData();
+  const district = data?.district || '';
+  const apiKey   = getApiKey();
+  if (!district) { alert('홈 페이지에서 선거구를 먼저 입력해주세요.'); return; }
+  if (!apiKey)   { alert('홈 페이지 Step 1에서 Gemini API 키를 먼저 저장해주세요.'); return; }
 
   // 캐시 확인
   const cacheKey = 'landscape_gemini_' + district;
@@ -1031,7 +1041,8 @@ async function generateCustomAnalysis(forceRegen) {
     if (cached) { try { renderCustomAnalysis(JSON.parse(cached), district, true); return; } catch(e){} }
   }
 
-  // 로딩
+  // 로딩 시작
+  document.getElementById('ls-custom-result').style.display = 'none';
   document.getElementById('ls-api-form').style.display = 'none';
   const box = document.getElementById('ls-generating-box');
   box.style.display = 'flex';
@@ -1165,7 +1176,7 @@ function renderCustomAnalysis(a, district, fromCache) {
       </div>
       <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
         ${fromCache ? `<span class="ls-cache-notice">✅ 캐시 저장됨</span>` : `<span class="ls-cache-notice">✅ 방금 생성됨 · ${now}</span>`}
-        <button class="ls-regen-btn" onclick="document.getElementById('ls-api-form').style.display='block';document.getElementById('ls-custom-result').style.display='none'">✏️ 재생성</button>
+        <button class="ls-regen-btn" onclick="generateCustomAnalysis(true)">🔄 재생성</button>
       </div>
     </div>
     <div class="ls-result-overview">${a.election_overview||''}</div>
