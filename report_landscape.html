@@ -187,6 +187,159 @@
 .ls-chart-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 16px; }
 @media (max-width: 680px) { .ls-chart-row { grid-template-columns: 1fr; } }
 
+/* ══════════════════════════════════════
+   Gemini 선거구 맞춤 분석 섹션
+   ══════════════════════════════════════ */
+.ls-gemini-wrap {
+  background: white; border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 26px 28px;
+  margin-bottom: 28px; box-shadow: var(--shadow);
+  border-top: 4px solid #4f46e5;
+}
+.ls-gemini-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 6px; flex-wrap: wrap; gap: 8px;
+}
+.ls-gemini-title {
+  font-size: 16px; font-weight: 800; color: #0f172a;
+  display: flex; align-items: center; gap: 8px;
+}
+.ls-gemini-title-sub { font-size: 12px; color: #4b5563; font-weight: 500; margin-bottom: 18px; }
+.gemini-badge {
+  background: #ede9fe; color: #4f46e5; padding: 3px 10px;
+  border-radius: 12px; font-size: 11px; font-weight: 700;
+  border: 1px solid #c4b5fd;
+}
+/* 폼 */
+.ls-form-row { display: flex; flex-direction: column; gap: 4px; margin-bottom: 12px; }
+.ls-form-row label { font-size: 12px; font-weight: 700; color: #374151; }
+.ls-form-row input {
+  padding: 10px 14px; border: 1px solid var(--border); border-radius: 8px;
+  font-size: 13px; font-family: inherit; color: #0f172a; transition: border-color .2s;
+}
+.ls-form-row input:focus { outline: none; border-color: #4f46e5; }
+.ls-form-actions { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-top: 4px; }
+.ls-gen-btn {
+  padding: 10px 22px; background: #4f46e5; color: white;
+  border: none; border-radius: 8px; font-size: 13px; font-weight: 700;
+  cursor: pointer; font-family: inherit; transition: all .2s;
+  display: flex; align-items: center; gap: 6px;
+}
+.ls-gen-btn:hover { background: #4338ca; transform: translateY(-1px); }
+.ls-gen-btn:disabled { background: #94a3b8; cursor: not-allowed; transform: none; }
+.ls-regen-btn {
+  padding: 8px 14px; background: white; color: #374151;
+  border: 1px solid var(--border); border-radius: 8px; font-size: 12px; font-weight: 600;
+  cursor: pointer; font-family: inherit; transition: all .2s;
+}
+.ls-regen-btn:hover { border-color: #4f46e5; color: #4f46e5; }
+.ls-api-note { font-size: 11px; color: #6b7280; margin-top: 10px; }
+/* 로딩 */
+.ls-generating-box {
+  display: flex; align-items: center; justify-content: center;
+  flex-direction: column; gap: 14px; padding: 44px 20px;
+}
+.ls-gen-spinner {
+  width: 36px; height: 36px;
+  border: 3px solid #e2e8f0; border-top-color: #4f46e5;
+  border-radius: 50%; animation: spin .8s linear infinite;
+}
+.ls-gen-status { font-size: 14px; font-weight: 700; color: #374151; }
+.ls-gen-status-sub { font-size: 12px; color: #4b5563; }
+/* 결과 공통 */
+.ls-result-title-row {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 8px; flex-wrap: wrap; gap: 8px;
+}
+.ls-result-district { font-size: 19px; font-weight: 900; color: #0f172a; }
+.ls-result-type {
+  display: inline-block; padding: 3px 12px; border-radius: 20px;
+  font-size: 12px; font-weight: 700; background: #ede9fe; color: #4f46e5;
+  margin-left: 8px; vertical-align: middle;
+}
+.ls-result-overview {
+  font-size: 13px; color: #374151; line-height: 1.8;
+  padding: 14px 16px; background: #f5f3ff; border-radius: 8px;
+  border-left: 4px solid #4f46e5; margin-bottom: 20px;
+}
+/* 결과 2열 그리드 */
+.ls-result-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+@media (max-width: 700px) { .ls-result-grid { grid-template-columns: 1fr; } }
+.ls-result-card {
+  background: #f8fafc; border-radius: var(--radius-sm);
+  border: 1px solid var(--border); padding: 16px;
+}
+.ls-result-card-title {
+  font-size: 12px; font-weight: 800; color: #374151;
+  margin-bottom: 12px; display: flex; align-items: center; gap: 6px;
+}
+/* 유권자 그룹 */
+.ls-vg-item {
+  display: flex; align-items: center; gap: 8px;
+  padding: 6px 8px; border-radius: 6px; margin-bottom: 6px; background: white;
+  border: 1px solid var(--border);
+}
+.ls-vg-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+.ls-vg-name { font-size: 12px; font-weight: 700; color: #0f172a; flex: 1; }
+.ls-vg-ratio { font-size: 11px; font-weight: 900; margin-right: 4px; }
+.ls-vg-issue { font-size: 11px; color: #4b5563; }
+/* 이슈 바 */
+.ls-issue-item { display: flex; align-items: center; gap: 8px; margin-bottom: 9px; }
+.ls-issue-rank { font-size: 11px; font-weight: 900; color: #6b7280; min-width: 18px; }
+.ls-issue-bar-wrap { flex: 1; }
+.ls-issue-label { font-size: 12px; font-weight: 700; color: #0f172a; margin-bottom: 3px; }
+.ls-issue-track { height: 6px; background: #e2e8f0; border-radius: 3px; overflow: hidden; }
+.ls-issue-fill { height: 100%; border-radius: 3px; }
+.ls-issue-score { font-size: 12px; font-weight: 900; min-width: 26px; text-align: right; }
+/* 프레임 */
+.ls-frame-box {
+  background: white; border-radius: 8px; padding: 14px;
+  border: 1px solid var(--border);
+}
+.ls-frame-name { font-size: 15px; font-weight: 800; color: #0f172a; margin-bottom: 6px; }
+.ls-frame-prob-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.ls-frame-prob-track { flex: 1; height: 8px; background: #e2e8f0; border-radius: 4px; overflow: hidden; }
+.ls-frame-prob-fill { height: 100%; border-radius: 4px; background: #4f46e5; }
+.ls-frame-prob-val { font-size: 13px; font-weight: 900; color: #4f46e5; }
+.ls-frame-analysis { font-size: 12px; color: #374151; line-height: 1.65; margin-bottom: 10px; }
+.ls-frame-types { display: flex; gap: 8px; flex-wrap: wrap; }
+.ls-frame-fav { padding: 3px 10px; border-radius: 10px; font-size: 11px; font-weight: 700; background: #dcfce7; color: #166534; }
+.ls-frame-unfav { padding: 3px 10px; border-radius: 10px; font-size: 11px; font-weight: 700; background: #fee2e2; color: #991b1b; }
+/* 리스크 미니 */
+.ls-risk-mini {
+  display: flex; gap: 10px; align-items: flex-start;
+  padding: 10px 12px; background: white; border-radius: 8px;
+  border: 1px solid var(--border); border-left: 3px solid; margin-bottom: 8px;
+}
+.ls-risk-mini-icon { font-size: 18px; flex-shrink: 0; }
+.ls-risk-mini-title { font-size: 12px; font-weight: 800; color: #0f172a; margin-bottom: 2px; }
+.ls-risk-mini-desc { font-size: 11px; color: #374151; line-height: 1.55; }
+.ls-risk-mini-timing {
+  font-size: 10px; font-weight: 700; color: #4b5563; margin-top: 5px;
+  background: #f1f5f9; display: inline-block; padding: 1px 7px; border-radius: 8px;
+}
+/* 캠페인 포인트 */
+.ls-cp-item {
+  margin-bottom: 8px; padding: 11px 14px; background: white;
+  border-radius: 8px; border: 1px solid var(--border); border-left: 3px solid;
+}
+.ls-cp-phase { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: .6px; margin-bottom: 3px; }
+.ls-cp-title { font-size: 13px; font-weight: 800; color: #0f172a; margin-bottom: 6px; }
+.ls-cp-pts { display: flex; flex-direction: column; gap: 3px; }
+.ls-cp-pt {
+  font-size: 11px; color: #374151; padding: 3px 7px;
+  background: #f8fafc; border-radius: 4px; border-left: 2px solid #e2e8f0;
+}
+/* 인사이트 */
+.ls-district-insight {
+  background: linear-gradient(135deg, #fdf4ff, #ede9fe);
+  border: 1px solid #ddd6fe; border-left: 4px solid #7c3aed;
+  border-radius: var(--radius-sm); padding: 14px 16px;
+  font-size: 13px; color: #1e1b4b; line-height: 1.8; margin-top: 14px;
+}
+.ls-district-insight strong { color: #7c3aed; }
+/* 캐시 안내 */
+.ls-cache-notice { font-size: 11px; color: #6b7280; display: flex; align-items: center; gap: 5px; }
 /* ── 인쇄 ── */
 @media print {
   * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
@@ -250,6 +403,43 @@
   </div>
 
   <button class="ls-pdf-btn no-print" onclick="window.print()">📥 PDF 저장</button>
+
+  <!-- ══════════════════════════════════════
+       ✨ Gemini 선거구 맞춤 분석
+       ══════════════════════════════════════ -->
+  <div class="ls-gemini-wrap no-print" id="ls-gemini-wrap">
+    <div class="ls-gemini-header">
+      <div class="ls-gemini-title">✨ 선거구 맞춤 AI 분석</div>
+      <div class="gemini-badge">Powered by Gemini AI</div>
+    </div>
+    <div class="ls-gemini-title-sub">선거구·선거명을 입력하면 해당 선거에 특화된 판세 분석을 AI가 생성합니다.</div>
+
+    <!-- 폼 -->
+    <div id="ls-api-form">
+      <div class="ls-form-row">
+        <label>선거구 / 선거명</label>
+        <input id="ls-district-input" placeholder="예: 서울시장 선거, 부산시 교육감 선거, 사이판 시장 선거" />
+      </div>
+      <div class="ls-form-row">
+        <label>Gemini API Key</label>
+        <input id="ls-gemini-key" type="password" placeholder="AIzaSy..." autocomplete="off" />
+      </div>
+      <div class="ls-form-actions">
+        <button class="ls-gen-btn" id="ls-gen-btn" onclick="generateCustomAnalysis()">🤖 AI 분석 생성</button>
+      </div>
+      <div class="ls-api-note">💡 Gemini API 키는 <strong>Google AI Studio (aistudio.google.com)</strong>에서 무료로 발급받을 수 있습니다.</div>
+    </div>
+
+    <!-- 로딩 -->
+    <div class="ls-generating-box" id="ls-generating-box" style="display:none">
+      <div class="ls-gen-spinner"></div>
+      <div class="ls-gen-status" id="ls-gen-status">분석 생성 중...</div>
+      <div class="ls-gen-status-sub" id="ls-gen-status-sub">Gemini AI가 선거구 판세를 분석하고 있습니다.</div>
+    </div>
+
+    <!-- 결과 -->
+    <div id="ls-custom-result" style="display:none"></div>
+  </div>
 
   <!-- ── 목차 ── -->
   <div class="ls-toc">
@@ -802,6 +992,258 @@
 
 <script src="js/shared.js"></script>
 <script>
+/* ══════════════════════════════════════
+   Gemini 선거구 맞춤 분석 함수
+   ══════════════════════════════════════ */
+
+function getGeminiKey() { return localStorage.getItem('gemini_api_key') || ''; }
+function setGeminiKey(k) { localStorage.setItem('gemini_api_key', k); }
+
+function initGeminiForm() {
+  const data = getData();
+  const districtEl = document.getElementById('ls-district-input');
+  const keyEl = document.getElementById('ls-gemini-key');
+  if (data && data.district && districtEl) districtEl.value = data.district;
+  if (keyEl) keyEl.value = getGeminiKey();
+
+  // 캐시 확인 — district + 저장된 key가 있으면 자동 표시
+  const district = districtEl ? districtEl.value.trim() : '';
+  if (district) {
+    const cacheKey = 'landscape_gemini_' + district;
+    const cached = localStorage.getItem(cacheKey);
+    if (cached) {
+      try { renderCustomAnalysis(JSON.parse(cached), district, true); return; } catch(e){}
+    }
+  }
+}
+
+async function generateCustomAnalysis(forceRegen) {
+  const district = document.getElementById('ls-district-input').value.trim();
+  const apiKey   = document.getElementById('ls-gemini-key').value.trim();
+  if (!district) { alert('선거구 / 선거명을 입력해주세요.'); return; }
+  if (!apiKey)   { alert('Gemini API Key를 입력해주세요.'); return; }
+  setGeminiKey(apiKey);
+
+  // 캐시 확인
+  const cacheKey = 'landscape_gemini_' + district;
+  if (!forceRegen) {
+    const cached = localStorage.getItem(cacheKey);
+    if (cached) { try { renderCustomAnalysis(JSON.parse(cached), district, true); return; } catch(e){} }
+  }
+
+  // 로딩
+  document.getElementById('ls-api-form').style.display = 'none';
+  const box = document.getElementById('ls-generating-box');
+  box.style.display = 'flex';
+  document.getElementById('ls-gen-status').textContent = district + ' 분석 생성 중...';
+  document.getElementById('ls-gen-status-sub').textContent = 'Gemini AI가 해당 선거의 판세를 분석하고 있습니다.';
+
+  const prompt = `당신은 선거 전문 분석가입니다. 아래 선거에 대한 판세 인텔리전스 분석을 JSON으로 제공해주세요.
+
+선거 정보: ${district}
+
+다음 JSON 구조로 정확히 응답하세요. JSON 외 다른 텍스트는 포함하지 마세요:
+{
+  "election_type": "선거 유형 (예: 광역단체장, 기초단체장, 교육감, 국회의원 등)",
+  "election_overview": "이 선거의 전반적 특성·중요성·선거 환경 (3문장)",
+  "voter_structure": {
+    "estimated_voters": "추정 유권자 수 (예: 약 830만 명)",
+    "turnout_estimate": "예상 투표율 (예: 62%)",
+    "swing_voter_ratio": "스윙보터 추정 비율 (예: 20%)",
+    "key_groups": [
+      {"name": "그룹명", "ratio": "비율%", "key_issue": "핵심 관심사", "color": "#16a34a"}
+    ]
+  },
+  "key_issues": [
+    {"rank": 1, "title": "이슈명", "score": 90, "desc": "이슈 설명 1-2문장", "icon": "💰", "color": "#f59e0b"}
+  ],
+  "election_frame": {
+    "dominant_frame": "지배적 프레임 이름",
+    "probability": 38,
+    "analysis": "프레임 분석 2-3문장",
+    "favorable_type": "유리한 후보 유형 (예: 행정형·현직형)",
+    "unfavorable_type": "불리한 후보 유형 (예: 신인형)"
+  },
+  "risk_factors": [
+    {"title": "리스크명", "desc": "설명 1-2문장", "timing": "발생 시점 (예: D-30~D-14)", "icon": "⚠️", "color": "#dc2626"}
+  ],
+  "campaign_points": [
+    {"phase": "D-90~D-60", "title": "포지셔닝 단계", "color": "#0891b2", "points": ["전략1", "전략2", "전략3"]}
+  ],
+  "district_insight": "이 선거에서 가장 중요한 전략적 인사이트 2-3문장"
+}
+
+key_groups: 4개, key_issues: 5-6개, risk_factors: 3-4개, campaign_points: 3개. 모두 한국어.`;
+
+  try {
+    const resp = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: prompt }] }],
+          generationConfig: { temperature: 0.7, maxOutputTokens: 2048 }
+        })
+      }
+    );
+    if (!resp.ok) {
+      const err = await resp.json();
+      throw new Error(err.error?.message || resp.status);
+    }
+    const respData = await resp.json();
+    let text = respData.candidates?.[0]?.content?.parts?.[0]?.text || '';
+
+    // JSON 추출 (마크다운 코드블록 처리)
+    const mdMatch = text.match(/```(?:json)?\s*([\s\S]*?)```/);
+    if (mdMatch) text = mdMatch[1];
+    else { const objMatch = text.match(/\{[\s\S]*\}/); if (objMatch) text = objMatch[0]; }
+
+    const analysis = JSON.parse(text.trim());
+    localStorage.setItem(cacheKey, JSON.stringify(analysis));
+
+    box.style.display = 'none';
+    renderCustomAnalysis(analysis, district, false);
+
+  } catch(err) {
+    box.style.display = 'none';
+    document.getElementById('ls-api-form').style.display = 'block';
+    alert('분석 생성 중 오류가 발생했습니다:\n' + err.message);
+  }
+}
+
+function renderCustomAnalysis(a, district, fromCache) {
+  document.getElementById('ls-api-form').style.display = 'none';
+  document.getElementById('ls-generating-box').style.display = 'none';
+
+  const issues = (a.key_issues || []).map((iss, i) => `
+    <div class="ls-issue-item">
+      <div class="ls-issue-rank">${iss.icon||'•'}</div>
+      <div class="ls-issue-bar-wrap">
+        <div class="ls-issue-label">${iss.title}</div>
+        <div class="ls-issue-track">
+          <div class="ls-issue-fill" style="width:${iss.score}%;background:${iss.color||'#4f46e5'}"></div>
+        </div>
+      </div>
+      <div class="ls-issue-score" style="color:${iss.color||'#4f46e5'}">${iss.score}</div>
+    </div>`).join('');
+
+  const groups = (a.voter_structure?.key_groups || []).map(g => `
+    <div class="ls-vg-item">
+      <div class="ls-vg-dot" style="background:${g.color||'#4f46e5'}"></div>
+      <div class="ls-vg-name">${g.name}</div>
+      <div class="ls-vg-ratio" style="color:${g.color||'#4f46e5'}">${g.ratio}</div>
+      <div class="ls-vg-issue">${g.key_issue}</div>
+    </div>`).join('');
+
+  const risks = (a.risk_factors || []).map(r => `
+    <div class="ls-risk-mini" style="border-left-color:${r.color||'#dc2626'}">
+      <div class="ls-risk-mini-icon">${r.icon||'⚠️'}</div>
+      <div>
+        <div class="ls-risk-mini-title">${r.title}</div>
+        <div class="ls-risk-mini-desc">${r.desc}</div>
+        <div class="ls-risk-mini-timing">📅 ${r.timing}</div>
+      </div>
+    </div>`).join('');
+
+  const cpoints = (a.campaign_points || []).map(cp => `
+    <div class="ls-cp-item" style="border-left-color:${cp.color||'#4f46e5'}">
+      <div class="ls-cp-phase" style="color:${cp.color||'#4f46e5'}">${cp.phase}</div>
+      <div class="ls-cp-title">${cp.title}</div>
+      <div class="ls-cp-pts">${(cp.points||[]).map(p=>`<div class="ls-cp-pt">${p}</div>`).join('')}</div>
+    </div>`).join('');
+
+  const fr = a.election_frame || {};
+  const vs = a.voter_structure || {};
+  const now = new Date().toLocaleDateString('ko-KR');
+
+  const html = `
+    <div class="ls-result-title-row">
+      <div>
+        <span class="ls-result-district">${district}</span>
+        <span class="ls-result-type">${a.election_type||'선거'}</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+        ${fromCache ? `<span class="ls-cache-notice">✅ 캐시 저장됨</span>` : `<span class="ls-cache-notice">✅ 방금 생성됨 · ${now}</span>`}
+        <button class="ls-regen-btn" onclick="document.getElementById('ls-api-form').style.display='block';document.getElementById('ls-custom-result').style.display='none'">✏️ 재생성</button>
+      </div>
+    </div>
+    <div class="ls-result-overview">${a.election_overview||''}</div>
+
+    <div class="ls-result-grid">
+      <!-- 유권자 구조 -->
+      <div class="ls-result-card">
+        <div class="ls-result-card-title">👥 유권자 구조</div>
+        <div style="display:flex;gap:16px;margin-bottom:12px;flex-wrap:wrap">
+          <div style="text-align:center">
+            <div style="font-size:22px;font-weight:900;color:#4f46e5">${vs.estimated_voters||'-'}</div>
+            <div style="font-size:11px;color:#4b5563">추정 유권자</div>
+          </div>
+          <div style="text-align:center">
+            <div style="font-size:22px;font-weight:900;color:#059669">${vs.turnout_estimate||'-'}</div>
+            <div style="font-size:11px;color:#4b5563">예상 투표율</div>
+          </div>
+          <div style="text-align:center">
+            <div style="font-size:22px;font-weight:900;color:#d97706">${vs.swing_voter_ratio||'-'}</div>
+            <div style="font-size:11px;color:#4b5563">스윙보터</div>
+          </div>
+        </div>
+        ${groups}
+      </div>
+      <!-- 핵심 이슈 -->
+      <div class="ls-result-card">
+        <div class="ls-result-card-title">📊 핵심 이슈 우선순위</div>
+        ${issues}
+      </div>
+    </div>
+
+    <!-- 프레임 분석 (전체 폭) -->
+    <div class="ls-result-card" style="margin-bottom:14px">
+      <div class="ls-result-card-title">🎭 선거 프레임 분석</div>
+      <div class="ls-frame-box">
+        <div class="ls-frame-name">지배적 프레임: ${fr.dominant_frame||'-'}</div>
+        <div class="ls-frame-prob-row">
+          <div class="ls-frame-prob-track">
+            <div class="ls-frame-prob-fill" style="width:${fr.probability||0}%"></div>
+          </div>
+          <div class="ls-frame-prob-val">${fr.probability||0}%</div>
+        </div>
+        <div class="ls-frame-analysis">${fr.analysis||''}</div>
+        <div class="ls-frame-types">
+          <span style="font-size:12px;font-weight:700;color:#374151;margin-right:4px">유리:</span>
+          <span class="ls-frame-fav">✅ ${fr.favorable_type||'-'}</span>
+          <span style="font-size:12px;font-weight:700;color:#374151;margin:0 4px">불리:</span>
+          <span class="ls-frame-unfav">⛔ ${fr.unfavorable_type||'-'}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="ls-result-grid">
+      <!-- 리스크 요인 -->
+      <div class="ls-result-card">
+        <div class="ls-result-card-title">⚠️ 선거 리스크 요인</div>
+        ${risks}
+      </div>
+      <!-- 캠페인 전략 -->
+      <div class="ls-result-card">
+        <div class="ls-result-card-title">📅 캠페인 전략 포인트</div>
+        ${cpoints}
+      </div>
+    </div>
+
+    <!-- 전략적 인사이트 -->
+    <div class="ls-district-insight">
+      <strong>💡 ${district} 전략적 인사이트</strong><br>
+      ${a.district_insight||''}
+    </div>`;
+
+  const resultEl = document.getElementById('ls-custom-result');
+  resultEl.innerHTML = html;
+  resultEl.style.display = 'block';
+}
+
+/* ══════════════════════════════════════ */
+
 document.addEventListener('DOMContentLoaded', () => {
 
   // ── 메타 정보 ──
@@ -810,6 +1252,9 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('cover-district').textContent = data.district || '-';
     document.getElementById('cover-date').textContent = data.analysis_date || '-';
   }
+
+  // ── Gemini 폼 초기화 ──
+  initGeminiForm();
 
   // ── 연령대 도넛 차트 ──
   new Chart(document.getElementById('ageChart'), {
