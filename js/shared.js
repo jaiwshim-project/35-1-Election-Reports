@@ -50,7 +50,7 @@ const NAV_PAGES = [
   { href: 'report_ai.html',       icon: '🤖', label: 'AI 모델 비교' },
   { href: 'report_strategy.html',   icon: '🏆', label: '03. 당선 전략' },
   { href: 'report_landscape.html', icon: '🗺️', label: '02. 선거 판세 인텔리전스' },
-  { href: 'report_full.html',      icon: '📥', label: 'PDF 전체 보고서' },
+  { href: 'report_full.html',      icon: '📥', label: '01. 종합 비교분석' },
 ];
 
 function renderNav() {
