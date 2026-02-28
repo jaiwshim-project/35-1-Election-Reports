@@ -34,6 +34,16 @@
   color: white; padding: 4px 12px; border-radius: 20px;
   font-size: 11px; font-weight: 600; display: inline-block; margin-bottom: 8px;
 }
+.grade-legend {
+  display: flex; align-items: center; flex-wrap: wrap; gap: 6px;
+  margin-bottom: 16px; padding: 10px 14px;
+  background: #f8fafc; border-radius: 8px; border: 1px solid #e2e8f0;
+}
+.grade-legend-label { font-size: 11px; font-weight: 700; color: #374151; }
+.grade-legend-item {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 3px 10px; border-radius: 14px; font-size: 11px; font-weight: 700;
+}
 
 @media (max-width: 768px) { .charts-grid { grid-template-columns: 1fr; } }
 </style>
@@ -73,7 +83,16 @@ document.addEventListener('DOMContentLoaded', () => {
   let html = '';
 
   // ── 순위 카드 ──
-  html += `<div class="card"><div class="card-title">🏆 종합 순위</div><div class="ranking-grid">`;
+  html += `<div class="card"><div class="card-title">🏆 종합 순위</div>
+  <div class="grade-legend">
+    <span class="grade-legend-label">📊 등급 기준:</span>
+    <span class="grade-legend-item" style="background:#ede9fe;color:#5b21b6">S 최우수 · 880점 이상</span>
+    <span class="grade-legend-item" style="background:#dcfce7;color:#166534">A 우수 · 840점 이상</span>
+    <span class="grade-legend-item" style="background:#dbeafe;color:#1e40af">E 양호 · 760점 이상</span>
+    <span class="grade-legend-item" style="background:#fef3c7;color:#92400e">B 보통 · 680점 이상</span>
+    <span class="grade-legend-item" style="background:#fee2e2;color:#991b1b">C 미흡 · 680점 미만</span>
+  </div>
+  <div class="ranking-grid">`;
   const sorted = [...candidates].map((c,i) => ({...c, idx:i})).sort((a,b)=>b.total_score-a.total_score);
   sorted.forEach((c, rank) => {
     const col = CANDIDATE_COLORS[c.idx % 5];

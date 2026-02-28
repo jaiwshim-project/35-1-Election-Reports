@@ -48,10 +48,9 @@ const NAV_PAGES = [
   { href: 'report_profiles.html', icon: '👤', label: '후보 프로파일' },
   { href: 'report_gaps.html',     icon: '🎯', label: '격차 분석' },
   { href: 'report_ai.html',       icon: '🤖', label: 'AI 모델 비교' },
-  { href: 'report_strategy.html', icon: '🏆', label: '당선 전략' },
-  { href: 'report_full.html',     icon: '📥', label: 'PDF 전체 보고서' },
-  { href: 'report_pricing.html',  icon: '💰', label: '가격 산정' },
-  { href: 'report_guide.html',   icon: '📋', label: '안내자료' },
+  { href: 'report_strategy.html',   icon: '🏆', label: '당선 전략' },
+  { href: 'report_landscape.html', icon: '🗺️', label: '선거 판세' },
+  { href: 'report_full.html',      icon: '📥', label: 'PDF 전체 보고서' },
 ];
 
 function renderNav() {
@@ -181,6 +180,11 @@ function renderFooter() {
             </div>
           </div>
         </div>
+      </div>
+      <div class="footer-divider"></div>
+      <div class="footer-links">
+        <a href="report_pricing.html" class="footer-link-btn">💰 가격 산정</a>
+        <a href="report_guide.html" class="footer-link-btn">📋 안내자료</a>
       </div>
       <div class="footer-divider"></div>
       <div class="footer-bottom">
