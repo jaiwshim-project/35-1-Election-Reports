@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>종합 분석 보고서 · ElectionAI</title>
+<title>01. 통합 분석 리포트 · ElectionAI</title>
 <link rel="stylesheet" href="css/style.css">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
@@ -30,7 +30,7 @@
 }
 .back-btn:hover { background: rgba(255,255,255,0.25); }
 
-.full-report { max-width: 960px; margin: 0 auto; padding: 32px 24px 80px; }
+.full-report { padding: 0 0 80px; }
 
 /* ── 표지 ── */
 .cover-page {
@@ -216,9 +216,10 @@
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
   }
-  .top-bar, .app-header, .main-nav { display: none !important; }
+  .top-bar, .app-header, .main-nav, .full-toolbar { display: none !important; }
   body { background: white !important; margin: 0; }
-  .full-report { max-width: 100%; padding: 0; }
+  .full-report { padding: 0; }
+  .page-container { padding: 0; }
 
   /* 표지 */
   .cover-page {
@@ -293,10 +294,20 @@
 </head>
 <body>
 
-<!-- 상단 바 -->
-<div class="top-bar no-print">
-  <a href="report_compare.html" class="back-btn">← 돌아가기</a>
-  <h2>📋 01. 종합 비교분석 보고서</h2>
+<header class="app-header">
+  <div class="header-inner">
+    <div class="header-logo">Election<span class="logo-analysis">Analysis</span><span class="logo-report">Report</span><span class="logo-ai">AI</span></div>
+    <div class="header-subtitle">01. 통합 분석 리포트 · Comprehensive Analysis Report</div>
+    <div class="header-date" id="header-date"></div>
+  </div>
+</header>
+<nav class="main-nav no-print"><div class="nav-inner" id="main-nav"></div></nav>
+
+<div class="page-container">
+
+<!-- 툴바 -->
+<div class="full-toolbar no-print" style="display:flex;align-items:center;justify-content:space-between;padding:12px 0;margin-bottom:8px">
+  <span style="font-size:15px;font-weight:800;color:#1e3a8a">📋 01. 통합 분석 리포트</span>
   <button class="pdf-btn" onclick="savePDF()">📥 PDF로 저장</button>
 </div>
 
@@ -326,6 +337,8 @@
     </div>
   </div>
 </div>
+
+</div><!-- /page-container -->
 
 <script src="js/shared.js"></script>
 <script>
@@ -382,7 +395,7 @@ function buildCover(candidates, sortedC, district, analysis_date) {
   return `
   <div class="cover-page">
     <div class="cover-badge">ElectionAI · AI 기반 선거 후보자 분석 시스템</div>
-    <h1>01. 선거 후보자<br>종합 비교분석 보고서</h1>
+    <h1>01. 선거 후보자<br>통합 분석 리포트</h1>
     <div class="subtitle">10개 지표 기반 정량 평가 · AI 모델 통합 분석</div>
     <div class="cover-meta">
       <div class="cover-meta-item">
@@ -413,7 +426,7 @@ function buildTOC(candidateCount, district) {
   <div class="full-toc">
     <div class="toc-head">
       <div class="toc-head-title">📋 목 차</div>
-      <div class="toc-head-sub">종합 비교 분석 보고서 · ${district||'선거구'} · 총 5개 섹션</div>
+      <div class="toc-head-sub">01. 통합 분석 리포트 · ${district||'선거구'} · 총 5개 섹션</div>
     </div>
     <div class="toc-body">
       <div class="toc-item">
