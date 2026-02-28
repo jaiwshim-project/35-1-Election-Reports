@@ -49,7 +49,7 @@ const NAV_PAGES = [
   { href: 'report_gaps.html',     icon: '🎯', label: '격차 분석' },
   { href: 'report_ai.html',       icon: '🤖', label: 'AI 모델 비교' },
   { href: 'report_strategy.html',   icon: '🏆', label: '당선 전략' },
-  { href: 'report_landscape.html', icon: '🗺️', label: '선거 판세' },
+  { href: 'report_landscape.html', icon: '🗺️', label: '02. 선거 판세 인텔리전스' },
   { href: 'report_full.html',      icon: '📥', label: 'PDF 전체 보고서' },
 ];
 
