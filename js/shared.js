@@ -105,9 +105,9 @@ function rankTag(rank) {
 function scoreGrade(score) {
   if (score >= 880) return { label: 'S', color: '#7c3aed', desc: '최우수' };
   if (score >= 840) return { label: 'A', color: '#16a34a', desc: '우수' };
-  if (score >= 760) return { label: 'E', color: '#2563eb', desc: '양호' };
-  if (score >= 680) return { label: 'B', color: '#d97706', desc: '보통' };
-  return { label: 'C', color: '#dc2626', desc: '미흡' };
+  if (score >= 760) return { label: 'B', color: '#2563eb', desc: '양호' };
+  if (score >= 680) return { label: 'C', color: '#d97706', desc: '보통' };
+  return { label: 'D', color: '#dc2626', desc: '미흡' };
 }
 
 // ── 점수 숫자 포맷 ──
