@@ -142,6 +142,75 @@
   }
 }
 
+/* ── 목차 ── */
+.full-toc {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  overflow: hidden;
+  margin-bottom: 32px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+}
+.toc-head {
+  background: linear-gradient(90deg, #1e3a8a, #2563eb);
+  padding: 18px 28px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.toc-head-title {
+  font-size: 16px;
+  font-weight: 900;
+  color: white;
+}
+.toc-head-sub {
+  font-size: 12px;
+  color: rgba(255,255,255,0.65);
+  margin-left: auto;
+}
+.toc-body {
+  padding: 20px 24px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px 24px;
+}
+@media (max-width: 600px) { .toc-body { grid-template-columns: 1fr; } }
+.toc-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 14px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  border-left: 4px solid;
+  background: #fafafa;
+}
+.toc-item:nth-child(1) { border-left-color: #2563eb; }
+.toc-item:nth-child(2) { border-left-color: #7c3aed; }
+.toc-item:nth-child(3) { border-left-color: #16a34a; }
+.toc-item:nth-child(4) { border-left-color: #d97706; }
+.toc-item:nth-child(5) { border-left-color: #0891b2; }
+.toc-num {
+  font-size: 12px;
+  font-weight: 900;
+  color: #94a3b8;
+  min-width: 22px;
+  flex-shrink: 0;
+  line-height: 1.5;
+}
+.toc-item-title {
+  font-size: 13px;
+  font-weight: 800;
+  color: #0f172a;
+  margin-bottom: 3px;
+  line-height: 1.3;
+}
+.toc-item-desc {
+  font-size: 11px;
+  color: #64748b;
+  line-height: 1.5;
+}
+
 @media print {
   * {
     -webkit-print-color-adjust: exact !important;
@@ -235,6 +304,29 @@
   <!-- 동적으로 생성 -->
 </div>
 
+<!-- 리포트 하단 푸터 (화면 + PDF 모두 출력) -->
+<div class="full-report">
+  <div class="report-print-footer">
+    <div class="rpf-inner">
+      <div class="rpf-brand">
+        <div class="rpf-logo">⚖️ Election<span class="logo-analysis">Analysis</span><span class="logo-report">Report</span><span class="logo-ai">AI</span></div>
+        <div class="rpf-tagline">AI 기반 선거 후보자 비교 분석 플랫폼 · 종합 분석 보고서</div>
+      </div>
+      <div class="rpf-contact">
+        <div class="rpf-contact-name">심재우 대표</div>
+        <div class="rpf-contact-items">
+          <span>📞 010-2397-5734</span>
+          <span>✉️ jaiwshim@gmail.com</span>
+        </div>
+      </div>
+    </div>
+    <div class="rpf-bottom">
+      <span>© 2026 ElectionAnalysisReportAI · 무단 복제 및 배포 금지</span>
+      <span>Powered by Claude AI · ElectionAI Pricing Engine v1.0</span>
+    </div>
+  </div>
+</div>
+
 <script src="js/shared.js"></script>
 <script>
 /* ═══════════════════════════════════════════════════
@@ -261,6 +353,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const sortedC = [...candidates].map((c,i)=>({...c,idx:i})).sort((a,b)=>b.total_score-a.total_score);
 
   let html = buildCover(candidates, sortedC, district, analysis_date)
+    + buildTOC(candidates.length, district)
     + buildSection1(candidates, sortedC, totalRanks)
     + buildSection2(candidates)
     + buildSection3(candidates, totalRanks)
@@ -311,6 +404,54 @@ function buildCover(candidates, sortedC, district, analysis_date) {
     </div>
     <div style="font-size:12px;opacity:.6;margin-bottom:8px">후보자 종합 순위</div>
     <div class="cover-candidates">${chips}</div>
+  </div>`;
+}
+
+/* ── 목차 ── */
+function buildTOC(candidateCount, district) {
+  return `
+  <div class="full-toc">
+    <div class="toc-head">
+      <div class="toc-head-title">📋 목 차</div>
+      <div class="toc-head-sub">종합 비교 분석 보고서 · ${district||'선거구'} · 총 5개 섹션</div>
+    </div>
+    <div class="toc-body">
+      <div class="toc-item">
+        <div class="toc-num">01</div>
+        <div>
+          <div class="toc-item-title">📊 종합 비교 분석</div>
+          <div class="toc-item-desc">종합 순위 · 레이더 차트 · 항목별 최고 점수 후보</div>
+        </div>
+      </div>
+      <div class="toc-item">
+        <div class="toc-num">02</div>
+        <div>
+          <div class="toc-item-title">📈 10개 항목 점수 상세</div>
+          <div class="toc-item-desc">점수 히트맵 · 그룹 막대 그래프 · 항목별 분석</div>
+        </div>
+      </div>
+      <div class="toc-item">
+        <div class="toc-num">03</div>
+        <div>
+          <div class="toc-item-title">👤 후보자 프로파일</div>
+          <div class="toc-item-desc">후보별 강점·약점 · 경력·이력 · AI 총평 카드</div>
+        </div>
+      </div>
+      <div class="toc-item">
+        <div class="toc-num">04</div>
+        <div>
+          <div class="toc-item-title">🎯 격차 분석</div>
+          <div class="toc-item-desc">1위 대비 항목별 격차 · 역전 가능 지표 · 전략 제안</div>
+        </div>
+      </div>
+      <div class="toc-item">
+        <div class="toc-num">05</div>
+        <div>
+          <div class="toc-item-title">🤖 AI 모델별 점수 비교</div>
+          <div class="toc-item-desc">Claude·ChatGPT·Gemini·Grok 4중 교차 검증 · 신뢰도 분석</div>
+        </div>
+      </div>
+    </div>
   </div>`;
 }
 
@@ -1046,5 +1187,6 @@ async function savePDF() {
   }, 1500);
 }
 </script>
+
 </body>
 </html>
