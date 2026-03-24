@@ -104,7 +104,7 @@ document.addEventListener('DOMContentLoaded', () => {
   html += `<tr style="background:#f8fafc;font-size:12px"><td style="color:var(--text-muted);font-weight:600">AI 1위 후보</td>`;
   AI_MODELS.forEach(m => {
     const best = candidates.reduce((b,c) => (c.ai_scores?.[m]??0) > (b.ai_scores?.[m]??0) ? c : b);
-    html += `<td style="font-size:11px;color:${AI_BORDER[m]};font-weight:700">${best.name}<br>${best.ai_scores?.[m]}</td>`;
+    html += `<td style="font-size:12px;color:${AI_BORDER[m]};font-weight:700">${best.name}<br>${best.ai_scores?.[m]}</td>`;
   });
   html += `<td colspan="3"></td></tr>`;
 
@@ -190,9 +190,9 @@ document.addEventListener('DOMContentLoaded', () => {
           const s = c.ai_scores?.[m] ?? 0;
           const diff = s - avg;
           return `<div style="text-align:center;min-width:70px;background:#f8fafc;border-radius:8px;padding:8px 10px">
-            <div style="font-size:11px;color:${AI_BORDER[m]};font-weight:700">${AI_LABELS[m]}</div>
+            <div style="font-size:12px;color:${AI_BORDER[m]};font-weight:700">${AI_LABELS[m]}</div>
             <div style="font-size:18px;font-weight:900;color:${col.border}">${s}</div>
-            <div style="font-size:11px;color:${diff>0?'#16a34a':diff<0?'#dc2626':'#94a3b8'}">${diff>0?'+'+diff.toFixed(1):diff.toFixed(1)}</div>
+            <div style="font-size:12px;color:${diff>0?'#16a34a':diff<0?'#dc2626':'#94a3b8'}">${diff>0?'+'+diff.toFixed(1):diff.toFixed(1)}</div>
           </div>`;
         }).join('')}
       </div>

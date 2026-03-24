@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>분석 구조도 · ElectionAI</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .diagram-page {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 40px 24px 80px;
+    }
+
+    .diagram-title {
+      text-align: center;
+      margin-bottom: 50px;
+    }
+
+    .diagram-title h1 {
+      font-size: 32px;
+      font-weight: 900;
+      color: #1e3a8a;
+      margin-bottom: 12px;
+    }
+
+    .diagram-title p {
+      font-size: 16px;
+      color: #666;
+    }
+
+    /* 3단계 카드 레이아웃 */
+    .stage-cards-container {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr auto 1fr;
+      gap: 16px;
+      margin-bottom: 60px;
+      align-items: center;
+    }
+
+    .stage-card {
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+      background: white;
+      border: 3px solid;
+    }
+
+    .stage-card.s1 { border-color: #2563eb; }
+    .stage-card.s2 { border-color: #7c3aed; }
+    .stage-card.s3 { border-color: #dc2626; }
+
+    .stage-header {
+      padding: 24px;
+      color: white;
+      font-size: 28px;
+      font-weight: 900;
+      text-align: center;
+    }
+
+    .stage-card.s1 .stage-header { background: #2563eb; }
+    .stage-card.s2 .stage-header { background: #7c3aed; }
+    .stage-card.s3 .stage-header { background: #dc2626; }
+
+    .stage-subtitle {
+      font-size: 14px;
+      font-weight: 700;
+      margin-top: 4px;
+      opacity: 0.95;
+    }
+
+    .stage-body {
+      padding: 0;
+    }
+
+    /* 입력 섹션 */
+    .section-box {
+      padding: 20px;
+      margin: 16px;
+      border-radius: 12px;
+      border: 2px dashed;
+    }
+
+    .section-input {
+      background: white;
+      border-color: #2563eb;
+    }
+    .stage-card.s2 .section-input { border-color: #7c3aed; }
+    .stage-card.s3 .section-input { border-color: #dc2626; }
+
+    .section-label {
+      font-size: 12px;
+      font-weight: 800;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .section-input .section-label { color: #2563eb; }
+    .stage-card.s2 .section-input .section-label { color: #7c3aed; }
+    .stage-card.s3 .section-input .section-label { color: #dc2626; }
+
+    .input-item {
+      font-size: 12px;
+      color: #374151;
+      line-height: 1.6;
+      font-weight: 500;
+    }
+
+    /* 분석 내용 섹션 */
+    .section-analysis {
+      background: #f8fafc;
+      border-color: #cbd5e1;
+    }
+
+    .section-analysis .section-label {
+      color: #475569;
+    }
+
+    .analysis-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .analysis-list li {
+      font-size: 12px;
+      color: #374151;
+      padding: 6px 0;
+      padding-left: 16px;
+      position: relative;
+    }
+
+    .analysis-list li::before {
+      content: "•";
+      position: absolute;
+      left: 0;
+      font-weight: 900;
+      color: #666;
+    }
+
+    /* 산출물 섹션 */
+    .section-output {
+      background: #dcfce7;
+      border-color: #16a34a;
+    }
+
+    .section-output .section-label { color: #166534; }
+
+    .output-item {
+      font-size: 12px;
+      font-weight: 700;
+      color: #166534;
+      padding: 4px 0;
+    }
+
+    .output-arrow {
+      font-size: 12px;
+      color: #666;
+      margin-top: 8px;
+      font-weight: 600;
+    }
+
+    /* 화살표 */
+    .arrow-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+    }
+
+    .arrow-line {
+      font-size: 28px;
+      color: #1e40af;
+      font-weight: 900;
+    }
+
+    /* 모바일 */
+    @media (max-width: 1024px) {
+      .stage-cards-container {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+
+      .arrow-container {
+        height: 30px;
+      }
+
+      .arrow-line {
+        transform: rotate(90deg);
+      }
+    }
+
+    /* 범례 */
+    .legend-section {
+      background: #f0f9ff;
+      border: 2px solid #bfdbfe;
+      border-radius: 12px;
+      padding: 24px;
+      margin-top: 40px;
+    }
+
+    .legend-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: #1e40af;
+      margin-bottom: 16px;
+    }
+
+    .legend-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+    }
+
+    .legend-item {
+      padding: 12px;
+      background: white;
+      border-radius: 8px;
+      border-left: 4px solid;
+    }
+
+    .legend-item.input { border-left-color: #2563eb; }
+    .legend-item.analysis { border-left-color: #d97706; }
+    .legend-item.output { border-left-color: #16a34a; }
+
+    .legend-item-label {
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .legend-item-desc {
+      font-size: 12px;
+      color: #666;
+      line-height: 1.5;
+    }
+
+    /* 요약 */
+    .summary-section {
+      background: white;
+      border: 2px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 24px;
+      margin-top: 40px;
+    }
+
+    .summary-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: #1e3a8a;
+      margin-bottom: 16px;
+    }
+
+    .summary-point {
+      padding: 12px;
+      padding-left: 28px;
+      position: relative;
+      font-size: 14px;
+      color: #374151;
+      line-height: 1.6;
+      margin-bottom: 12px;
+    }
+
+    .summary-point::before {
+      content: "✓";
+      position: absolute;
+      left: 6px;
+      font-weight: 900;
+      color: #16a34a;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+
+<header class="app-header">
+  <div class="header-inner">
+    <div class="header-logo">⚖️ Election<span class="logo-analysis">Analysis</span><span class="logo-report">Report</span><span class="logo-ai">AI</span></div>
+    <div class="header-subtitle">AI 기반 선거 후보자 비교 분석 플랫폼</div>
+    <div class="header-date" id="header-date"></div>
+  </div>
+</header>
+
+<nav class="main-nav"><div class="nav-inner" id="main-nav"></div></nav>
+
+<div class="diagram-page">
+
+  <!-- 제목 -->
+  <div class="diagram-title">
+    <h1>📊 3단계 선거 분석 파이프라인</h1>
+    <p>홈페이지에서 PDF 업로드 → 3단계 보고서 자동 생성</p>
+  </div>
+
+  <!-- 3단계 카드 -->
+  <div class="stage-cards-container">
+
+    <!-- STAGE 01 -->
+    <div class="stage-card s1">
+      <div class="stage-header">
+        01
+        <div class="stage-subtitle">통합분석리포트</div>
+      </div>
+
+      <div class="stage-body">
+        <!-- 입력 -->
+        <div class="section-box section-input">
+          <div class="section-label">📥 입력</div>
+          <div class="input-item">선거구 & 선거유형 입력</div>
+          <div class="input-item">홈페이지 업로드(드래그&드롭)</div>
+          <div class="input-item">PDF 파일 (CCI 데이터)</div>
+        </div>
+
+        <!-- 분석 내용 -->
+        <div class="section-box section-analysis">
+          <div class="section-label">📊 분석 내용</div>
+          <ul class="analysis-list">
+            <li>종합 비교 분석</li>
+            <li>10개 항목 점수</li>
+            <li>우보자 프로파일</li>
+            <li>격차 분석</li>
+          </ul>
+        </div>
+
+        <!-- 산출물 -->
+        <div class="section-box section-output">
+          <div class="section-label">🎯 산출물</div>
+          <div class="output-item">강점/약점 분석</div>
+          <div class="output-item">경쟁 구도 파악</div>
+          <div class="output-arrow">→ 02로 연결</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 화살표 -->
+    <div class="arrow-container">
+      <div class="arrow-line">→</div>
+    </div>
+
+    <!-- STAGE 02 -->
+    <div class="stage-card s2">
+      <div class="stage-header">
+        02
+        <div class="stage-subtitle">선거 판세 인텔리전스</div>
+      </div>
+
+      <div class="stage-body">
+        <!-- 입력 -->
+        <div class="section-box section-input">
+          <div class="section-label">📥 입력</div>
+          <div class="input-item">01 결과 + 업로드 파일</div>
+          <div class="input-item">(강점/약점 + 경쟁구도)</div>
+        </div>
+
+        <!-- 분석 내용 -->
+        <div class="section-box section-analysis">
+          <div class="section-label">📊 분석 내용</div>
+          <ul class="analysis-list">
+            <li>유권자 구조 분석</li>
+            <li>각 후보별 판세</li>
+            <li>경쟁 우위 분석</li>
+            <li>리스크 요인</li>
+          </ul>
+        </div>
+
+        <!-- 산출물 -->
+        <div class="section-box section-output">
+          <div class="section-label">🎯 산출물</div>
+          <div class="output-item">판세 분석 결과</div>
+          <div class="output-item">핵심 승패 변수</div>
+          <div class="output-arrow">→ 03으로 연결</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 화살표 -->
+    <div class="arrow-container">
+      <div class="arrow-line">→</div>
+    </div>
+
+    <!-- STAGE 03 -->
+    <div class="stage-card s3">
+      <div class="stage-header">
+        03
+        <div class="stage-subtitle">당선 전략</div>
+      </div>
+
+      <div class="stage-body">
+        <!-- 입력 -->
+        <div class="section-box section-input">
+          <div class="section-label">📥 입력</div>
+          <div class="input-item">01+02 결과 + 업로드파일</div>
+          <div class="input-item">(도움, 경과 보고)</div>
+        </div>
+
+        <!-- 분석 내용 -->
+        <div class="section-box section-analysis">
+          <div class="section-label">📊 분석 내용</div>
+          <ul class="analysis-list">
+            <li>각 후보별 독립 분석</li>
+            <li>포지션 진단 & 전략 분기</li>
+            <li>경쟁 대응 전술</li>
+            <li>90일 액션 로드맵</li>
+          </ul>
+        </div>
+
+        <!-- 산출물 -->
+        <div class="section-box section-output">
+          <div class="section-label">🎯 산출물</div>
+          <div class="output-item">후보별 탭 구조</div>
+          <div class="output-item">개별 PDF 다운로드</div>
+          <div class="output-arrow">전략 실행 계획</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 범례 -->
+  <div class="legend-section">
+    <div class="legend-title">📋 범례</div>
+    <div class="legend-grid">
+      <div class="legend-item input">
+        <div class="legend-item-label">📥 입력</div>
+        <div class="legend-item-desc">각 단계의 입력 데이터 및 이전 단계의 결과</div>
+      </div>
+      <div class="legend-item analysis">
+        <div class="legend-item-label">📊 분석</div>
+        <div class="legend-item-desc">각 단계에서 수행되는 분석 활동</div>
+      </div>
+      <div class="legend-item output">
+        <div class="legend-item-label">🎯 산출물</div>
+        <div class="legend-item-desc">생성되는 분석 결과 및 다음 단계 인풋</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 요약 -->
+  <div class="summary-section">
+    <div class="summary-title">✨ 파이프라인의 특징</div>
+    <div class="summary-point">각 단계는 이전 단계의 결과를 활용하여 더 깊이 있는 분석을 제공합니다</div>
+    <div class="summary-point">원본 데이터(업로드 파일)는 모든 단계에서 함께 참고되어 분석 완결성을 보장합니다</div>
+    <div class="summary-point">03 단계는 후보별 독립된 탭 구조로 각 후보자의 맞춤형 전략을 제공하며, 개별 PDF 다운로드가 가능합니다</div>
+  </div>
+
+</div>
+
+<script src="js/shared.js"></script>
+</body>
+</html>

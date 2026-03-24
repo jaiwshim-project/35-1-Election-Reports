@@ -1,0 +1,137 @@
+<svg viewBox="0 0 1200 600" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .stage-box { fill: white; stroke-width: 2; }
+      .stage-title { font-size: 18px; font-weight: bold; fill: white; }
+      .stage-label { font-size: 14px; font-weight: bold; }
+      .input-label { font-size: 12px; fill: #666; }
+      .output-label { font-size: 12px; fill: #16a34a; font-weight: bold; }
+      .arrow { stroke: #1e40af; stroke-width: 2; fill: none; marker-end: url(#arrowhead); }
+      .flow-text { font-size: 11px; fill: #374151; }
+    </style>
+    <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#1e40af" />
+    </marker>
+  </defs>
+
+  <!-- 배경 -->
+  <rect width="1200" height="600" fill="#f8fafc" />
+
+  <!-- 제목 -->
+  <text x="600" y="30" text-anchor="middle" style="font-size: 24px; font-weight: bold; fill: #1e3a8a;">
+    📊 3단계 선거 분석 파이프라인
+  </text>
+
+  <!-- ═══ STAGE 1 ═══ -->
+  <rect x="50" y="80" width="280" height="480" class="stage-box" stroke="#2563eb" rx="8" />
+
+  <!-- Stage 1 Header -->
+  <rect x="50" y="80" width="280" height="50" fill="#2563eb" rx="8" />
+  <text x="190" y="115" text-anchor="middle" class="stage-title">01</text>
+  <text x="190" y="135" text-anchor="middle" style="font-size: 13px; fill: white;">통합분석리포트</text>
+
+  <!-- Stage 1 Input -->
+  <rect x="70" y="150" width="240" height="70" fill="#dbeafe" stroke="#2563eb" stroke-dasharray="2,2" rx="4" />
+  <text x="190" y="175" text-anchor="middle" class="input-label">📥 입력</text>
+  <text x="190" y="195" text-anchor="middle" style="font-size: 12px; font-weight: bold;">홈페이지 업로드</text>
+  <text x="190" y="210" text-anchor="middle" style="font-size: 11px;">PDF 파일 (CCI 데이터)</text>
+
+  <!-- Stage 1 Process -->
+  <rect x="70" y="240" width="240" height="100" fill="#f0f9ff" stroke="#2563eb" stroke-dasharray="2,2" rx="4" />
+  <text x="190" y="265" text-anchor="middle" class="label" style="font-size: 12px; font-weight: bold;">📊 분석 내용</text>
+  <text x="85" y="285" style="font-size: 11px;">• 종합 비교 분석</text>
+  <text x="85" y="300" style="font-size: 11px;">• 10개 항목 점수</text>
+  <text x="85" y="315" style="font-size: 11px;">• 후보자 프로파일</text>
+  <text x="85" y="330" style="font-size: 11px;">• 격차 분석</text>
+
+  <!-- Stage 1 Output -->
+  <rect x="70" y="360" width="240" height="80" fill="#dcfce7" stroke="#16a34a" stroke-width="2" rx="4" />
+  <text x="190" y="385" text-anchor="middle" class="output-label">📤 산출물</text>
+  <text x="190" y="405" text-anchor="middle" style="font-size: 11px; font-weight: bold;">강점/약점 분석</text>
+  <text x="190" y="420" text-anchor="middle" style="font-size: 11px; font-weight: bold;">경쟁 구도 파악</text>
+  <text x="190" y="435" text-anchor="middle" style="font-size: 11px;">→ 02로 전달</text>
+
+  <!-- Arrow 1→2 -->
+  <path d="M 330 300 L 410 300" class="arrow" />
+  <text x="370" y="295" text-anchor="middle" class="flow-text">결과 활용</text>
+
+  <!-- ═══ STAGE 2 ═══ -->
+  <rect x="410" y="80" width="280" height="480" class="stage-box" stroke="#7c3aed" rx="8" />
+
+  <!-- Stage 2 Header -->
+  <rect x="410" y="80" width="280" height="50" fill="#7c3aed" rx="8" />
+  <text x="550" y="115" text-anchor="middle" class="stage-title">02</text>
+  <text x="550" y="135" text-anchor="middle" style="font-size: 13px; fill: white;">선거 판세 인텔리전스</text>
+
+  <!-- Stage 2 Input -->
+  <rect x="430" y="150" width="240" height="70" fill="#ede9fe" stroke="#7c3aed" stroke-dasharray="2,2" rx="4" />
+  <text x="550" y="175" text-anchor="middle" class="input-label">📥 입력</text>
+  <text x="550" y="195" text-anchor="middle" style="font-size: 12px; font-weight: bold;">01 결과 + 업로드 파일</text>
+  <text x="550" y="210" text-anchor="middle" style="font-size: 11px;">(강점/약점+경쟁구도)</text>
+
+  <!-- Stage 2 Process -->
+  <rect x="430" y="240" width="240" height="100" fill="#f3e8ff" stroke="#7c3aed" stroke-dasharray="2,2" rx="4" />
+  <text x="550" y="265" text-anchor="middle" class="label" style="font-size: 12px; font-weight: bold;">📊 분석 내용</text>
+  <text x="445" y="285" style="font-size: 11px;">• 유권자 구조 분석</text>
+  <text x="445" y="300" style="font-size: 11px;">• 각 후보별 판세</text>
+  <text x="445" y="315" style="font-size: 11px;">• 경쟁 우위 분석</text>
+  <text x="445" y="330" style="font-size: 11px;">• 리스크 요인</text>
+
+  <!-- Stage 2 Output -->
+  <rect x="430" y="360" width="240" height="80" fill="#dcfce7" stroke="#16a34a" stroke-width="2" rx="4" />
+  <text x="550" y="385" text-anchor="middle" class="output-label">📤 산출물</text>
+  <text x="550" y="405" text-anchor="middle" style="font-size: 11px; font-weight: bold;">판세 분석 결과</text>
+  <text x="550" y="420" text-anchor="middle" style="font-size: 11px; font-weight: bold;">핵심 승패 변수</text>
+  <text x="550" y="435" text-anchor="middle" style="font-size: 11px;">→ 03으로 전달</text>
+
+  <!-- Arrow 2→3 -->
+  <path d="M 690 300 L 770 300" class="arrow" />
+  <text x="730" y="295" text-anchor="middle" class="flow-text">결과 활용</text>
+
+  <!-- ═══ STAGE 3 ═══ -->
+  <rect x="770" y="80" width="280" height="480" class="stage-box" stroke="#dc2626" rx="8" />
+
+  <!-- Stage 3 Header -->
+  <rect x="770" y="80" width="280" height="50" fill="#dc2626" rx="8" />
+  <text x="910" y="115" text-anchor="middle" class="stage-title">03</text>
+  <text x="910" y="135" text-anchor="middle" style="font-size: 13px; fill: white;">당선 전략</text>
+
+  <!-- Stage 3 Input -->
+  <rect x="790" y="150" width="240" height="70" fill="#fee2e2" stroke="#dc2626" stroke-dasharray="2,2" rx="4" />
+  <text x="910" y="175" text-anchor="middle" class="input-label">📥 입력</text>
+  <text x="910" y="195" text-anchor="middle" style="font-size: 12px; font-weight: bold;">01+02 결과+업로드파일</text>
+  <text x="910" y="210" text-anchor="middle" style="font-size: 11px;">(모든 분석 종합)</text>
+
+  <!-- Stage 3 Process -->
+  <rect x="790" y="240" width="240" height="100" fill="#fef2f2" stroke="#dc2626" stroke-dasharray="2,2" rx="4" />
+  <text x="910" y="265" text-anchor="middle" class="label" style="font-size: 12px; font-weight: bold;">📊 분석 내용</text>
+  <text x="805" y="285" style="font-size: 11px;">• 포지션 진단</text>
+  <text x="805" y="300" style="font-size: 11px;">• 전략 유형 분기</text>
+  <text x="805" y="315" style="font-size: 11px;">• 대응 전술</text>
+  <text x="805" y="330" style="font-size: 11px;">• 90일 액션 로드맵</text>
+
+  <!-- Stage 3 Output -->
+  <rect x="790" y="360" width="240" height="80" fill="#dcfce7" stroke="#16a34a" stroke-width="2" rx="4" />
+  <text x="910" y="385" text-anchor="middle" class="output-label">📤 산출물</text>
+  <text x="910" y="405" text-anchor="middle" style="font-size: 11px; font-weight: bold;">당선 전략 설계</text>
+  <text x="910" y="420" text-anchor="middle" style="font-size: 11px; font-weight: bold;">리스크 대응</text>
+  <text x="910" y="435" text-anchor="middle" style="font-size: 11px;">실행 계획</text>
+
+  <!-- 범례 -->
+  <g>
+    <text x="50" y="570" style="font-size: 12px; font-weight: bold; fill: #1e3a8a;">범례:</text>
+    <rect x="120" y="560" width="15" height="15" fill="#dbeafe" stroke="#2563eb" stroke-dasharray="2,2" />
+    <text x="140" y="572" style="font-size: 11px;">입력</text>
+
+    <rect x="210" y="560" width="15" height="15" fill="#f0f9ff" stroke="#2563eb" stroke-dasharray="2,2" />
+    <text x="230" y="572" style="font-size: 11px;">분석</text>
+
+    <rect x="310" y="560" width="15" height="15" fill="#dcfce7" stroke="#16a34a" stroke-width="2" />
+    <text x="330" y="572" style="font-size: 11px;">산출물</text>
+  </g>
+
+  <!-- 하단 설명 -->
+  <text x="600" y="570" text-anchor="middle" style="font-size: 12px; fill: #374151;">
+    각 단계는 이전 단계의 결과를 활용하여 더 깊이 있는 분석 제공
+  </text>
+</svg>

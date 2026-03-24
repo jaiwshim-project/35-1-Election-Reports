@@ -48,9 +48,9 @@ const NAV_PAGES = [
   { href: 'report_profiles.html', icon: '👤', label: '후보 프로파일' },
   { href: 'report_gaps.html',     icon: '🎯', label: '격차 분석' },
   { href: 'report_ai.html',       icon: '🤖', label: 'AI 모델 비교' },
-  { href: 'report_strategy.html', icon: '🏆', label: '당선 전략' },
-  { href: 'report_full.html',     icon: '📥', label: 'PDF 전체 보고서' },
-  { href: 'report_pricing.html',  icon: '💰', label: '가격 산정' },
+  { href: 'report_full.html',      icon: '📋', label: '01. 통합 분석 리포트' },
+  { href: 'report_landscape.html', icon: '🗺️', label: '02. 선거 판세 인텔리전스' },
+  { href: 'report_strategy.html',   icon: '🏆', label: '03. 당선 전략' },
 ];
 
 function renderNav() {
@@ -105,9 +105,9 @@ function rankTag(rank) {
 function scoreGrade(score) {
   if (score >= 880) return { label: 'S', color: '#7c3aed', desc: '최우수' };
   if (score >= 840) return { label: 'A', color: '#16a34a', desc: '우수' };
-  if (score >= 760) return { label: 'E', color: '#2563eb', desc: '양호' };
-  if (score >= 680) return { label: 'B', color: '#d97706', desc: '보통' };
-  return { label: 'C', color: '#dc2626', desc: '미흡' };
+  if (score >= 760) return { label: 'B', color: '#2563eb', desc: '양호' };
+  if (score >= 680) return { label: 'C', color: '#d97706', desc: '보통' };
+  return { label: 'D', color: '#dc2626', desc: '미흡' };
 }
 
 // ── 점수 숫자 포맷 ──
@@ -180,6 +180,12 @@ function renderFooter() {
             </div>
           </div>
         </div>
+      </div>
+      <div class="footer-divider"></div>
+      <div class="footer-links">
+        <a href="diagram_workflow.html" class="footer-link-btn">📊 분석 구조도</a>
+        <a href="report_pricing.html" class="footer-link-btn">💰 가격 산정</a>
+        <a href="report_guide.html" class="footer-link-btn">📋 안내자료</a>
       </div>
       <div class="footer-divider"></div>
       <div class="footer-bottom">

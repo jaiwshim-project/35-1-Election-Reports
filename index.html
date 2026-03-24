@@ -137,6 +137,67 @@
     <p>PoliticianFinder.com AI 평가 리포트 PDF를 업로드하면 10개 지표 비교 분석 보고서를 자동 생성합니다.</p>
   </div>
 
+  <!-- 설정 영역 -->
+  <div class="setup-grid">
+
+    <!-- Step 1: API 키 -->
+    <div class="card">
+      <div class="step-title"><span class="step-badge">1</span>Google Gemini API 키 설정</div>
+      <div class="input-wrap">
+        <input type="password" id="apiKeyInput" placeholder="AIzaSy..." autocomplete="off">
+        <button class="btn btn-primary" onclick="saveApiKey()">저장</button>
+      </div>
+      <div class="api-status" id="apiStatus">
+        <span class="api-none">● API 키 미설정</span>
+      </div>
+      <div class="alert alert-info" style="margin-top:12px;font-size:12px">
+        🔑 API 키는 브라우저 로컬 저장소에만 저장되며 외부로 전송되지 않습니다.
+        <a href="https://aistudio.google.com/app/apikey" target="_blank" style="color:inherit;font-weight:600">Google AI Studio에서 발급받기 →</a>
+      </div>
+    </div>
+
+    <!-- Step 2: 선거구 -->
+    <div class="card">
+      <div class="step-title"><span class="step-badge">2</span>선거구 및 분석 정보</div>
+      <label style="font-size:13px;color:var(--text-muted);margin-bottom:4px;display:block">선거구 이름</label>
+      <input class="form-input" type="text" id="districtName" placeholder="예: 서울 성동구" style="width:100%;margin-bottom:12px">
+      <label style="font-size:13px;color:var(--text-muted);margin-bottom:4px;display:block">선거 유형</label>
+      <select class="form-input" id="electionType" style="width:100%;padding:10px 14px;cursor:pointer">
+        <option value="">── 선택하세요 ──</option>
+        <option value="제9회 전국동시지방선거">제9회 전국동시지방선거</option>
+        <option value="국회의원 보궐선거">국회의원 보궐선거</option>
+        <option value="지방의회 보궐선거">지방의회 보궐선거</option>
+        <option value="광역시장/도지사 보궐선거">광역시장/도지사 보궐선거</option>
+        <option value="구청장/군수 보궐선거">구청장/군수 보궐선거</option>
+        <option value="기타">기타 (직접 입력)</option>
+      </select>
+    </div>
+
+  </div>
+
+  <!-- Step 3: 파일 업로드 -->
+  <div class="card">
+    <div class="step-title"><span class="step-badge">3</span>후보자 PDF 리포트 업로드 (최대 5명)</div>
+
+    <div class="drop-zone" id="dropZone" onclick="document.getElementById('fileInput').click()">
+      <div class="drop-icon">📄</div>
+      <h3>PDF 파일을 드래그하거나 클릭하여 선택</h3>
+      <p>PoliticianFinder.com 평가 리포트 PDF · 후보자당 1개 파일 · 최대 5개</p>
+      <input type="file" id="fileInput" multiple accept=".pdf">
+    </div>
+
+    <div class="file-list" id="fileList"></div>
+
+    <div class="analyze-area">
+      <button class="btn btn-primary" id="analyzeBtn" onclick="startAnalysis()" disabled>
+        🔍 분석 시작
+      </button>
+      <span id="analyzeHint" style="font-size:13px;color:var(--text-muted)">PDF 파일을 업로드한 후 분석을 시작하세요.</span>
+    </div>
+
+    <div class="status-log" id="statusLog"></div>
+  </div>
+
   <!-- 저장된 데이터가 있을 경우 -->
   <div id="saved-data-section" style="display:none">
     <div class="card">
@@ -183,59 +244,6 @@
         <div class="sc-info"><div class="sc-name">후보자 5</div><div class="sc-score">분석 후 표시</div></div>
       </div>
     </div>
-  </div>
-
-  <!-- 설정 영역 -->
-  <div class="setup-grid">
-
-    <!-- Step 1: API 키 -->
-    <div class="card">
-      <div class="step-title"><span class="step-badge">1</span>Google Gemini API 키 설정</div>
-      <div class="input-wrap">
-        <input type="password" id="apiKeyInput" placeholder="AIzaSy..." autocomplete="off">
-        <button class="btn btn-primary" onclick="saveApiKey()">저장</button>
-      </div>
-      <div class="api-status" id="apiStatus">
-        <span class="api-none">● API 키 미설정</span>
-      </div>
-      <div class="alert alert-info" style="margin-top:12px;font-size:12px">
-        🔑 API 키는 브라우저 로컬 저장소에만 저장되며 외부로 전송되지 않습니다.
-        <a href="https://aistudio.google.com/app/apikey" target="_blank" style="color:inherit;font-weight:600">Google AI Studio에서 발급받기 →</a>
-      </div>
-    </div>
-
-    <!-- Step 2: 선거구 -->
-    <div class="card">
-      <div class="step-title"><span class="step-badge">2</span>선거구 및 분석 정보</div>
-      <label style="font-size:13px;color:var(--text-muted);margin-bottom:4px;display:block">선거구 이름</label>
-      <input class="form-input" type="text" id="districtName" placeholder="예: 서울 성동구" style="width:100%;margin-bottom:12px">
-      <label style="font-size:13px;color:var(--text-muted);margin-bottom:4px;display:block">선거 유형</label>
-      <input class="form-input" type="text" id="electionType" placeholder="예: 제9회 전국동시지방선거" style="width:100%">
-    </div>
-
-  </div>
-
-  <!-- Step 3: 파일 업로드 -->
-  <div class="card">
-    <div class="step-title"><span class="step-badge">3</span>후보자 PDF 리포트 업로드 (최대 5명)</div>
-
-    <div class="drop-zone" id="dropZone" onclick="document.getElementById('fileInput').click()">
-      <div class="drop-icon">📄</div>
-      <h3>PDF 파일을 드래그하거나 클릭하여 선택</h3>
-      <p>PoliticianFinder.com 평가 리포트 PDF · 후보자당 1개 파일 · 최대 5개</p>
-      <input type="file" id="fileInput" multiple accept=".pdf">
-    </div>
-
-    <div class="file-list" id="fileList"></div>
-
-    <div class="analyze-area">
-      <button class="btn btn-primary" id="analyzeBtn" onclick="startAnalysis()" disabled>
-        🔍 분석 시작
-      </button>
-      <span id="analyzeHint" style="font-size:13px;color:var(--text-muted)">PDF 파일을 업로드한 후 분석을 시작하세요.</span>
-    </div>
-
-    <div class="status-log" id="statusLog"></div>
   </div>
 
   <!-- 수동 입력 옵션 -->

@@ -144,7 +144,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;text-align:center">
           ${AI_MODELS.map(m => `
             <div style="background:#f8fafc;border-radius:var(--radius-sm);padding:6px 4px">
-              <div style="font-size:10px;color:var(--text-muted);font-weight:600">${AI_LABELS[m]}</div>
+              <div style="font-size:12px;color:var(--text-muted);font-weight:600">${AI_LABELS[m]}</div>
               <div style="font-size:15px;font-weight:800;color:${col.border}">${c.ai_scores?.[m] ?? '-'}</div>
             </div>`).join('')}
         </div>

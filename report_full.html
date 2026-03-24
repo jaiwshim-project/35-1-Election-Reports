@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>종합 분석 보고서 · ElectionAI</title>
+<title>01. 통합 분석 리포트 · ElectionAI</title>
 <link rel="stylesheet" href="css/style.css">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
@@ -30,7 +30,7 @@
 }
 .back-btn:hover { background: rgba(255,255,255,0.25); }
 
-.full-report { max-width: 960px; margin: 0 auto; padding: 32px 24px 80px; }
+.full-report { padding: 0 0 80px; }
 
 /* ── 표지 ── */
 .cover-page {
@@ -51,7 +51,7 @@
 .cover-page .subtitle { font-size: 16px; opacity: .8; margin-bottom: 32px; }
 .cover-meta { display: flex; gap: 32px; flex-wrap: wrap; margin-bottom: 32px; }
 .cover-meta-item { }
-.cover-meta-item .label { font-size: 11px; opacity: .6; text-transform: uppercase; letter-spacing: .8px; margin-bottom: 3px; }
+.cover-meta-item .label { font-size: 12px; opacity: .6; text-transform: uppercase; letter-spacing: .8px; margin-bottom: 3px; }
 .cover-meta-item .value { font-size: 16px; font-weight: 700; }
 .cover-candidates { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 28px; }
 .cover-candidate-chip {
@@ -88,7 +88,7 @@
   font-weight:800; font-size:14px; margin-bottom:10px;
 }
 .rk-card .name { font-size:17px; font-weight:800; }
-.rk-card .party { font-size:11px; color:var(--text-muted); margin-bottom:8px; }
+.rk-card .party { font-size:12px; color:var(--text-muted); margin-bottom:8px; }
 .rk-card .big { font-size:34px; font-weight:900; }
 .rk-card .prog { height:6px; background:#f1f5f9; border-radius:3px; margin-top:10px; overflow:hidden; }
 .rk-card .prog-fill { height:100%; border-radius:3px; }
@@ -109,7 +109,7 @@
 .pp-info { font-size:12px; color:var(--text-muted); margin-bottom:4px; }
 .pp-info strong { color:var(--text); }
 .pp-tags { display:flex; flex-wrap:wrap; gap:5px; margin:8px 0; }
-.pp-tag { padding:3px 9px; border-radius:12px; font-size:11px; font-weight:600; }
+.pp-tag { padding:3px 9px; border-radius:12px; font-size:12px; font-weight:600; }
 .pp-tag.s { background:#dcfce7; color:#166534; }
 .pp-tag.w { background:#fee2e2; color:#991b1b; }
 .pp-sum { font-size:12px; color:var(--text-muted); line-height:1.6; margin-top:8px; border-top:1px solid var(--border); padding-top:8px; }
@@ -127,8 +127,80 @@
 .ai-consist-name { font-weight:700; width:80px; flex-shrink:0; }
 .ai-consist-bars { flex:1; display:flex; gap:6px; }
 .ai-consist-bar { flex:1; text-align:center; }
-.ai-consist-bar .al { font-size:10px; font-weight:600; }
+.ai-consist-bar .al { font-size:12px; font-weight:600; }
 .ai-consist-bar .av { font-size:14px; font-weight:800; }
+
+/* ── 종합비교 카드 (report_compare 동일) ── */
+.ranking-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px,1fr)); gap: 16px; }
+.rank-card {
+  background: white; border-radius: var(--radius); padding: 20px;
+  border: 2px solid var(--border); box-shadow: var(--shadow);
+  position: relative; overflow: hidden;
+}
+.rank-card .rank-num { font-size: 48px; font-weight: 900; opacity: 0.06; position: absolute; right: 12px; top: 4px; line-height:1; }
+.rank-card .candidate-name { font-size: 18px; font-weight: 800; margin-bottom: 2px; }
+.rank-card .candidate-party { font-size: 12px; color: var(--text-muted); margin-bottom: 12px; }
+.rank-card .total-score { font-size: 36px; font-weight: 900; }
+.rank-card .grade-badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 700;
+  margin-left: 8px; vertical-align: middle;
+}
+.rank-card .rank-position { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+.charts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+@media (max-width: 768px) { .charts-grid { grid-template-columns: 1fr; } }
+.grade-legend { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; margin-bottom: 16px; padding: 10px 14px; background: #f8fafc; border-radius: 8px; border: 1px solid #e2e8f0; }
+.grade-legend-label { font-size: 12px; font-weight: 700; color: #374151; }
+.grade-legend-item { display: inline-flex; align-items: center; gap: 4px; padding: 3px 10px; border-radius: 14px; font-size: 12px; font-weight: 700; }
+
+/* ── 점수상세 항목별 바 (report_scores 동일) ── */
+.metric-section { margin-bottom: 28px; }
+.metric-title { font-size: 15px; font-weight: 700; color: var(--primary-dark); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+.metric-bar-row { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+.metric-bar-name { width: 80px; font-size: 13px; font-weight: 600; flex-shrink: 0; }
+.metric-bar-wrap { flex: 1; }
+.metric-bar-score { width: 36px; text-align: right; font-size: 13px; font-weight: 700; }
+.avg-line { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+
+/* ── 프로파일 카드 (report_profiles 동일) ── */
+.profile-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px,1fr)); gap: 24px; }
+.profile-card { background: white; border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); border: 1px solid var(--border); }
+.profile-card-header { padding: 20px 24px 16px; color: white; }
+.profile-card-header .rank-badge { background: rgba(255,255,255,0.2); border: 2px solid rgba(255,255,255,0.5); width: 32px; height: 32px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-weight: 900; font-size: 14px; margin-bottom: 10px; }
+.profile-card-header h2 { font-size: 22px; font-weight: 900; margin-bottom: 2px; }
+.profile-card-header .party { opacity: .85; font-size: 13px; }
+.profile-card-header .score-row { display: flex; align-items: baseline; gap: 8px; margin-top: 10px; }
+.profile-card-header .big-score { font-size: 42px; font-weight: 900; }
+.profile-card-header .grade { font-size: 14px; opacity: .85; }
+.profile-card-body { padding: 20px 24px; }
+.info-row { display: flex; gap: 8px; margin-bottom: 8px; font-size: 13px; }
+.info-label { color: var(--text-muted); width: 56px; flex-shrink: 0; }
+.info-value { color: var(--text); flex: 1; }
+.divider { border: none; border-top: 1px solid var(--border); margin: 14px 0; }
+.mini-chart-wrap { height: 200px; margin-bottom: 14px; }
+.kw-section { margin-bottom: 12px; }
+.kw-title { font-size: 12px; font-weight: 700; color: var(--text-muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: .5px; }
+.summary-text { font-size: 13px; line-height: 1.7; color: var(--text-muted); }
+
+/* ── 격차분석 (report_gaps 동일) ── */
+.gap-table td.gap-cell { font-weight: 700; font-size: 13px; }
+.gap-positive { color: #dc2626; }
+.gap-neutral { color: #d97706; }
+.gap-negative { color: #16a34a; }
+.winner-badge { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 20px; font-size: 13px; font-weight: 700; color: white; }
+.strength-card { background: white; border-radius: var(--radius-sm); padding: 14px 16px; border: 1px solid var(--border); margin-bottom: 10px; }
+
+/* ── AI 모델 카드 (report_ai 동일) ── */
+.ai-model-card { background: white; border-radius: var(--radius); padding: 20px 24px; border: 1px solid var(--border); box-shadow: var(--shadow); border-top: 4px solid; }
+.ai-model-header { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+.ai-model-icon { font-size: 24px; }
+.ai-model-name { font-size: 18px; font-weight: 800; }
+.ai-model-desc { font-size: 12px; color: var(--text-muted); }
+.ai-score-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.ai-score-name { font-size: 13px; font-weight: 600; flex: 1; }
+.ai-score-bar-wrap { flex: 2; }
+.ai-score-val { font-size: 14px; font-weight: 800; width: 40px; text-align: right; }
+.consistency-badge { padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 700; }
 
 /* ── 인쇄 스타일 ── */
 @page {
@@ -142,14 +214,84 @@
   }
 }
 
+/* ── 목차 ── */
+.full-toc {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  overflow: hidden;
+  margin-bottom: 32px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+}
+.toc-head {
+  background: linear-gradient(90deg, #1e3a8a, #2563eb);
+  padding: 18px 28px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.toc-head-title {
+  font-size: 16px;
+  font-weight: 900;
+  color: white;
+}
+.toc-head-sub {
+  font-size: 12px;
+  color: rgba(255,255,255,0.65);
+  margin-left: auto;
+}
+.toc-body {
+  padding: 20px 24px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px 24px;
+}
+@media (max-width: 600px) { .toc-body { grid-template-columns: 1fr; } }
+.toc-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 14px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  border-left: 4px solid;
+  background: #fafafa;
+}
+.toc-item:nth-child(1) { border-left-color: #2563eb; }
+.toc-item:nth-child(2) { border-left-color: #7c3aed; }
+.toc-item:nth-child(3) { border-left-color: #16a34a; }
+.toc-item:nth-child(4) { border-left-color: #d97706; }
+.toc-item:nth-child(5) { border-left-color: #0891b2; }
+.toc-num {
+  font-size: 12px;
+  font-weight: 900;
+  color: #94a3b8;
+  min-width: 22px;
+  flex-shrink: 0;
+  line-height: 1.5;
+}
+.toc-item-title {
+  font-size: 13px;
+  font-weight: 800;
+  color: #0f172a;
+  margin-bottom: 3px;
+  line-height: 1.3;
+}
+.toc-item-desc {
+  font-size: 12px;
+  color: #64748b;
+  line-height: 1.5;
+}
+
 @media print {
   * {
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
   }
-  .top-bar, .app-header, .main-nav { display: none !important; }
+  .top-bar, .app-header, .main-nav, .full-toolbar { display: none !important; }
   body { background: white !important; margin: 0; }
-  .full-report { max-width: 100%; padding: 0; }
+  .full-report { padding: 0; }
+  .page-container { padding: 0; }
 
   /* 표지 */
   .cover-page {
@@ -224,10 +366,20 @@
 </head>
 <body>
 
-<!-- 상단 바 -->
-<div class="top-bar no-print">
-  <a href="report_compare.html" class="back-btn">← 돌아가기</a>
-  <h2>📋 종합 분석 보고서 — 모든 항목 통합</h2>
+<header class="app-header">
+  <div class="header-inner">
+    <div class="header-logo">Election<span class="logo-analysis">Analysis</span><span class="logo-report">Report</span><span class="logo-ai">AI</span></div>
+    <div class="header-subtitle">01. 통합 분석 리포트 · Comprehensive Analysis Report</div>
+    <div class="header-date" id="header-date"></div>
+  </div>
+</header>
+<nav class="main-nav no-print"><div class="nav-inner" id="main-nav"></div></nav>
+
+<div class="page-container">
+
+<!-- 툴바 -->
+<div class="full-toolbar no-print" style="display:flex;align-items:center;justify-content:space-between;padding:12px 0;margin-bottom:8px">
+  <span style="font-size:15px;font-weight:800;color:#1e3a8a">📋 01. 통합 분석 리포트</span>
   <button class="pdf-btn" onclick="savePDF()">📥 PDF로 저장</button>
 </div>
 
@@ -258,6 +410,8 @@
   </div>
 </div>
 
+</div><!-- /page-container -->
+
 <script src="js/shared.js"></script>
 <script>
 /* ═══════════════════════════════════════════════════
@@ -284,6 +438,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const sortedC = [...candidates].map((c,i)=>({...c,idx:i})).sort((a,b)=>b.total_score-a.total_score);
 
   let html = buildCover(candidates, sortedC, district, analysis_date)
+    + buildTOC(candidates.length, district)
     + buildSection1(candidates, sortedC, totalRanks)
     + buildSection2(candidates)
     + buildSection3(candidates, totalRanks)
@@ -312,7 +467,7 @@ function buildCover(candidates, sortedC, district, analysis_date) {
   return `
   <div class="cover-page">
     <div class="cover-badge">ElectionAI · AI 기반 선거 후보자 분석 시스템</div>
-    <h1>선거 후보자<br>종합 비교 분석 보고서</h1>
+    <h1>01. 선거 후보자<br>통합 분석 리포트</h1>
     <div class="subtitle">10개 지표 기반 정량 평가 · AI 모델 통합 분석</div>
     <div class="cover-meta">
       <div class="cover-meta-item">
@@ -337,26 +492,80 @@ function buildCover(candidates, sortedC, district, analysis_date) {
   </div>`;
 }
 
+/* ── 목차 ── */
+function buildTOC(candidateCount, district) {
+  return `
+  <div class="full-toc">
+    <div class="toc-head">
+      <div class="toc-head-title">📋 목 차</div>
+      <div class="toc-head-sub">01. 통합 분석 리포트 · ${district||'선거구'} · 총 5개 섹션</div>
+    </div>
+    <div class="toc-body">
+      <div class="toc-item">
+        <div class="toc-num">01</div>
+        <div>
+          <div class="toc-item-title">📊 종합 비교 분석</div>
+          <div class="toc-item-desc">종합 순위 · 레이더 차트 · 항목별 최고 점수 후보</div>
+        </div>
+      </div>
+      <div class="toc-item">
+        <div class="toc-num">02</div>
+        <div>
+          <div class="toc-item-title">📈 10개 항목 점수 상세</div>
+          <div class="toc-item-desc">점수 히트맵 · 그룹 막대 그래프 · 항목별 분석</div>
+        </div>
+      </div>
+      <div class="toc-item">
+        <div class="toc-num">03</div>
+        <div>
+          <div class="toc-item-title">👤 후보자 프로파일</div>
+          <div class="toc-item-desc">후보별 강점·약점 · 경력·이력 · AI 총평 카드</div>
+        </div>
+      </div>
+      <div class="toc-item">
+        <div class="toc-num">04</div>
+        <div>
+          <div class="toc-item-title">🎯 격차 분석</div>
+          <div class="toc-item-desc">1위 대비 항목별 격차 · 역전 가능 지표 · 전략 제안</div>
+        </div>
+      </div>
+      <div class="toc-item">
+        <div class="toc-num">05</div>
+        <div>
+          <div class="toc-item-title">🤖 AI 모델별 점수 비교</div>
+          <div class="toc-item-desc">Claude·ChatGPT·Gemini·Grok 4중 교차 검증 · 신뢰도 분석</div>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
 /* ── Section 1: 종합 비교 ── */
 function buildSection1(candidates, sortedC, totalRanks) {
   const n = sortedC.length;
   const rankCards = sortedC.map((c, rank) => {
     const col = CANDIDATE_COLORS[c.idx%5];
     const g = scoreGrade(c.total_score);
-    const rankCls = rank===0?'rank-1':rank===1?'rank-2':rank===2?'rank-3':'rank-other';
     return `
-    <div class="rk-card" style="border-color:${col.border}">
-      <div class="num">${rank+1}</div>
-      <div class="rank-tag-lg ${rankCls}">${rank+1}</div>
-      <div class="name" style="color:${col.border}">${c.name}</div>
-      <div class="party">${c.party}</div>
-      <div>
-        <span class="big" style="color:${col.border}">${c.total_score}</span>
-        <span style="font-size:13px;color:var(--text-muted)">점</span>
-      </div>
-      <div style="font-size:11px;color:${col.border};font-weight:600;margin-top:3px">${g.label}등급 · ${g.desc}</div>
-      <div class="prog"><div class="prog-fill" style="width:${(c.total_score/1000)*100}%;background:${col.border}"></div></div>
-    </div>`;
+      <div class="rank-card" style="border-color:${col.border}">
+        <div class="rank-num">${rank+1}</div>
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+          <div class="rank-tag ${rank===0?'rank-1':rank===1?'rank-2':rank===2?'rank-3':'rank-other'}">${rank+1}</div>
+          <div>
+            <div class="candidate-name" style="color:${col.border}">${c.name}</div>
+            <div class="candidate-party">${c.party}</div>
+          </div>
+        </div>
+        <div>
+          <span class="total-score" style="color:${col.border}">${c.total_score}</span>
+          <span style="font-size:14px;color:var(--text-muted)">점</span>
+          <span class="grade-badge" style="background:${col.light};color:${col.text}">${g.label}등급 · ${g.desc}</span>
+        </div>
+        <div class="rank-position">${c.position || ''}</div>
+        <div class="progress-bar" style="margin-top:10px">
+          <div class="progress-fill" style="width:${(c.total_score/1000)*100}%;background:${col.border}"></div>
+        </div>
+      </div>`;
   }).join('');
 
   // 항목별 최고 점수 테이블
@@ -434,15 +643,23 @@ function buildSection1(candidates, sortedC, totalRanks) {
   <div class="report-section">
     <div class="section-header"><div class="section-num">1</div>📊 종합 비교 분석</div>
     <div class="card"><div class="card-title">🏆 종합 순위</div>
-      <div class="rank-cards-grid">${rankCards}</div>
+      <div class="grade-legend">
+        <span class="grade-legend-label">📊 등급 기준:</span>
+        <span class="grade-legend-item" style="background:#ede9fe;color:#5b21b6">S 최우수 · 880점 이상</span>
+        <span class="grade-legend-item" style="background:#dcfce7;color:#166534">A 우수 · 840점 이상</span>
+        <span class="grade-legend-item" style="background:#dbeafe;color:#1e40af">B 양호 · 760점 이상</span>
+        <span class="grade-legend-item" style="background:#fef3c7;color:#92400e">C 보통 · 680점 이상</span>
+        <span class="grade-legend-item" style="background:#fee2e2;color:#991b1b">D 미흡 · 680점 미만</span>
+      </div>
+      <div class="ranking-grid">${rankCards}</div>
     </div>
     ${sum_rank}
-    <div class="two-col">
-      <div class="chart-box"><h3>🕸️ 10개 항목 레이더 비교</h3>
-        <div style="height:300px"><canvas id="s1_radar"></canvas></div>
+    <div class="charts-grid">
+      <div class="card"><div class="card-title">🕸️ 10개 항목 레이더 비교</div>
+        <div class="chart-container" style="height:360px"><canvas id="s1_radar"></canvas></div>
       </div>
-      <div class="chart-box"><h3>📊 종합 점수 막대</h3>
-        <div style="height:300px"><canvas id="s1_bar"></canvas></div>
+      <div class="card"><div class="card-title">📊 종합 점수 비교</div>
+        <div class="chart-container" style="height:360px"><canvas id="s1_bar"></canvas></div>
       </div>
     </div>
     ${sum_chart}
@@ -522,19 +739,43 @@ function buildSection2(candidates) {
     `균형성과 종합 점수는 서로 다른 차원의 지표입니다. 점수가 다소 낮더라도 균형성이 높은 후보는 안정적이고 예측 가능한 리더십을 보여주며, 이는 중도층 유권자에게 특히 긍정적으로 작용합니다. 반대로 편중된 후보는 특정 지지층에게 강력한 호소력을 발휘할 수 있습니다.`
   ]);
 
+  // ── 항목별 바 섹션 ──
+  let metricBars = '';
+  METRICS.forEach(m => {
+    const scores = candidates.map(c => c.metrics?.[m] ?? 0);
+    const avg = scores.reduce((a,b)=>a+b,0)/n;
+    metricBars += `<div class="metric-section"><div class="metric-title">${METRIC_LABELS[m]}</div>`;
+    candidates.forEach((c,i) => {
+      const s = c.metrics?.[m] ?? 0;
+      const col = CANDIDATE_COLORS[i%5];
+      metricBars += `<div class="metric-bar-row">
+        <div class="metric-bar-name" style="color:${col.border}">${c.name}</div>
+        <div class="metric-bar-wrap">
+          <div class="progress-bar"><div class="progress-fill" style="width:${s}%;background:${col.border}"></div></div>
+        </div>
+        <div class="metric-bar-score" style="color:${col.border}">${s}</div>
+      </div>`;
+    });
+    metricBars += `<div class="avg-line">항목 평균: ${avg.toFixed(1)}점</div></div>`;
+  });
+
   return `
   <div class="report-section">
     <div class="section-header"><div class="section-num">2</div>📈 10개 항목 점수 상세</div>
-    <div class="card"><div class="card-title">🔥 점수 히트맵</div>
+    <div class="card"><div class="card-title">🔥 점수 히트맵 (항목 × 후보자)</div>
       <div class="table-wrap">${tbl}</div>
-      <div class="insight-box" style="margin-top:10px">▲ 해당 항목 최고  |  ▼ 해당 항목 최저</div>
+      <div class="insight-box" style="margin-top:10px">▲ 해당 항목 최고 점수 &nbsp;|&nbsp; ▼ 해당 항목 최저 점수</div>
     </div>
     ${sum_heatmap}
-    <div class="card"><div class="card-title">📊 항목별 그룹 비교</div>
-      <div style="height:360px"><canvas id="s2_grouped"></canvas></div>
+    <div class="card"><div class="card-title">📊 항목별 그룹 막대그래프</div>
+      <div class="chart-container" style="height:420px"><canvas id="s2_grouped"></canvas></div>
     </div>
-    <div class="card"><div class="card-title">📐 균형성 분석 (표준편차)</div>
+    <div class="card"><div class="card-title">📋 항목별 후보자 점수 상세</div>
+      ${metricBars}
+    </div>
+    <div class="card"><div class="card-title">📐 항목별 편차 분석 (균형성)</div>
       <div class="table-wrap">${stdTbl}</div>
+      <div class="insight-box">표준편차가 낮을수록 항목 간 균형이 잡힌 후보입니다. 높을수록 특정 항목에 편중됩니다.</div>
     </div>
     ${sum_balance}
   </div>`;
@@ -546,36 +787,54 @@ function buildSection3(candidates, totalRanks) {
     const col = CANDIDATE_COLORS[i%5];
     const rank = totalRanks[i];
     const g = scoreGrade(c.total_score);
+    const scores = METRICS.map(m => c.metrics?.[m] ?? 0);
+    const avgMetric = scores.reduce((a,b)=>a+b,0)/scores.length;
     const topM = METRICS.map(m=>({m,s:c.metrics?.[m]??0})).sort((a,b)=>b.s-a.s).slice(0,3);
     const botM = METRICS.map(m=>({m,s:c.metrics?.[m]??0})).sort((a,b)=>a.s-b.s).slice(0,3);
-    const aiRow = AI_MODELS.map(m => `
-      <div class="pp-ai-cell">
-        <div class="lbl" style="color:${col.border}">${AI_LABELS[m]}</div>
-        <div class="val" style="color:${col.border}">${c.ai_scores?.[m]??'-'}</div>
-      </div>`).join('');
 
     return `
-    <div class="pp-card">
-      <div class="pp-head" style="background:linear-gradient(135deg,${col.border}ee,${col.border})">
-        <div style="display:flex;justify-content:space-between;align-items:flex-start">
-          <div>
-            <div class="name">${c.name}</div>
-            <div class="sub">${c.party} · ${c.position||''}</div>
-            <div class="sc">${c.total_score}점 <span style="font-size:13px;opacity:.8">${g.label}등급</span></div>
-          </div>
-          <div style="background:rgba(255,255,255,0.2);width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:16px">${rank}</div>
+    <div class="profile-card">
+      <div class="profile-card-header" style="background:linear-gradient(135deg,${col.border}dd,${col.border})">
+        <div class="rank-badge">${rank}</div>
+        <h2>${c.name}</h2>
+        <div class="party">${c.party} · ${c.position || ''}</div>
+        <div class="score-row">
+          <div class="big-score">${c.total_score}</div>
+          <div class="grade">점 · ${g.label}등급 (${g.desc})</div>
         </div>
       </div>
-      <div class="pp-body">
-        ${c.education?`<div class="pp-info"><strong>학력</strong> ${c.education}</div>`:''}
-        ${c.career?`<div class="pp-info"><strong>경력</strong> ${c.career}</div>`:''}
-        <div style="height:180px;margin:12px 0"><canvas id="s3_radar_${i}"></canvas></div>
-        <div style="font-size:11px;color:var(--text-muted);margin-bottom:6px">강점 항목</div>
-        <div class="pp-tags">${topM.map(x=>`<span class="pp-tag s">${METRIC_LABELS[x.m]} ${x.s}</span>`).join('')}${(c.strengths||[]).map(s=>`<span class="pp-tag s">${s}</span>`).join('')}</div>
-        <div style="font-size:11px;color:var(--text-muted);margin:6px 0">개선 항목</div>
-        <div class="pp-tags">${botM.map(x=>`<span class="pp-tag w">${METRIC_LABELS[x.m]} ${x.s}</span>`).join('')}${(c.weaknesses||[]).map(s=>`<span class="pp-tag w">${s}</span>`).join('')}</div>
-        ${c.summary?`<div class="pp-sum">${c.summary}</div>`:''}
-        <div class="pp-ai-row">${aiRow}</div>
+      <div class="profile-card-body">
+        ${c.education ? `<div class="info-row"><span class="info-label">학력</span><span class="info-value">${c.education}</span></div>` : ''}
+        ${c.career ? `<div class="info-row"><span class="info-label">경력</span><span class="info-value">${c.career}</span></div>` : ''}
+        <hr class="divider">
+        <div class="mini-chart-wrap"><canvas id="s3_radar_${i}"></canvas></div>
+        <div style="text-align:center;margin-bottom:12px;font-size:12px;color:var(--text-muted)">
+          10개 항목 평균: <strong style="color:${col.border};font-size:14px">${avgMetric.toFixed(1)}점</strong>
+        </div>
+        <hr class="divider">
+        <div class="kw-section">
+          <div class="kw-title">✅ 강점 항목</div>
+          <div class="tag-list">
+            ${topM.map(x=>`<span class="tag tag-strength">${METRIC_LABELS[x.m]} ${x.s}</span>`).join('')}
+            ${(c.strengths||[]).map(s=>`<span class="tag tag-strength">${s}</span>`).join('')}
+          </div>
+        </div>
+        <div class="kw-section">
+          <div class="kw-title">⚠️ 개선 필요 항목</div>
+          <div class="tag-list">
+            ${botM.map(x=>`<span class="tag tag-weakness">${METRIC_LABELS[x.m]} ${x.s}</span>`).join('')}
+            ${(c.weaknesses||[]).map(s=>`<span class="tag tag-weakness">${s}</span>`).join('')}
+          </div>
+        </div>
+        ${c.summary ? `<hr class="divider"><p class="summary-text">${c.summary}</p>` : ''}
+        <hr class="divider">
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;text-align:center">
+          ${AI_MODELS.map(m => `
+            <div style="background:#f8fafc;border-radius:var(--radius-sm);padding:6px 4px">
+              <div style="font-size:12px;color:var(--text-muted);font-weight:600">${AI_LABELS[m]}</div>
+              <div style="font-size:15px;font-weight:800;color:${col.border}">${c.ai_scores?.[m] ?? '-'}</div>
+            </div>`).join('')}
+        </div>
       </div>
     </div>`;
   }).join('');
@@ -630,7 +889,7 @@ function buildSection3(candidates, totalRanks) {
   return `
   <div class="report-section">
     <div class="section-header"><div class="section-num">3</div>👤 후보자 프로파일</div>
-    <div class="profile-print-grid">${cards}</div>
+    <div class="profile-grid">${cards}</div>
     ${sum_profiles}
     <div class="card" style="margin-top:20px">
       <div class="card-title">📊 10개 항목 개인별 비교 분석</div>
@@ -729,11 +988,21 @@ function buildSection4(candidates, sortedC) {
     `매트릭스 분석을 통해 각 후보의 '독점 강점 항목'(압도적 우위)과 '공략 가능 항목'(치열한 경쟁) 지도를 작성할 수 있습니다. 이 지도는 유권자가 각 후보를 어떤 기준으로 비교해야 하는지, 그리고 각 후보가 어떤 메시지를 강조해야 하는지를 결정하는 데 핵심적인 근거가 됩니다.`
   ]);
 
+  const leaderCol = CANDIDATE_COLORS[leader.idx%5];
   return `
   <div class="report-section">
     <div class="section-header"><div class="section-num">4</div>🎯 격차 분석</div>
     <div class="card">
-      <div class="card-title">🥇 기준: <span style="color:${CANDIDATE_COLORS[leader.idx%5].border}">${leader.name}</span> (종합 1위 · ${leader.total_score}점)</div>
+      <div class="card-title">🥇 기준 후보 (종합 1위)</div>
+      <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+        <div class="winner-badge" style="background:${leaderCol.border}">🏆 ${leader.name} · ${leader.total_score}점</div>
+        <div style="font-size:13px;color:var(--text-muted)">${leader.party} · ${leader.position || ''}</div>
+      </div>
+      <div class="insight-box" style="margin-top:12px">
+        아래 모든 격차는 <strong>${leader.name}(${leader.total_score}점)</strong>을 기준으로 계산됩니다. 양수(+)는 리더보다 높은 항목, 음수(-)는 낮은 항목입니다.
+      </div>
+    </div>
+    <div class="card"><div class="card-title">📉 종합 점수 격차</div>
       <div class="table-wrap">${sumTbl}</div>
     </div>
     <div class="card"><div class="card-title">📊 항목별 격차 차트 (1위 대비)</div>
@@ -779,30 +1048,60 @@ function buildSection5(candidates) {
   AI_MODELS.forEach(m => {
     const best = candidates.reduce((b,c)=>(c.ai_scores?.[m]??0)>(b.ai_scores?.[m]??0)?c:b);
     const idx = candidates.indexOf(best);
-    aiTbl += `<td style="color:${CANDIDATE_COLORS[idx%5].border};font-weight:700;font-size:11px">${best.name}<br>${best.ai_scores?.[m]}</td>`;
+    aiTbl += `<td style="color:${CANDIDATE_COLORS[idx%5].border};font-weight:700;font-size:12px">${best.name}<br>${best.ai_scores?.[m]}</td>`;
   });
   aiTbl += `<td colspan="3"></td></tr></tbody></table>`;
 
-  // AI 일관성 박스
+  // AI 모델별 카드
+  const aiModelCards = AI_MODELS.map(m => {
+    const scores = candidates.map((c,i)=>({name:c.name,score:c.ai_scores?.[m]??0,col:CANDIDATE_COLORS[i%5]})).sort((a,b)=>b.score-a.score);
+    const avg = scores.reduce((s,x)=>s+x.score,0)/scores.length;
+    let rows = scores.map((s,rank) => `<div class="ai-score-row">
+      <div style="display:flex;align-items:center;gap:6px;flex:1">
+        ${rankTag(rank+1)}
+        <span class="ai-score-name" style="color:${s.col.border}">${s.name}</span>
+      </div>
+      <div class="ai-score-bar-wrap">
+        <div class="progress-bar"><div class="progress-fill" style="width:${(s.score/1000)*100}%;background:${AI_BORDER[m]}"></div></div>
+      </div>
+      <div class="ai-score-val" style="color:${AI_BORDER[m]}">${s.score}</div>
+    </div>`).join('');
+    return `<div class="ai-model-card" style="border-top-color:${AI_BORDER[m]}">
+      <div class="ai-model-header">
+        <span class="ai-model-icon">${AI_ICONS[m]}</span>
+        <div>
+          <div class="ai-model-name" style="color:${AI_BORDER[m]}">${AI_LABELS[m]}</div>
+          <div class="ai-model-desc">${AI_DESCS[m]}</div>
+        </div>
+        <span style="margin-left:auto;font-size:12px;color:var(--text-muted)">평균 ${avg.toFixed(1)}점</span>
+      </div>
+      ${rows}
+    </div>`;
+  }).join('');
+
+  // AI 일관성 박스 (strength-card 스타일)
   const consistRows = candidates.map((c,i) => {
     const col = CANDIDATE_COLORS[i%5];
     const scores = AI_MODELS.map(m=>c.ai_scores?.[m]??0).filter(s=>s>0);
     const avg = scores.reduce((a,b)=>a+b,0)/scores.length;
     const std = Math.sqrt(scores.reduce((s,v)=>s+Math.pow(v-avg,2),0)/scores.length);
     const spread = Math.max(...scores)-Math.min(...scores);
-    const bars = AI_MODELS.map(m => {
+    const cells = AI_MODELS.map(m => {
       const s = c.ai_scores?.[m]??0;
       const diff = s - avg;
-      return `<div class="ai-consist-bar">
-        <div class="al" style="color:#7c3aed">${AI_LABELS[m]}</div>
-        <div class="av" style="color:${col.border}">${s}</div>
-        <div style="font-size:9px;color:${diff>0?'#16a34a':diff<0?'#dc2626':'#94a3b8'}">${diff>0?'+':''  }${diff.toFixed(1)}</div>
+      return `<div style="text-align:center;min-width:70px;background:#f8fafc;border-radius:8px;padding:8px 10px">
+        <div style="font-size:12px;color:${AI_BORDER[m]};font-weight:700">${AI_LABELS[m]}</div>
+        <div style="font-size:18px;font-weight:900;color:${col.border}">${s}</div>
+        <div style="font-size:12px;color:${diff>0?'#16a34a':diff<0?'#dc2626':'#94a3b8'}">${diff>0?'+'+diff.toFixed(1):diff.toFixed(1)}</div>
       </div>`;
     }).join('');
-    return `<div class="ai-consist-row">
-      <div class="ai-consist-name" style="color:${col.border}">${c.name}</div>
-      <div class="ai-consist-bars">${bars}</div>
-      <div style="font-size:11px;color:var(--text-muted);white-space:nowrap;min-width:80px;text-align:right">편차 <strong>${std.toFixed(1)}</strong> · 범위 <strong>${spread}점</strong></div>
+    return `<div class="strength-card">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+        <strong style="color:${col.border};font-size:15px">${c.name}</strong>
+        <span style="font-size:12px;color:var(--text-muted)">${c.party}</span>
+        <span style="margin-left:auto;font-size:12px">편차: <strong>${std.toFixed(1)}</strong> · 범위: <strong>${spread}점</strong></span>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">${cells}</div>
     </div>`;
   }).join('');
 
@@ -848,21 +1147,22 @@ function buildSection5(candidates) {
   return `
   <div class="report-section">
     <div class="section-header"><div class="section-num">5</div>🤖 AI 모델별 점수 비교</div>
-    <div class="card"><div class="card-title">📊 AI 모델 × 후보자 그룹 비교</div>
-      <div style="height:360px"><canvas id="s5_bar"></canvas></div>
+    <div class="card"><div class="card-title">📊 AI 모델 × 후보자 점수 비교</div>
+      <div class="chart-container" style="height:380px"><canvas id="s5_bar"></canvas></div>
     </div>
-    <div class="card"><div class="card-title">📋 AI 모델별 상세 점수</div>
+    <div class="card"><div class="card-title">🏆 AI 모델별 후보자 순위</div>
       <div class="table-wrap">${aiTbl}</div>
     </div>
     ${sum_ai}
-    <div class="card"><div class="card-title">📈 AI 모델 추세 비교</div>
-      <div style="height:280px"><canvas id="s5_line"></canvas></div>
-    </div>
-    <div class="card"><div class="card-title">📐 후보별 AI 평가 일관성</div>
+    <div class="grid-2">${aiModelCards}</div>
+    <div class="card"><div class="card-title">📐 후보별 AI 평가 일관성 분석</div>
       ${consistRows}
-      <div class="insight-box">편차가 낮을수록 AI 모델 간 평가가 일치하며 신뢰도가 높습니다.</div>
+      <div class="insight-box">편차가 낮을수록 AI 모델 간 평가가 일치하며 신뢰도가 높습니다. 높은 편차는 특정 AI에서 다르게 판단되었음을 의미합니다.</div>
     </div>
     ${sum_consist}
+    <div class="card"><div class="card-title">📈 AI 모델별 평가 추세 비교</div>
+      <div class="chart-container" style="height:300px"><canvas id="s5_line"></canvas></div>
+    </div>
   </div>`;
 }
 
@@ -1029,6 +1329,12 @@ async function savePDF() {
   btn.disabled = true;
   btn.innerHTML = '⏳ 차트 변환 중...';
 
+  // 선거구 정보 가져오기
+  const data = getData();
+  const district = data?.district || '선거구';
+  const origTitle = document.title;
+  document.title = `${district}_01.통합분석리포트`;
+
   // 모든 canvas를 고해상도 img로 변환 (화면 비율 그대로 유지)
   const canvasEls = Array.from(document.querySelectorAll('#fullReport canvas'));
   const replacements = [];
@@ -1057,13 +1363,14 @@ async function savePDF() {
   await new Promise(r => setTimeout(r, 600));
   window.print();
 
-  // 인쇄 후 canvas 복원
+  // 인쇄 후 canvas 복원 및 title 복원
   setTimeout(() => {
     replacements.forEach(({ img, canvas, parent }) => {
       try {
         if (img.parentNode === parent) parent.replaceChild(canvas, img);
       } catch(e) {}
     });
+    document.title = origTitle;
     btn.disabled = false;
     btn.innerHTML = '📥 PDF로 저장';
   }, 1500);
