@@ -183,6 +183,7 @@ function renderFooter() {
       </div>
       <div class="footer-divider"></div>
       <div class="footer-links">
+        <a href="diagram_workflow.html" class="footer-link-btn">📊 분석 구조도</a>
         <a href="report_pricing.html" class="footer-link-btn">💰 가격 산정</a>
         <a href="report_guide.html" class="footer-link-btn">📋 안내자료</a>
       </div>
