@@ -43,14 +43,15 @@ function setTargetIdx(idx) { localStorage.setItem('target_candidate_idx', idx); 
 // ── 내비게이션 렌더링 ──
 const NAV_PAGES = [
   { href: 'index.html',           icon: '🏠', label: '홈 · 분석' },
-  { href: 'report_compare.html',  icon: '📊', label: '종합 비교' },
-  { href: 'report_scores.html',   icon: '📈', label: '점수 상세' },
-  { href: 'report_profiles.html', icon: '👤', label: '후보 프로파일' },
-  { href: 'report_gaps.html',     icon: '🎯', label: '격차 분석' },
-  { href: 'report_ai.html',       icon: '🤖', label: 'AI 모델 비교' },
+  { href: 'diagram_workflow.html', icon: '📊', label: '분석 구조도' },
   { href: 'report_full.html',      icon: '📋', label: '01. 통합 분석 리포트' },
+  { href: 'report_compare.html',  icon: '📊', label: '   ├ 종합 비교' },
+  { href: 'report_scores.html',   icon: '📈', label: '   ├ 점수 상세' },
+  { href: 'report_profiles.html', icon: '👤', label: '   ├ 후보 프로파일' },
+  { href: 'report_gaps.html',     icon: '🎯', label: '   ├ 격차 분석' },
+  { href: 'report_ai.html',       icon: '🤖', label: '   └ AI 모델 비교' },
   { href: 'report_landscape.html', icon: '🗺️', label: '02. 선거 판세 인텔리전스' },
-  { href: 'report_strategy.html',   icon: '🏆', label: '03. 당선 전략' },
+  { href: 'report_strategy.html',   icon: '🏆', label: '03. 당선 전략 보고서' },
 ];
 
 function renderNav() {
