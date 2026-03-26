@@ -25,9 +25,9 @@
   font-size: 12px; font-weight: 700; margin-bottom: 16px; letter-spacing: .6px;
 }
 .ls-cover h1 { font-size: 30px; font-weight: 900; line-height: 1.25; margin-bottom: 8px; }
-.ls-cover .ls-subtitle { font-size: 14px; opacity: .9; margin-bottom: 32px; line-height: 1.75; }
+.ls-cover .ls-subtitle { font-size: 14px; opacity: 1; margin-bottom: 32px; line-height: 1.75; }
 .ls-meta { display: flex; gap: 32px; flex-wrap: wrap; }
-.ls-meta-item .lbl { font-size: 12px; opacity: .8; text-transform: uppercase; letter-spacing: .8px; margin-bottom: 3px; }
+.ls-meta-item .lbl { font-size: 12px; opacity: .95; text-transform: uppercase; letter-spacing: .8px; margin-bottom: 3px; }
 .ls-meta-item .val { font-size: 15px; font-weight: 700; }
 
 /* ── PDF 버튼 ── */
@@ -77,7 +77,7 @@
   font-size: 12px; font-weight: 900; flex-shrink: 0;
 }
 .ls-section-title { font-size: 17px; font-weight: 800; }
-.ls-section-desc { font-size: 12px; opacity: .9; margin-top: 2px; }
+.ls-section-desc { font-size: 12px; opacity: 1; margin-top: 2px; }
 
 /* ── 섹션 색상 ── */
 .ls-c1 { background: linear-gradient(135deg, #0891b2, #0e7490); }
@@ -87,6 +87,173 @@
 .ls-c5 { background: linear-gradient(135deg, #059669, #047857); }
 .ls-c6 { background: linear-gradient(135deg, #dc2626, #b91c1c); }
 .ls-c7 { background: linear-gradient(135deg, #0f172a, #1e3a8a); }
+.ls-c8 { background: linear-gradient(135deg, #0284c7, #0369a1); }
+.ls-c9 { background: linear-gradient(135deg, #9333ea, #7e22ce); }
+.ls-c10 { background: linear-gradient(135deg, #0d9488, #0f766e); }
+.ls-c11 { background: linear-gradient(135deg, #c2410c, #9a3412); }
+.ls-c12 { background: linear-gradient(135deg, #4338ca, #3730a3); }
+.ls-c13 { background: linear-gradient(135deg, #be185d, #9d174d); }
+.ls-c14 { background: linear-gradient(135deg, #15803d, #166534); }
+.ls-c15 { background: linear-gradient(135deg, #b45309, #92400e); }
+.ls-c16 { background: linear-gradient(135deg, #6d28d9, #5b21b6); }
+.ls-c17 { background: linear-gradient(135deg, #0891b2, #0e7490); }
+
+/* ── 후보 유형 분류 카드 ── */
+.ctype-card {
+  background: white; border-radius: var(--radius-sm); border: 1px solid var(--border);
+  padding: 18px; border-top: 4px solid; position: relative; overflow: hidden;
+}
+.ctype-card::after {
+  content: attr(data-icon); font-size: 80px; opacity: .04;
+  position: absolute; right: -8px; bottom: -12px; line-height: 1; pointer-events: none;
+}
+.ctype-tag {
+  display: inline-block; padding: 4px 12px; border-radius: 20px;
+  font-size: 12px; font-weight: 800; margin-bottom: 8px;
+}
+.ctype-name { font-size: 16px; font-weight: 900; color: #0f172a; margin-bottom: 4px; }
+.ctype-desc { font-size: 12px; color: #374151; line-height: 1.65; margin-bottom: 10px; }
+.ctype-metrics { display: flex; flex-wrap: wrap; gap: 5px; }
+.ctype-metric-tag {
+  font-size: 12px; padding: 3px 8px; border-radius: 6px;
+  background: #f1f5f9; color: #334155; font-weight: 600;
+}
+
+/* ── 균형도 바 ── */
+.balance-bar-wrap { margin-bottom: 14px; }
+.balance-bar-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 6px;
+}
+.balance-bar-name { font-size: 13px; font-weight: 800; color: #0f172a; }
+.balance-bar-val { font-size: 13px; font-weight: 900; }
+.balance-bar-track { height: 12px; background: #e2e8f0; border-radius: 6px; overflow: hidden; position: relative; }
+.balance-bar-fill { height: 100%; border-radius: 6px; transition: width .8s ease; }
+.balance-type-badge {
+  display: inline-block; padding: 3px 10px; border-radius: 12px;
+  font-size: 12px; font-weight: 700; margin-left: 8px;
+}
+
+/* ── 합의도 게이지 ── */
+.consensus-card {
+  background: white; border-radius: var(--radius-sm); border: 1px solid var(--border);
+  padding: 16px; text-align: center;
+}
+.consensus-gauge { width: 80px; height: 80px; margin: 0 auto 8px; position: relative; }
+.consensus-gauge svg { transform: rotate(-90deg); }
+.consensus-gauge .gauge-text {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+  font-size: 18px; font-weight: 900;
+}
+
+/* ── 공격 노출도 ── */
+.vuln-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 14px; background: white; border-radius: var(--radius-sm);
+  border: 1px solid var(--border); border-left: 4px solid; margin-bottom: 8px;
+}
+.vuln-level {
+  min-width: 54px; text-align: center; padding: 4px 8px;
+  border-radius: 8px; font-size: 12px; font-weight: 900;
+}
+
+/* ── 역전 매트릭스 ── */
+.reversal-card {
+  background: white; border-radius: var(--radius-sm); border: 1px solid var(--border);
+  padding: 16px; margin-bottom: 10px;
+}
+.reversal-arrow {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 800;
+  background: #fef3c7; color: #92400e; margin-bottom: 10px;
+}
+
+/* ── 차별화 맵 ── */
+.diff-matrix { display: flex; flex-direction: column; gap: 8px; }
+.diff-row {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 14px; background: white; border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+}
+.diff-keyword { font-size: 13px; font-weight: 800; color: #0f172a; min-width: 100px; }
+.diff-owners { display: flex; gap: 4px; flex-wrap: wrap; }
+.diff-owner-tag {
+  padding: 2px 8px; border-radius: 10px; font-size: 12px; font-weight: 700;
+}
+.diff-exclusive { background: #dcfce7; color: #166534; border: 1px solid #86efac; }
+.diff-shared { background: #fef3c7; color: #92400e; border: 1px solid #fcd34d; }
+
+/* ── 승리 공식 카드 ── */
+.win-formula-card {
+  background: white; border-radius: var(--radius-sm); border: 1px solid var(--border);
+  padding: 18px; border-left: 5px solid;
+}
+.win-formula-num {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 26px; height: 26px; border-radius: 50%; font-size: 13px; font-weight: 900;
+  color: white; margin-right: 8px;
+}
+.win-formula-title { font-size: 14px; font-weight: 800; color: #0f172a; margin-bottom: 6px; }
+.win-formula-desc { font-size: 12px; color: #374151; line-height: 1.65; }
+
+/* ── 메시지 설계 ── */
+.msg-card {
+  background: white; border-radius: var(--radius-sm); border: 1px solid var(--border);
+  padding: 14px 16px; border-top: 3px solid;
+}
+.msg-target { font-size: 12px; font-weight: 800; margin-bottom: 6px; }
+.msg-text {
+  font-size: 14px; font-weight: 700; color: #0f172a; line-height: 1.5;
+  padding: 10px 14px; background: #f8fafc; border-radius: 8px;
+  border-left: 3px solid #e2e8f0; margin-bottom: 6px;
+}
+.msg-reason { font-size: 12px; color: #4b5563; line-height: 1.5; }
+
+/* ── 공격 시나리오 ── */
+.attack-scenario {
+  background: white; border-radius: var(--radius-sm); border: 1px solid var(--border);
+  padding: 16px; margin-bottom: 10px;
+}
+.attack-header {
+  display: flex; align-items: center; gap: 8px; margin-bottom: 10px;
+  padding-bottom: 8px; border-bottom: 1px solid #f1f5f9;
+}
+.attack-badge {
+  padding: 3px 10px; border-radius: 10px; font-size: 12px; font-weight: 700;
+}
+.attack-point { font-size: 13px; color: #991b1b; line-height: 1.6; margin-bottom: 8px; padding: 8px; background: #fef2f2; border-radius: 6px; }
+.defense-point { font-size: 13px; color: #166534; line-height: 1.6; padding: 8px; background: #f0fdf4; border-radius: 6px; }
+
+/* ── 내러티브 ── */
+.narrative-box {
+  background: linear-gradient(135deg, #faf5ff, #f0f9ff);
+  border: 1px solid #ddd6fe; border-radius: var(--radius-sm);
+  padding: 20px 24px; font-size: 14px; color: #1e1b4b; line-height: 2;
+}
+.narrative-box strong { color: #6d28d9; }
+
+/* ── 브리핑 ── */
+.briefing-box {
+  background: white; border: 2px solid #0f172a; border-radius: var(--radius);
+  padding: 24px 28px; font-size: 13px; color: #0f172a; line-height: 1.8;
+}
+.briefing-header {
+  text-align: center; padding-bottom: 16px; margin-bottom: 16px;
+  border-bottom: 2px solid #0f172a;
+}
+.briefing-header h3 { font-size: 18px; font-weight: 900; margin-bottom: 4px; }
+.briefing-header .sub { font-size: 12px; color: #4b5563; }
+.briefing-section { margin-bottom: 16px; }
+.briefing-section h4 {
+  font-size: 13px; font-weight: 800; color: #1e3a8a;
+  padding: 6px 10px; background: #eff6ff; border-radius: 6px;
+  margin-bottom: 8px; display: flex; align-items: center; gap: 6px;
+}
+.briefing-section ul { list-style: none; display: flex; flex-direction: column; gap: 4px; }
+.briefing-section li {
+  padding: 6px 10px; background: #f8fafc; border-radius: 4px;
+  border-left: 2px solid #e2e8f0; font-size: 12px; line-height: 1.55;
+}
 
 /* ── 데이터 카드 ── */
 .ls-card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px,1fr)); gap: 14px; margin-bottom: 16px; }
@@ -355,6 +522,9 @@
   }
   .ls-section { break-inside: avoid; }
   .ls-toc { break-inside: avoid; }
+  .win-formula-card, .attack-scenario, .reversal-card, .consensus-card,
+  .vuln-item, .diff-row, .briefing-section, .narrative-box,
+  .ctype-card, .balance-bar-wrap, .msg-card { break-inside: avoid; }
   @page { margin: 10mm 12mm 20mm 12mm; @bottom-right { content: counter(page) " / " counter(pages); font-size: 9pt; color: #94a3b8; } }
 }
 </style>
@@ -376,7 +546,7 @@
   <div class="ls-cover">
     <div class="ls-badge">🗺️ ELECTION INTELLIGENCE REPORT · 공통 판세 분석</div>
     <h1>02. 선거 판세 인텔리전스<br>
-      <span style="font-size:20px;opacity:.85;font-weight:700">Election Landscape Intelligence</span>
+      <span style="font-size:20px;opacity:1;font-weight:700">Election Landscape Intelligence</span>
     </h1>
     <p class="ls-subtitle">
       특정 후보에 편향되지 않은 객관적 선거 환경 분석 보고서<br>
@@ -397,7 +567,7 @@
       </div>
       <div class="ls-meta-item">
         <div class="lbl">분석 섹션</div>
-        <div class="val">7개 분야</div>
+        <div class="val">20개 분야</div>
       </div>
     </div>
   </div>
@@ -485,6 +655,50 @@
         <div class="ls-toc-num" style="color:#16a34a">09</div>
         <div class="ls-toc-txt"><div class="t">종합 판세 비교 분석</div><div class="d">경쟁 구도·우위 분석·시뮬레이션</div></div>
       </div>
+      <div class="ls-toc-item" style="border-color:#0284c7" onclick="document.getElementById('s10').scrollIntoView({behavior:'smooth'})">
+        <div class="ls-toc-num" style="color:#0284c7">10</div>
+        <div class="ls-toc-txt"><div class="t">후보 유형 자동 분류</div><div class="d">메트릭 패턴→유형 판별·프레임 매칭</div></div>
+      </div>
+      <div class="ls-toc-item" style="border-color:#9333ea" onclick="document.getElementById('s11').scrollIntoView({behavior:'smooth'})">
+        <div class="ls-toc-num" style="color:#9333ea">11</div>
+        <div class="ls-toc-txt"><div class="t">메트릭 균형도 분석</div><div class="d">올라운더형 vs 뾰족형·전략 방향</div></div>
+      </div>
+      <div class="ls-toc-item" style="border-color:#0d9488" onclick="document.getElementById('s12').scrollIntoView({behavior:'smooth'})">
+        <div class="ls-toc-num" style="color:#0d9488">12</div>
+        <div class="ls-toc-txt"><div class="t">AI 모델 합의도 분석</div><div class="d">4개 AI 평가 일치·불일치 분석</div></div>
+      </div>
+      <div class="ls-toc-item" style="border-color:#c2410c" onclick="document.getElementById('s13').scrollIntoView({behavior:'smooth'})">
+        <div class="ls-toc-num" style="color:#c2410c">13</div>
+        <div class="ls-toc-txt"><div class="t">취약점 공격 노출도</div><div class="d">약점 위험도 지수·방어 우선순위</div></div>
+      </div>
+      <div class="ls-toc-item" style="border-color:#4338ca" onclick="document.getElementById('s14').scrollIntoView({behavior:'smooth'})">
+        <div class="ls-toc-num" style="color:#4338ca">14</div>
+        <div class="ls-toc-txt"><div class="t">역전 가능성 매트릭스</div><div class="d">역전 로드맵·집중 지표 분석</div></div>
+      </div>
+      <div class="ls-toc-item" style="border-color:#be185d" onclick="document.getElementById('s15').scrollIntoView({behavior:'smooth'})">
+        <div class="ls-toc-num" style="color:#be185d">15</div>
+        <div class="ls-toc-txt"><div class="t">강점 겹침·차별화 맵</div><div class="d">독점 강점·중복 포지션 분석</div></div>
+      </div>
+      <div class="ls-toc-item" style="border-color:#15803d" onclick="document.getElementById('s16').scrollIntoView({behavior:'smooth'})">
+        <div class="ls-toc-num" style="color:#15803d">16</div>
+        <div class="ls-toc-txt"><div class="t">후보별 맞춤 승리 공식</div><div class="d">AI 생성·이기려면 해야 할 3가지</div></div>
+      </div>
+      <div class="ls-toc-item" style="border-color:#b45309" onclick="document.getElementById('s17').scrollIntoView({behavior:'smooth'})">
+        <div class="ls-toc-num" style="color:#b45309">17</div>
+        <div class="ls-toc-txt"><div class="t">유권자 설득 메시지 설계</div><div class="d">AI 생성·세대별 맞춤 메시지</div></div>
+      </div>
+      <div class="ls-toc-item" style="border-color:#6d28d9" onclick="document.getElementById('s18').scrollIntoView({behavior:'smooth'})">
+        <div class="ls-toc-num" style="color:#6d28d9">18</div>
+        <div class="ls-toc-txt"><div class="t">공격 시나리오 사전 대비</div><div class="d">AI 생성·공격-방어 시뮬레이션</div></div>
+      </div>
+      <div class="ls-toc-item" style="border-color:#0891b2" onclick="document.getElementById('s19').scrollIntoView({behavior:'smooth'})">
+        <div class="ls-toc-num" style="color:#0891b2">19</div>
+        <div class="ls-toc-txt"><div class="t">선거 판세 종합 내러티브</div><div class="d">AI 생성·스토리텔링 판세 분석</div></div>
+      </div>
+      <div class="ls-toc-item" style="border-color:#0f172a" onclick="document.getElementById('s20').scrollIntoView({behavior:'smooth'})">
+        <div class="ls-toc-num" style="color:#0f172a">20</div>
+        <div class="ls-toc-txt"><div class="t">캠프 리더 브리핑 요약</div><div class="d">AI 생성·A4 1장 핵심 브리핑</div></div>
+      </div>
     </div>
   </div>
 
@@ -512,19 +726,19 @@
         <div style="display:flex;flex-direction:column;gap:9px;margin-top:4px">
           <div style="padding:10px 12px;border-radius:8px;background:#f0f9ff;border-left:3px solid #0891b2">
             <div style="font-size:12px;font-weight:800;color:#0891b2;margin-bottom:3px">🎓 18–29세 (18%)</div>
-            <div style="font-size:12px;color:#374151">일자리·창업 환경, SNS 정치 참여, 임대료 부담, 기후·환경</div>
+            <div style="font-size:12px;color:#1e293b">일자리·창업 환경, SNS 정치 참여, 임대료 부담, 기후·환경</div>
           </div>
           <div style="padding:10px 12px;border-radius:8px;background:#eff6ff;border-left:3px solid #3b82f6">
             <div style="font-size:12px;font-weight:800;color:#1e40af;margin-bottom:3px">👨‍👩‍👧 30–44세 (26%)</div>
-            <div style="font-size:12px;color:#374151">교육·보육, 생활비, 안정적 일자리, 주택·임대료</div>
+            <div style="font-size:12px;color:#1e293b">교육·보육, 생활비, 안정적 일자리, 주택·임대료</div>
           </div>
           <div style="padding:10px 12px;border-radius:8px;background:#f5f3ff;border-left:3px solid #7c3aed">
             <div style="font-size:12px;font-weight:800;color:#6d28d9;margin-bottom:3px">💼 45–59세 (31%)</div>
-            <div style="font-size:12px;color:#374151">관광 경제·사업 환경, 자녀 교육비, 의료 접근성, 노후 준비</div>
+            <div style="font-size:12px;color:#1e293b">관광 경제·사업 환경, 자녀 교육비, 의료 접근성, 노후 준비</div>
           </div>
           <div style="padding:10px 12px;border-radius:8px;background:#fef3c7;border-left:3px solid #d97706">
             <div style="font-size:12px;font-weight:800;color:#92400e;margin-bottom:3px">🧓 60세 이상 (25%)</div>
-            <div style="font-size:12px;color:#374151">의료·연금 안정, 지역 전통 보존, 치안·안전, 안정적 행정</div>
+            <div style="font-size:12px;color:#1e293b">의료·연금 안정, 지역 전통 보존, 치안·안전, 안정적 행정</div>
           </div>
         </div>
       </div>
@@ -562,6 +776,12 @@
       45–59세 중장년층(31%)이 최다 유권자 그룹이며 <strong>투표율도 가장 높습니다.</strong>
       이들의 최우선 관심사는 관광 경제·사업 환경으로, 이 층의 지지를 확보하는 캠프가 선거 주도권을 갖습니다.
       스윙보터(22%)는 소규모 선거에서 <strong>당락을 가르는 결정적 변수</strong>입니다.
+      <br><br>
+      중장년층을 공략할 때는 <strong>오프라인 현장 접촉이 가장 효과적</strong>입니다. 이 연령대는 SNS보다 지인 추천과 커뮤니티 활동에 훨씬 큰 영향을 받으며, 상공인 모임·종교 단체·지역 봉사활동에서의 직접 대면이 지지 전환율이 가장 높습니다. 캠프는 이 층이 참여하는 정기 모임 일정을 파악하고, 후보가 직접 참석하는 일정을 최우선으로 편성해야 합니다.
+      <br><br>
+      스윙보터(22%) 확보를 위해서는 <strong>"경제적 실익"을 구체적 숫자로 제시</strong>하는 것이 핵심입니다. "생활비를 절감하겠다"는 추상적 약속보다 "식료품비 월 15만원 절감 방안"처럼 체감 가능한 수치를 제시할 때 부동층 전환율이 2배 이상 높아집니다. 스윙보터는 중도·실용 성향이 강하며, 이념보다 생활 개선 가능성에 반응합니다.
+      <br><br>
+      청년층(18%)은 투표율이 가장 낮지만, 이들의 SNS 활동이 <strong>전체 선거 분위기를 형성</strong>하는 역할을 합니다. 청년층의 자발적 콘텐츠 생산을 유도하는 것이 비용 대비 가장 효율적인 온라인 전략입니다. 60세 이상(25%)은 <strong>조직 투표 성향이 가장 강해</strong>, 커뮤니티 리더 1명의 지지 선언이 수백 표를 움직일 수 있으므로, 이 연령대의 핵심 인플루언서 확보를 조기에 추진해야 합니다.
     </div>
   </div>
 
@@ -609,15 +829,15 @@
         <div style="display:flex;flex-direction:column;gap:8px">
           <div style="padding:12px;background:#eff6ff;border-radius:8px;border-left:3px solid #2563eb">
             <div style="font-size:12px;font-weight:800;color:#1e40af;margin-bottom:4px">📈 상승 요인</div>
-            <div style="font-size:12px;color:#374151;line-height:1.65">경쟁 구도 심화 / 경제 이슈 강도 / 조직 동원력 강화 / SNS 선거 관심도 상승</div>
+            <div style="font-size:12px;color:#1e293b;line-height:1.65">경쟁 구도 심화 / 경제 이슈 강도 / 조직 동원력 강화 / SNS 선거 관심도 상승</div>
           </div>
           <div style="padding:12px;background:#fef2f2;border-radius:8px;border-left:3px solid #dc2626">
             <div style="font-size:12px;font-weight:800;color:#991b1b;margin-bottom:4px">📉 하락 요인</div>
-            <div style="font-size:12px;color:#374151;line-height:1.65">후보 차별성 부재 / 정치 불신 확산 / 이슈 부재 / 악천후·투표일 요인</div>
+            <div style="font-size:12px;color:#1e293b;line-height:1.65">후보 차별성 부재 / 정치 불신 확산 / 이슈 부재 / 악천후·투표일 요인</div>
           </div>
           <div style="padding:12px;background:#f0fdf4;border-radius:8px;border-left:3px solid #16a34a">
             <div style="font-size:12px;font-weight:800;color:#166534;margin-bottom:4px">👥 부동층 특성</div>
-            <div style="font-size:12px;color:#374151;line-height:1.65">중도·실용 성향 / 경제·생활 이슈 반응 / 선거 막판 2주 내 결정 비율 <strong>약 65%</strong></div>
+            <div style="font-size:12px;color:#1e293b;line-height:1.65">중도·실용 성향 / 경제·생활 이슈 반응 / 선거 막판 2주 내 결정 비율 <strong>약 65%</strong></div>
           </div>
         </div>
       </div>
@@ -628,6 +848,12 @@
       부동층의 <strong>약 65%가 선거 마지막 2주 내에 최종 결정</strong>합니다.
       이 기간의 메시지 집중도·미디어 노출이 가장 결정적입니다.
       초반 지지율 격차보다 <strong>막판 2주 캠페인 전략이 실제 결과를 좌우</strong>할 가능성이 높습니다.
+      <br><br>
+      이를 역으로 활용하면, 선거 초반에 다소 불리한 위치에 있더라도 <strong>막판 2주 전략을 잘 설계한 캠프가 역전할 수 있습니다.</strong> 따라서 캠프는 전체 선거 기간을 "인지도 구축 → 지지층 결집 → 부동층 전환"의 3단계로 구조화하고, 예산과 인력의 40% 이상을 마지막 2주에 집중 배분하는 전략이 효과적입니다.
+      <br><br>
+      투표율 상승 요인인 <strong>경쟁 구도 심화와 경제 이슈 강도</strong>는 캠프가 직접 조절할 수 있는 변수입니다. 경쟁이 치열할수록 중도층도 투표장에 나오기 때문에, 자신에게 유리한 의제를 전면에 부각시켜 경쟁 구도를 선명하게 만드는 것이 투표율을 끌어올리는 동시에 지지 기반을 넓히는 전략이 됩니다. 반면 <strong>후보 차별성 부재는 투표율 하락의 직접 원인</strong>이므로, 경쟁 후보와 명확히 구분되는 핵심 정책을 반드시 1~2개 선점해야 합니다.
+      <br><br>
+      부동층은 중도·실용 성향으로, 선거 막판 2주 내 결정하는 만큼 이 시기에 <strong>생활 밀착형 공약을 반복·강조</strong>하는 메시지 전략이 핵심입니다. 단일 메시지를 다양한 채널에서 일관되게 노출시키는 것이 분산된 메시지보다 훨씬 효과적임을 명심해야 합니다.
     </div>
   </div>
 
@@ -649,7 +875,7 @@
       <div class="type-badge" style="background:#fef3c7;color:#92400e;border-color:#d97706">⭐ 신인형</div>
       <div class="type-badge" style="background:#fef2f2;color:#991b1b;border-color:#dc2626">🔄 현직형</div>
       <div class="type-badge" style="background:#f5f3ff;color:#5b21b6;border-color:#7c3aed">🎓 전문형</div>
-      <div style="font-size:12px;color:#4b5563;display:flex;align-items:center;margin-left:4px">← 특정 후보 이름 대신 후보 유형으로 분석합니다</div>
+      <div style="font-size:12px;color:#1e293b;display:flex;align-items:center;margin-left:4px">← 특정 후보 이름 대신 후보 유형으로 분석합니다</div>
     </div>
 
     <div class="table-wrap">
@@ -667,7 +893,7 @@
           <tr>
             <td>
               <strong>💰 경제 선거</strong><br>
-              <span style="font-size:12px;color:#374151">생활비·일자리·경기회복 중심</span>
+              <span style="font-size:12px;color:#1e293b">생활비·일자리·경기회복 중심</span>
             </td>
             <td>
               <span class="frame-type-badge" style="background:#eff6ff;color:#1e40af">🏛️ 행정형</span>
@@ -677,12 +903,12 @@
               <span class="frame-type-badge" style="background:#fef3c7;color:#92400e">⭐ 신인형</span>
             </td>
             <td><span class="frame-prob" style="background:#dcfce7;color:#166534">35%</span></td>
-            <td style="font-size:12px;color:#374151">물가 불만 SNS 확산 중 · 생활비 이슈 상위권</td>
+            <td style="font-size:12px;color:#1e293b">물가 불만 SNS 확산 중 · 생활비 이슈 상위권</td>
           </tr>
           <tr>
             <td>
               <strong>🌀 세대교체 선거</strong><br>
-              <span style="font-size:12px;color:#374151">변화·혁신·새 인물 요구 중심</span>
+              <span style="font-size:12px;color:#1e293b">변화·혁신·새 인물 요구 중심</span>
             </td>
             <td>
               <span class="frame-type-badge" style="background:#f0fdf4;color:#166534">🔥 개혁형</span>
@@ -693,12 +919,12 @@
               <span class="frame-type-badge" style="background:#eff6ff;color:#1e40af">🏛️ 행정형</span>
             </td>
             <td><span class="frame-prob" style="background:#dbeafe;color:#1e40af">28%</span></td>
-            <td style="font-size:12px;color:#374151">청년층 정치 참여 증가 · 변화 요구 여론 확산</td>
+            <td style="font-size:12px;color:#1e293b">청년층 정치 참여 증가 · 변화 요구 여론 확산</td>
           </tr>
           <tr>
             <td>
               <strong>🛡️ 안정·검증 선거</strong><br>
-              <span style="font-size:12px;color:#374151">경험·신뢰·안정감 중심</span>
+              <span style="font-size:12px;color:#1e293b">경험·신뢰·안정감 중심</span>
             </td>
             <td>
               <span class="frame-type-badge" style="background:#fef2f2;color:#991b1b">🔄 현직형</span>
@@ -708,19 +934,19 @@
               <span class="frame-type-badge" style="background:#fef3c7;color:#92400e">⭐ 신인형</span>
             </td>
             <td><span class="frame-prob" style="background:#fef3c7;color:#92400e">25%</span></td>
-            <td style="font-size:12px;color:#374151">중장년·시니어층 안정 선호 확인</td>
+            <td style="font-size:12px;color:#1e293b">중장년·시니어층 안정 선호 확인</td>
           </tr>
           <tr>
             <td>
               <strong>🎓 이슈·전문성 선거</strong><br>
-              <span style="font-size:12px;color:#374151">특정 정책·전문 분야 이슈 중심</span>
+              <span style="font-size:12px;color:#1e293b">특정 정책·전문 분야 이슈 중심</span>
             </td>
             <td>
               <span class="frame-type-badge" style="background:#f5f3ff;color:#5b21b6">🎓 전문형</span>
             </td>
-            <td style="font-size:12px;color:#374151">일반 정치인 유형 전반</td>
-            <td><span class="frame-prob" style="background:#f1f5f9;color:#374151">12%</span></td>
-            <td style="font-size:12px;color:#374151">특정 돌발 이슈 발생 시 급변 가능</td>
+            <td style="font-size:12px;color:#1e293b">일반 정치인 유형 전반</td>
+            <td><span class="frame-prob" style="background:#f1f5f9;color:#1e293b">12%</span></td>
+            <td style="font-size:12px;color:#1e293b">특정 돌발 이슈 발생 시 급변 가능</td>
           </tr>
         </tbody>
       </table>
@@ -732,6 +958,12 @@
       그러나 어느 캠프가 어떤 프레임을 먼저 선점하느냐에 따라 판세가 달라집니다.
       자신에게 유리한 프레임을 선제 설정하는 캠프가 선거 주도권을 갖게 됩니다.
       <strong>프레임 설정의 골든 구간은 선거 공식 시작 후 초반 6주</strong>입니다.
+      <br><br>
+      경제 선거 프레임이 확정되면 <strong>행정형·현직형 후보가 구조적으로 유리</strong>합니다. 반면 신인형 후보라면 "기존 행정이 실패했기 때문에 새로운 리더십이 필요하다"는 논리를 통해 경제 선거 프레임을 세대교체 프레임과 결합하는 방식이 효과적입니다. 즉, 프레임 단순 수용이 아니라 <strong>복합 프레임 전략</strong>으로 대응해야 합니다.
+      <br><br>
+      세대교체 선거(28%) 프레임을 원하는 캠프는 청년층·변화 요구 층의 SNS 여론을 적극 활용해야 합니다. 온라인에서의 변화 요구 목소리를 증폭시키는 것이 프레임을 선점하는 가장 빠른 경로이며, 유명 인플루언서나 청년 커뮤니티와의 협력이 핵심 전술입니다.
+      <br><br>
+      주의할 점은 <strong>프레임은 선거 중반 이후 바꾸기 매우 어렵다</strong>는 것입니다. 초반 6주에 설정된 프레임이 유권자 인식에 고착되므로, 첫 공개 발언과 초기 정책 발표 내용이 곧 그 후보의 선거 프레임을 결정합니다. 캠프는 공식 선거 시작 전 내부적으로 "우리 선거의 핵심 프레임"을 명확히 결정하고 일관되게 실행해야 합니다.
     </div>
   </div>
 
@@ -758,15 +990,15 @@
           <div style="padding:16px;display:flex;flex-direction:column;gap:12px">
             <div style="padding:12px;background:#fffbeb;border-radius:8px;border-left:4px solid #f59e0b">
               <div style="font-size:13px;font-weight:800;color:#92400e;margin-bottom:5px">💰 생활비·물가 (87점)</div>
-              <div style="font-size:12px;color:#374151;line-height:1.65">식료품·연료·임대료 상승에 대한 직접적 불만. 소득 대비 생활비 비율이 높아 전 연령층에서 최우선 이슈로 부상.</div>
+              <div style="font-size:12px;color:#1e293b;line-height:1.65">식료품·연료·임대료 상승에 대한 직접적 불만. 소득 대비 생활비 비율이 높아 전 연령층에서 최우선 이슈로 부상.</div>
             </div>
             <div style="padding:12px;background:#f0fdf4;border-radius:8px;border-left:4px solid #16a34a">
               <div style="font-size:13px;font-weight:800;color:#166534;margin-bottom:5px">💼 일자리 창출 (82점)</div>
-              <div style="font-size:12px;color:#374151;line-height:1.65">청년층 취업난·중장년층 고용 불안이 겹치며 중요도 상승. 관광업 외 다양한 산업 유치 요구 증가.</div>
+              <div style="font-size:12px;color:#1e293b;line-height:1.65">청년층 취업난·중장년층 고용 불안이 겹치며 중요도 상승. 관광업 외 다양한 산업 유치 요구 증가.</div>
             </div>
             <div style="padding:12px;background:#fff7ed;border-radius:8px;border-left:4px solid #ea580c">
               <div style="font-size:13px;font-weight:800;color:#9a3412;margin-bottom:5px">🌺 관광 경제 (78점)</div>
-              <div style="font-size:12px;color:#374151;line-height:1.65">관광업 의존도 높은 경제 구조상 관광 회복 속도가 지역 전반에 직결. 사업자·서비스업 집중 관심.</div>
+              <div style="font-size:12px;color:#1e293b;line-height:1.65">관광업 의존도 높은 경제 구조상 관광 회복 속도가 지역 전반에 직결. 사업자·서비스업 집중 관심.</div>
             </div>
           </div>
         </div>
@@ -778,6 +1010,12 @@
       <strong>생활비·일자리·관광</strong>이 3대 핵심 이슈입니다.
       이 세 가지에 구체적인 정책 답변을 제시하는 캠프가 부동층을 흡수할 가능성이 높습니다.
       치안·환경 이슈는 현재 낮지만, <strong>특정 사건 발생 시 순위가 급등</strong>할 수 있어 상시 모니터링이 필요합니다.
+      <br><br>
+      생활비·물가(87점) 이슈에 대응할 때는 <strong>구체적인 절감 수치 제시</strong>가 핵심입니다. "물가를 잡겠다"는 선언보다 "임기 내 공공요금 인상률 3% 이하 억제", "지역 농산물 직거래 확대로 식료품비 10% 절감" 등 숫자로 약속하는 방식이 유권자 신뢰를 훨씬 높입니다. 전 연령층이 공감하는 이슈인 만큼 모든 연령대 집회와 콘텐츠의 공통 메시지로 활용해야 합니다.
+      <br><br>
+      일자리 창출(82점)은 청년층과 중장년층 모두에게 해당되지만 <strong>접근 방식을 달리해야</strong> 합니다. 청년층에게는 신규 산업 유치·창업 지원을, 중장년층에게는 기존 산업 안정화·재취업 지원을 강조하는 타겟 메시지 전략이 효과적입니다. 관광 경제(78점)는 사업자·서비스업 종사자에게 집중되므로, 이들 커뮤니티에서의 정책 발표 행사 개최가 직접적인 지지 전환으로 이어집니다.
+      <br><br>
+      치안·환경 이슈는 <strong>현재 낮지만 돌발 사건에 민감하게 반응</strong>하는 이슈입니다. 선거 기간 중 관련 사건이 발생하면 48시간 내에 후보의 입장과 대책을 발표하는 신속 대응 매뉴얼을 사전에 준비해야 합니다. 준비 없는 침묵은 "대책 없는 후보"라는 이미지로 굳어질 수 있습니다.
     </div>
   </div>
 
@@ -836,6 +1074,12 @@
       소규모 선거일수록 <strong>조직·커뮤니티 투표의 영향력이 절대적</strong>입니다.
       막판 2주는 "지지층 굳히기"와 "부동층 전환" 두 전략을 동시에 운영해야 합니다.
       조기 투표 마감 후 잔여 표 규모를 빠르게 파악하고 <strong>남은 유권자에게 집중하는 데이터 전략</strong>이 필요합니다.
+      <br><br>
+      조기 투표(~30%)는 조직력 강한 캠프의 핵심 무기입니다. <strong>조기 투표 시작 2일 전까지 지지층에게 "지금 바로 투표하러 가자"는 메시지를 최소 3회 이상 전달</strong>하는 것이 조기 투표율을 높이는 검증된 방법입니다. 문자·카카오톡·전화의 3채널을 병행하되, 개인화된 메시지가 단체 문자보다 응답률이 3배 높습니다.
+      <br><br>
+      커뮤니티 투표(±8%p)는 <strong>소수 핵심 리더를 통한 집단 행동 유도</strong>가 핵심입니다. 종교 지도자, 지역 상공회 임원, 아파트 부녀회장, 노인회 지회장 등 각 커뮤니티의 의사결정자 명단을 작성하고, 이들과 1대1 면담을 우선 추진해야 합니다. 커뮤니티 리더 1명의 지지 선언은 해당 그룹 내에서 평균 50~200표를 연쇄적으로 움직이는 효과가 있습니다.
+      <br><br>
+      조직 투표(~18%) 블록인 공무원·노조·협회는 투표율이 일반 유권자보다 <strong>15~20%p 높아 안정적인 득표 기반</strong>이 됩니다. 이 블록을 확보하면 선거 기반이 탄탄해지므로, 선거 초반 조직 접촉에 충분한 시간과 자원을 투자해야 합니다. 조직 블록은 정책 내용보다 <strong>후보의 신뢰성과 인간적 관계</strong>를 더 중시하므로, 직접 방문과 성실한 소통이 가장 효과적인 접근법입니다.
     </div>
   </div>
 
@@ -907,6 +1151,12 @@
       리스크는 <strong>예방이 대응보다 10배 효율적</strong>입니다.
       과거 발언·행적을 사전 검토하고, SNS 모니터링 체계를 구축하며,
       허위정보 대응 매뉴얼을 미리 준비해 두는 캠프가 막판 판세 흔들림을 최소화합니다.
+      <br><br>
+      캠프가 공식 선거 등록 전 반드시 해야 할 작업은 <strong>"자기 검증 먼저"</strong>입니다. 후보의 과거 발언·SNS 게시물·언론 인터뷰·공식 결정 기록을 전수 검토하고, 공격받을 수 있는 항목을 미리 목록화해야 합니다. SNS 이슈의 60%가 과거 발언·행적에서 비롯된다는 점을 고려하면, 이 작업은 리스크 예방의 가장 높은 ROI를 보장합니다.
+      <br><br>
+      D-45~D-30 구간에는 선두 후보에 대한 언론 집중 검증이 발생합니다. 이 시기를 앞두고 <strong>사전 포지셔닝 기사 3~5건을 전략적으로 배포</strong>하여 "이미 검증된 후보"라는 인식을 형성하는 것이 효과적입니다. 공격적인 의제 대신 신뢰·능력·성과를 중심으로 한 미디어 전략을 이 구간에 집중 운영해야 합니다.
+      <br><br>
+      허위정보 대응은 <strong>72시간 골든타임</strong>이 있습니다. 이 안에 공식 입장을 발표하지 않으면 허위 정보가 기정사실화되는 경향이 있습니다. 캠프는 "대변인 즉각 성명 → 후보 직접 해명 영상 → 팩트체크 문서 배포" 순서의 3단계 대응 프로토콜을 사전에 작성하고, 팀원 모두가 숙지해야 합니다. <strong>침묵은 인정으로 해석될 수 있으므로</strong> 반드시 즉각 대응 원칙을 지켜야 합니다.
     </div>
   </div>
 
@@ -997,6 +1247,12 @@
       캠페인 성공의 70%는 <strong>타이밍 관리</strong>에 달려 있습니다.
       이른 이슈 선점, 단계별 정책 발표, 막판 집중 투입 구조를 미리 설계하고 실행한 캠프가 항상 우위를 점합니다.
       온라인은 <strong>도달 범위</strong>를, 오프라인은 <strong>지지 확신</strong>을 담당하는 역할 분리 전략이 효과적입니다.
+      <br><br>
+      PHASE 1(D-90~D-60)에서 가장 흔한 실수는 <strong>너무 많은 정책을 동시에 발표</strong>하는 것입니다. 이 단계에서는 핵심 1~2개 정책만 선명하게 선점하고, 나머지는 다음 단계로 미루는 것이 효과적입니다. 유권자는 후보의 모든 공약을 기억하지 않습니다. 단 1개의 강력한 연상 키워드로 기억되는 캠프가 선거를 지배합니다.
+      <br><br>
+      PHASE 2(D-60~D-30)는 미디어 노출 최대화 구간입니다. 이 시기에 <strong>토론회 준비와 실전 훈련에 집중 투자</strong>해야 합니다. 토론회 1회의 파급력은 광고 예산 1,000만원과 맞먹는 효과가 있으며, 토론 준비가 부족한 후보는 이 구간에서 지지율이 급락하는 경향이 있습니다. 상대 후보의 예상 공격 포인트 20개를 미리 준비하고 답변을 숙지해야 합니다.
+      <br><br>
+      온라인 캠페인에서 <strong>Facebook·Instagram·카카오톡 3개 플랫폼에 집중</strong>하는 원칙은 매우 중요합니다. 유튜브·X(트위터)·블로그까지 분산 운영하면 모든 채널의 품질이 하락합니다. 60초 이내 영상이 텍스트 대비 도달률이 3배 이상이므로, 콘텐츠 제작의 70%를 영상에 할당하고 오전 7~9시·오후 6~9시 황금 시간대에 게시하는 루틴을 반드시 지켜야 합니다.
     </div>
   </div>
 
@@ -1028,7 +1284,171 @@
       </div>
     </div>
     <div id="s09-comparison" style="display:flex;flex-direction:column;gap:16px">
-      <!-- JavaScript에서 종합 비교 차트와 분석 생성 -->
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════ -->
+  <!-- S10: 후보 유형 자동 분류 -->
+  <!-- ═══════════════════════════════════ -->
+  <div class="ls-section card" id="s10">
+    <div class="ls-section-header ls-c8">
+      <div class="ls-section-num">10</div>
+      <div>
+        <div class="ls-section-title">후보 유형 자동 분류</div>
+        <div class="ls-section-desc">10개 메트릭 패턴으로 후보 유형 판별 · 선거 프레임(S03)과 자동 매칭하여 유리/불리 진단</div>
+      </div>
+    </div>
+    <div id="s10-content" style="display:flex;flex-direction:column;gap:16px">
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════ -->
+  <!-- S11: 메트릭 균형도 분석 -->
+  <!-- ═══════════════════════════════════ -->
+  <div class="ls-section card" id="s11">
+    <div class="ls-section-header ls-c9">
+      <div class="ls-section-num">11</div>
+      <div>
+        <div class="ls-section-title">메트릭 균형도 분석</div>
+        <div class="ls-section-desc">10개 지표 편차 분석 · 올라운더형(방어 강점) vs 뾰족형(프레임 선점 유리) 분류</div>
+      </div>
+    </div>
+    <div id="s11-content" style="display:flex;flex-direction:column;gap:16px">
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════ -->
+  <!-- S12: AI 모델 합의도 분석 -->
+  <!-- ═══════════════════════════════════ -->
+  <div class="ls-section card" id="s12">
+    <div class="ls-section-header ls-c10">
+      <div class="ls-section-num">12</div>
+      <div>
+        <div class="ls-section-title">AI 모델 합의도 분석</div>
+        <div class="ls-section-desc">Claude · ChatGPT · Gemini · Grok 4개 AI 평가 합의도 · 불일치 = 여론 변동성 신호</div>
+      </div>
+    </div>
+    <div id="s12-content" style="display:flex;flex-direction:column;gap:16px">
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════ -->
+  <!-- S13: 취약점 공격 노출도 -->
+  <!-- ═══════════════════════════════════ -->
+  <div class="ls-section card" id="s13">
+    <div class="ls-section-header ls-c11">
+      <div class="ls-section-num">13</div>
+      <div>
+        <div class="ls-section-title">취약점 공격 노출도</div>
+        <div class="ls-section-desc">후보별 하위 메트릭 + 경쟁자 대비 격차 → 공격 위험도 지수화 · 방어 우선순위 결정</div>
+      </div>
+    </div>
+    <div id="s13-content" style="display:flex;flex-direction:column;gap:16px">
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════ -->
+  <!-- S14: 역전 가능성 매트릭스 -->
+  <!-- ═══════════════════════════════════ -->
+  <div class="ls-section card" id="s14">
+    <div class="ls-section-header ls-c12">
+      <div class="ls-section-num">14</div>
+      <div>
+        <div class="ls-section-title">역전 가능성 매트릭스</div>
+        <div class="ls-section-desc">후보 간 격차 + 메트릭별 역전 가능 지표 수 → "어디서 몇 점 올리면 역전" 구체적 로드맵</div>
+      </div>
+    </div>
+    <div id="s14-content" style="display:flex;flex-direction:column;gap:16px">
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════ -->
+  <!-- S15: 강점 겹침·차별화 맵 -->
+  <!-- ═══════════════════════════════════ -->
+  <div class="ls-section card" id="s15">
+    <div class="ls-section-header ls-c13">
+      <div class="ls-section-num">15</div>
+      <div>
+        <div class="ls-section-title">강점 겹침·차별화 맵</div>
+        <div class="ls-section-desc">후보 간 강점 키워드 중복 분석 → 차별화 실패 vs 독점 포지션 식별</div>
+      </div>
+    </div>
+    <div id="s15-content" style="display:flex;flex-direction:column;gap:16px">
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════ -->
+  <!-- S16: 후보별 맞춤 승리 공식 (AI) -->
+  <!-- ═══════════════════════════════════ -->
+  <div class="ls-section card" id="s16">
+    <div class="ls-section-header ls-c14">
+      <div class="ls-section-num">16</div>
+      <div>
+        <div class="ls-section-title">후보별 맞춤 승리 공식</div>
+        <div class="ls-section-desc">업로드된 데이터 기반 → AI가 후보별 "이기려면 반드시 해야 할 3가지" 구체적 행동 제시</div>
+      </div>
+    </div>
+    <div id="s16-content" style="display:flex;flex-direction:column;gap:16px">
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════ -->
+  <!-- S17: 유권자 설득 메시지 설계 (AI) -->
+  <!-- ═══════════════════════════════════ -->
+  <div class="ls-section card" id="s17">
+    <div class="ls-section-header ls-c15">
+      <div class="ls-section-num">17</div>
+      <div>
+        <div class="ls-section-title">유권자 설득 메시지 설계</div>
+        <div class="ls-section-desc">강점 키워드 + 유권자 관심사 + 선거 프레임 → 세대별·이슈별 맞춤 메시지 자동 생성</div>
+      </div>
+    </div>
+    <div id="s17-content" style="display:flex;flex-direction:column;gap:16px">
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════ -->
+  <!-- S18: 공격 시나리오 사전 대비 (AI) -->
+  <!-- ═══════════════════════════════════ -->
+  <div class="ls-section card" id="s18">
+    <div class="ls-section-header ls-c16">
+      <div class="ls-section-num">18</div>
+      <div>
+        <div class="ls-section-title">공격 시나리오 사전 대비</div>
+        <div class="ls-section-desc">약점 메트릭 + 경쟁자 강점 → "이렇게 공격받으면 이렇게 방어하라" 시나리오 + 방어 화법</div>
+      </div>
+    </div>
+    <div id="s18-content" style="display:flex;flex-direction:column;gap:16px">
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════ -->
+  <!-- S19: 선거 판세 종합 내러티브 (AI) -->
+  <!-- ═══════════════════════════════════ -->
+  <div class="ls-section card" id="s19">
+    <div class="ls-section-header ls-c17">
+      <div class="ls-section-num">19</div>
+      <div>
+        <div class="ls-section-title">선거 판세 종합 내러티브</div>
+        <div class="ls-section-desc">전체 후보 데이터 + 선거구 정보 → 스토리텔링 형태의 판세 분석 내러티브</div>
+      </div>
+    </div>
+    <div id="s19-content" style="display:flex;flex-direction:column;gap:16px">
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════ -->
+  <!-- S20: 캠프 리더 브리핑 요약 (AI) -->
+  <!-- ═══════════════════════════════════ -->
+  <div class="ls-section card" id="s20">
+    <div class="ls-section-header ls-c7">
+      <div class="ls-section-num">20</div>
+      <div>
+        <div class="ls-section-title">캠프 리더 브리핑 요약</div>
+        <div class="ls-section-desc">모든 분석 결과 → A4 1장 분량 · 캠프 회의에서 바로 공유할 수 있는 핵심 브리핑 문서</div>
+      </div>
+    </div>
+    <div id="s20-content" style="display:flex;flex-direction:column;gap:16px">
     </div>
   </div>
 
@@ -1251,15 +1671,15 @@ function renderCustomAnalysis(a, district, fromCache) {
         <div style="display:flex;gap:16px;margin-bottom:12px;flex-wrap:wrap">
           <div style="text-align:center">
             <div style="font-size:22px;font-weight:900;color:#4f46e5">${vs.estimated_voters||'-'}</div>
-            <div style="font-size:12px;color:#4b5563">추정 유권자</div>
+            <div style="font-size:12px;color:#1e293b">추정 유권자</div>
           </div>
           <div style="text-align:center">
             <div style="font-size:22px;font-weight:900;color:#059669">${vs.turnout_estimate||'-'}</div>
-            <div style="font-size:12px;color:#4b5563">예상 투표율</div>
+            <div style="font-size:12px;color:#1e293b">예상 투표율</div>
           </div>
           <div style="text-align:center">
             <div style="font-size:22px;font-weight:900;color:#d97706">${vs.swing_voter_ratio||'-'}</div>
-            <div style="font-size:12px;color:#4b5563">스윙보터</div>
+            <div style="font-size:12px;color:#1e293b">스윙보터</div>
           </div>
         </div>
         ${groups}
@@ -1284,9 +1704,9 @@ function renderCustomAnalysis(a, district, fromCache) {
         </div>
         <div class="ls-frame-analysis">${fr.analysis||''}</div>
         <div class="ls-frame-types">
-          <span style="font-size:12px;font-weight:700;color:#374151;margin-right:4px">유리:</span>
+          <span style="font-size:12px;font-weight:700;color:#1e293b;margin-right:4px">유리:</span>
           <span class="ls-frame-fav">✅ ${fr.favorable_type||'-'}</span>
-          <span style="font-size:12px;font-weight:700;color:#374151;margin:0 4px">불리:</span>
+          <span style="font-size:12px;font-weight:700;color:#1e293b;margin:0 4px">불리:</span>
           <span class="ls-frame-unfav">⛔ ${fr.unfavorable_type||'-'}</span>
         </div>
       </div>
@@ -1320,7 +1740,7 @@ function renderCustomAnalysis(a, district, fromCache) {
 function renderCandidateAnalysis() {
   const data = getData();
   if (!data || !data.candidates || data.candidates.length === 0) {
-    document.getElementById('s08-candidates').innerHTML = '<p style="color:#999">업로드된 후보자 데이터가 없습니다.</p>';
+    document.getElementById('s08-candidates').innerHTML = '<p style="color:#1e293b">업로드된 후보자 데이터가 없습니다.</p>';
     return;
   }
 
@@ -1333,10 +1753,10 @@ function renderCandidateAnalysis() {
     const metrics = c.metrics || {};
     const rank = sorted.findIndex(x=>x.idx===idx) + 1;
 
-    // 강점/약점 분석
+    // 강점/약점 분석 (원본 변경 방지를 위해 spread)
     const metricEntries = Object.entries(metrics);
-    const strengths = metricEntries.sort(([,a], [,b]) => b - a).slice(0, 3);
-    const weaknesses = metricEntries.sort(([,a], [,b]) => a - b).slice(0, 2);
+    const strengths = [...metricEntries].sort(([,a], [,b]) => b - a).slice(0, 3);
+    const weaknesses = [...metricEntries].sort(([,a], [,b]) => a - b).slice(0, 2);
 
     // 선거 메시지 프레임 (강점 기반)
     const frameMsg = strengths.length > 0
@@ -1354,6 +1774,125 @@ function renderCandidateAnalysis() {
     else if (rank === 2) posMsg = '🥈 추격 가능 거리 - 강점 집중 공략';
     else posMsg = '🥉 역전 전략 필요 - 약점 보강 우선';
 
+    // 경쟁자 분석 데이터
+    const competitors = candidates.filter((_,i)=>i!==idx);
+    const leaderC = sorted[0];
+    const isLeader = rank === 1;
+    const targetAbove = sorted[rank-2]; // 바로 위 순위 후보
+    const totalGap = targetAbove ? Math.round((targetAbove.total_score||0)-(c.total_score||0)) : 0;
+
+    // 약점에서 경쟁자 최고 점수
+    const weakComp = weaknesses.map(([k,v]) => {
+      const maxC = Math.max(...competitors.map(comp => comp.metrics?.[k]||0));
+      return { name: k, my: Math.round(v), comp: Math.round(maxC), gap: Math.round(maxC - v) };
+    });
+
+    // 강점 우위 폭
+    const strongLead = strengths.map(([k,v]) => {
+      const maxC = Math.max(...competitors.map(comp => comp.metrics?.[k]||0));
+      return { name: k, lead: Math.round(v - maxC) };
+    });
+
+    // 역전 가능 메트릭 (8점 이내)
+    let reversibleMetrics = [];
+    if (!isLeader && targetAbove) {
+      METRICS.forEach(met => {
+        const gap = (targetAbove.metrics?.[met]||0) - (metrics[met]||0);
+        if (gap > 0 && gap <= 8) reversibleMetrics.push({ name: met, gap: Math.round(gap) });
+      });
+    }
+
+    // 전략적 방향 & 액션플랜 생성 (순위별 맞춤)
+    let strategyHTML = '';
+    if (isLeader) {
+      strategyHTML = `
+        <div style="font-size:13px;font-weight:800;color:${color.solid};margin-bottom:10px;display:flex;align-items:center;gap:6px">
+          🏆 ${c.name} 후보 전략적 방향 & 액션플랜
+          <span style="background:${color.light};padding:2px 8px;border-radius:10px;font-size:12px">선두 방어</span>
+        </div>
+        <div style="font-size:12px;color:#1e293b;line-height:1.85">
+          현재 <strong>${Math.round(c.total_score||0)}점으로 1위</strong>를 달리고 있으며, 2위와의 격차는 ${Math.round((c.total_score||0)-(sorted[1]?.total_score||0))}점입니다.
+          이 격차를 유지하면서 약점 공격에 대비하는 <strong>"방어형 확장" 전략</strong>이 최적입니다.
+          <br><br>
+          <strong>[액션 1] 약점 선제 예방 접종</strong><br>
+          가장 취약한 ${weakComp[0]?.name||'-'}(${weakComp[0]?.my||0}점)에서 경쟁자(${weakComp[0]?.comp||0}점)와 ${weakComp[0]?.gap||0}점 격차가 있습니다.
+          공격받기 전에 <strong>이 분야의 구체적 개선 노력을 먼저 공개</strong>하세요.
+          "부족한 부분을 인정하고 이렇게 보완하겠다"는 선제 발언이 공격 효과를 70% 이상 감쇄시킵니다.
+          예: 관련 분야 전문가 자문단 구성 발표, 구체적 정책 로드맵 선공개, 현장 방문 일정 공표 등.
+          <br><br>
+          <strong>[액션 2] 강점 프레임 독점</strong><br>
+          ${strongLead[0]?.name||'-'}에서 +${strongLead[0]?.lead||0}점 우위를 보유하고 있습니다.
+          이 강점을 선거의 <strong>핵심 평가 기준으로 프레임화</strong>하세요.
+          "이번 선거는 ${strongLead[0]?.name||'핵심 역량'}이 가장 중요한 선거"라는 메시지를 모든 채널에서 반복하면,
+          유권자가 자연스럽게 이 기준으로 후보를 비교하게 됩니다.
+          SNS에서 주 3회 이상 관련 콘텐츠를 게시하고, 오프라인 유세에서도 동일 키워드를 반복하세요.
+          <br><br>
+          <strong>[액션 3] 2위 추격자 동향 실시간 모니터링</strong><br>
+          2위 ${sorted[1]?.name||'경쟁자'}의 SNS·언론 동향을 매일 분석하세요.
+          상대가 새로운 프레임을 설정하려 할 때 <strong>48시간 이내에 대응 메시지</strong>를 발신해야 합니다.
+          특히 ${weakComp[0]?.name||'취약 지표'} 관련 공격이 예상되므로, 방어 Q&A 카드를 사전 제작하여 즉각 배포 체계를 구축하세요.
+        </div>`;
+    } else if (rank === 2) {
+      strategyHTML = `
+        <div style="font-size:13px;font-weight:800;color:${color.solid};margin-bottom:10px;display:flex;align-items:center;gap:6px">
+          🏆 ${c.name} 후보 전략적 방향 & 액션플랜
+          <span style="background:${color.light};padding:2px 8px;border-radius:10px;font-size:12px">역전 공략</span>
+        </div>
+        <div style="font-size:12px;color:#1e293b;line-height:1.85">
+          현재 <strong>2위(${Math.round(c.total_score||0)}점)</strong>로 1위 ${leaderC.name}과 ${totalGap}점 차이입니다.
+          ${totalGap <= 15 ? '이 격차는 충분히 역전 가능한 범위' : '격차가 있지만 전략적 집중으로 좁힐 수 있는 범위'}이며,
+          <strong>"선택과 집중" 역전 전략</strong>이 필요합니다.
+          <br><br>
+          <strong>[액션 1] 역전 가능 지표 집중 투자</strong><br>
+          ${reversibleMetrics.length > 0
+            ? `현재 ${reversibleMetrics.length}개 지표에서 8점 이내 격차로 역전이 가능합니다: ${reversibleMetrics.map(r=>`<strong>${r.name}(-${r.gap}점)</strong>`).join(', ')}.
+              이 지표들에 캠페인 자원의 <strong>50% 이상을 집중 배분</strong>하세요.
+              모든 지표를 올리려는 분산 전략은 가장 비효율적입니다.
+              구체적으로, 각 역전 가능 지표와 관련된 정책을 1개씩 발표하고 SNS·유세에서 집중 부각하세요.`
+            : `전 지표에서 격차가 크므로, 상위 강점(${strengths[0]?.[0]||'-'})을 극대화하여 "이 분야 1등" 이미지를 각인시키세요.`}
+          <br><br>
+          <strong>[액션 2] 1위 약점 의제화</strong><br>
+          ${leaderC.name}의 가장 약한 지표는 ${Object.entries(leaderC.metrics||{}).sort(([,a],[,b])=>a-b)[0]?.[0]||'-'}(${Math.round(Object.entries(leaderC.metrics||{}).sort(([,a],[,b])=>a-b)[0]?.[1]||0)}점)입니다.
+          직접 공격보다 <strong>"이 분야가 왜 중요한지"를 유권자에게 설득</strong>하는 의제 설정 방식이 효과적입니다.
+          토론회에서 이 이슈를 핵심 질문으로 던지고, SNS에서 관련 콘텐츠를 주 2회 이상 게시하세요.
+          "공격"이 아니라 "중요한 이슈 제기"로 포지셔닝하면 부정적 반작용 없이 상대 약점을 부각할 수 있습니다.
+          <br><br>
+          <strong>[액션 3] 차별화 독점 강점 구축</strong><br>
+          ${strongLead[0]?.name||'-'}에서 ${strongLead[0]?.lead > 0 ? '+'+strongLead[0]?.lead+'점 우위가' : '경쟁력이'} 있습니다.
+          이 강점을 <strong>"이 후보만의 것"으로 각인</strong>시키세요.
+          구체적 실적·사례를 카드뉴스·영상으로 제작하고, "이 분야만큼은 ${c.name}"이라는 슬로건을 반복 사용하세요.
+          종합 순위보다 특정 분야 1등이 유권자에게 더 강하게 각인됩니다.
+        </div>`;
+    } else {
+      strategyHTML = `
+        <div style="font-size:13px;font-weight:800;color:${color.solid};margin-bottom:10px;display:flex;align-items:center;gap:6px">
+          🏆 ${c.name} 후보 전략적 방향 & 액션플랜
+          <span style="background:${color.light};padding:2px 8px;border-radius:10px;font-size:12px">차별화 돌파</span>
+        </div>
+        <div style="font-size:12px;color:#1e293b;line-height:1.85">
+          현재 <strong>${rank}위(${Math.round(c.total_score||0)}점)</strong>로, 종합 순위에서의 역전보다
+          <strong>"특정 분야 독보적 1등"</strong> 포지션을 구축하는 것이 현실적이고 효과적인 전략입니다.
+          <br><br>
+          <strong>[액션 1] 독점 포지션 구축</strong><br>
+          최고 강점인 ${strengths[0]?.[0]||'-'}(${Math.round(strengths[0]?.[1]||0)}점)을 중심으로
+          <strong>"이 분야 전문가"</strong> 이미지를 집중 구축하세요.
+          이 지표와 관련된 구체적 실적·경험·정책을 매일 1건씩 SNS에 게시하고,
+          현장 방문·간담회를 주 2회 이상 진행하여 "현장 전문가" 이미지를 강화하세요.
+          유권자는 "모든 것을 잘하는 후보"보다 <strong>"이것 하나만큼은 확실한 후보"</strong>를 더 잘 기억합니다.
+          <br><br>
+          <strong>[액션 2] 기존 구도 깨기 — 새로운 프레임 설정</strong><br>
+          현재 1위·2위 중심 구도를 깨려면, 기존과 다른 선거 의제를 제시해야 합니다.
+          ${weakComp[0]?.name||'하위 지표'}보다 <strong>자신이 압도적으로 강한 분야를 선거의 핵심 이슈로 격상</strong>시키세요.
+          "이번 선거의 진짜 쟁점은 ${strengths[0]?.[0]||'이것'}입니다"라는 메시지로 토론의 축을 바꾸면,
+          기존 1·2위 간 경쟁 구도가 흔들리면서 새로운 기회가 열립니다.
+          <br><br>
+          <strong>[액션 3] 약점 최소 노출 + 강점 극대화 자원 배분</strong><br>
+          한정된 캠페인 자원을 <strong>강점 70% / 약점 방어 20% / 기타 10%</strong>로 배분하세요.
+          약점(${weaknesses[0]?.[0]||'-'}, ${weaknesses[1]?.[0]||'-'})은 "보완 중"이라는 메시지만 유지하되 깊이 들어가지 마세요.
+          대신 강점 분야에서 <strong>압도적 차이</strong>를 만들어, 유권자가 "이 분야만큼은 ${c.name}"이라고 떠올리게 하는 것이 목표입니다.
+        </div>`;
+    }
+
     return `
       <div style="border-left:5px solid ${color.solid};padding:20px;background:${color.bg};border-radius:8px">
         <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:16px">
@@ -1363,7 +1902,7 @@ function renderCandidateAnalysis() {
         </div>
 
         <div style="margin-bottom:14px;padding:10px;background:white;border-radius:6px;border-left:3px solid ${color.solid}">
-          <div style="font-size:12px;color:#666;margin-bottom:3px">📊 경쟁 위치</div>
+          <div style="font-size:12px;color:#1e293b;margin-bottom:3px">📊 경쟁 위치</div>
           <div style="font-size:13px;font-weight:700;color:${color.solid}">${posMsg}</div>
         </div>
 
@@ -1372,19 +1911,23 @@ function renderCandidateAnalysis() {
           <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px">
             ${strengths.map(([k,v]) => `<span style="background:${color.light};padding:4px 10px;border-radius:4px;font-size:12px;font-weight:600">${k} (${Math.round(v)}점)</span>`).join('')}
           </div>
-          <div style="font-size:12px;color:#666;background:#f8fafc;padding:8px;border-radius:4px;line-height:1.5">
+          <div style="font-size:12px;color:#1e293b;background:#f8fafc;padding:8px;border-radius:4px;line-height:1.5">
             📢 <strong>선거 메시지:</strong> ${frameMsg}
           </div>
         </div>
 
-        <div>
+        <div style="margin-bottom:14px">
           <div style="font-size:12px;font-weight:700;color:#333;margin-bottom:8px">⚠️ 약점 (하위 2개) & 개선 과제</div>
           <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px">
             ${weaknesses.map(([k,v]) => `<span style="background:#fee2e2;padding:4px 10px;border-radius:4px;font-size:12px;font-weight:600">${k} (${Math.round(v)}점)</span>`).join('')}
           </div>
-          <div style="font-size:12px;color:#666;background:#fef2f2;padding:8px;border-radius:4px;line-height:1.5">
+          <div style="font-size:12px;color:#1e293b;background:#fef2f2;padding:8px;border-radius:4px;line-height:1.5">
             🎯 <strong>판세 대응:</strong> ${riskMsg}
           </div>
+        </div>
+
+        <div style="padding:16px;background:white;border-radius:8px;border:1px solid ${color.border};border-top:3px solid ${color.solid}">
+          ${strategyHTML}
         </div>
       </div>
     `;
@@ -1397,7 +1940,7 @@ function renderCandidateAnalysis() {
 function renderComparisonAnalysis() {
   const data = getData();
   if (!data || !data.candidates || data.candidates.length === 0) {
-    document.getElementById('s09-comparison').innerHTML = '<p style="color:#999">업로드된 후보자 데이터가 없습니다.</p>';
+    document.getElementById('s09-comparison').innerHTML = '<p style="color:#1e293b">업로드된 후보자 데이터가 없습니다.</p>';
     return;
   }
 
@@ -1417,11 +1960,11 @@ function renderComparisonAnalysis() {
           const gap = (c.total_score||0) - nextScore;
           return `
             <div style="text-align:center;padding:12px;background:${colors[c.idx%5].bg};border-radius:6px;border:2px solid ${colors[c.idx%5].border}">
-              <div style="font-size:12px;color:#666;margin-bottom:4px">순위</div>
+              <div style="font-size:12px;color:#1e293b;margin-bottom:4px">순위</div>
               <div style="font-size:20px;font-weight:900;color:${colors[c.idx%5].solid}">${rank+1}</div>
               <div style="font-size:13px;font-weight:700;margin:8px 0">${c.name}</div>
               <div style="font-size:18px;font-weight:900;color:${colors[c.idx%5].solid}">${Math.round(c.total_score||0)}</div>
-              ${rank < candidates.length-1 ? `<div style="font-size:12px;color:#999;margin-top:6px">↓ ${Math.round(gap)}점</div>` : ''}
+              ${rank < candidates.length-1 ? `<div style="font-size:12px;color:#1e293b;margin-top:6px">↓ ${Math.round(gap)}점</div>` : ''}
             </div>
           `;
         }).join('')}
@@ -1456,7 +1999,7 @@ function renderComparisonAnalysis() {
           <div style="display:flex;align-items:center;gap:10px;padding:6px;border-bottom:1px solid #eee">
             <span style="font-weight:700;min-width:120px">${m.m}</span>
             <span style="background:${m.leader.color};color:white;padding:2px 8px;border-radius:3px;font-weight:600">${m.leader.name}</span>
-            <span style="color:#666">+${Math.round(m.gap)}점</span>
+            <span style="color:#1e293b">+${Math.round(m.gap)}점</span>
             <span style="margin-left:auto">${m.intensity}</span>
           </div>
         `).join('')}
@@ -1476,16 +2019,16 @@ function renderComparisonAnalysis() {
           <div style="padding:12px;background:#fff3cd;border-radius:6px;border-left:4px solid #ffc107">
             <div style="font-weight:700;margin-bottom:6px">🔴 무주공산 (치열한 경쟁)</div>
             <div style="font-size:12px;line-height:1.6">
-              ${fierce.length > 0 ? fierce.map(m => `<div>· ${m.m}</div>`).join('') : '<div style="color:#999">없음</div>'}
+              ${fierce.length > 0 ? fierce.map(m => `<div>· ${m.m}</div>`).join('') : '<div style="color:#1e293b">없음</div>'}
             </div>
-            <div style="font-size:12px;color:#666;margin-top:6px">단 1~2점 차이로 승패 결정</div>
+            <div style="font-size:12px;color:#1e293b;margin-top:6px">단 1~2점 차이로 승패 결정</div>
           </div>
           <div style="padding:12px;background:#d4edda;border-radius:6px;border-left:4px solid #28a745">
             <div style="font-weight:700;margin-bottom:6px">🔵 차별화 지점 (압도적 우위)</div>
             <div style="font-size:12px;line-height:1.6">
-              ${dominant.length > 0 ? dominant.map(m => `<div>· ${m.m}</div>`).join('') : '<div style="color:#999">없음</div>'}
+              ${dominant.length > 0 ? dominant.map(m => `<div>· ${m.m}</div>`).join('') : '<div style="color:#1e293b">없음</div>'}
             </div>
-            <div style="font-size:12px;color:#666;margin-top:6px">선택적 차별화 자산</div>
+            <div style="font-size:12px;color:#1e293b;margin-top:6px">선택적 차별화 자산</div>
           </div>
         </div>
       </div>
@@ -1509,7 +2052,7 @@ function renderComparisonAnalysis() {
                 <span style="font-size:16px;font-weight:900;color:${colors[c.idx%5].solid}">${Math.round(c.total_score||0)}점</span>
               </div>
               ${i < candidates.length - 1 ? `
-                <div style="font-size:12px;color:#666">
+                <div style="font-size:12px;color:#1e293b">
                   ↓ 다음 순위와의 격차: <strong>${Math.round(gap)}점</strong>
                   ${reversible ? `<span style="color:#d97706"> · 역전 가능 범위</span>` : ''}
                 </div>
@@ -1521,8 +2064,1674 @@ function renderComparisonAnalysis() {
     </div>
   ` : '';
 
-  const html = rankHTML + metrixHTML + gapAnalysis + competitionHTML;
+  // ── 후보별 종합 비교 분석 & 전략 가이드 (200단어) ──
+  const candidateGuideHTML = candidates.map((c, rank) => {
+    const color = colors[c.idx % 5];
+    const m = c.metrics || {};
+    const totalScore = Math.round(c.total_score || 0);
+    const isLeader = rank === 0;
+
+    // 이 후보가 1위인 지표 / 꼴찌인 지표
+    const leadingMetrics = metricWinners.filter(mw => mw.leader.name === c.name);
+    const trailingMetrics = METRICS.filter(met => {
+      const scores = candidates.map(x => x.metrics?.[met]||0);
+      const minScore = Math.min(...scores);
+      return (m[met]||0) === minScore && candidates.length > 1;
+    });
+
+    // 강점/약점 상위·하위
+    const top3 = Object.entries(m).sort(([,a],[,b])=>b-a).slice(0,3);
+    const bot2 = Object.entries(m).sort(([,a],[,b])=>a-b).slice(0,2);
+
+    // 경쟁자 대비 분석
+    const others = candidates.filter(x => x.idx !== c.idx);
+    const avgScore = Math.round(others.reduce((s,x)=>s+(x.total_score||0),0) / (others.length||1));
+    const vsAvg = totalScore - avgScore;
+
+    // 치열한 경쟁 지표에서 이 후보의 위치
+    const fierceMetrics = metricWinners.filter(mw =>
+      mw.intensity.includes('매우치열') || mw.intensity.includes('치열')
+    );
+    const fierceAdvantage = fierceMetrics.filter(fm => fm.leader.name === c.name);
+    const fierceDisadvantage = fierceMetrics.filter(fm => fm.leader.name !== c.name);
+
+    // 압도적 우위 지표
+    const dominantOwned = metricWinners.filter(mw =>
+      mw.intensity.includes('압도적') && mw.leader.name === c.name
+    );
+
+    // 바로 위 순위 후보와의 격차 분석
+    const above = rank > 0 ? candidates[rank-1] : null;
+    const gapToAbove = above ? Math.round((above.total_score||0) - totalScore) : 0;
+    const below = rank < candidates.length-1 ? candidates[rank+1] : null;
+    const gapToBelow = below ? Math.round(totalScore - (below.total_score||0)) : 0;
+
+    // 역전 가능 지표
+    let reversibleUp = [];
+    if (above) {
+      METRICS.forEach(met => {
+        const gap = (above.metrics?.[met]||0) - (m[met]||0);
+        if (gap > 0 && gap <= 8) reversibleUp.push({ name: met, gap: Math.round(gap) });
+      });
+    }
+
+    // 전략 방향 결정
+    let stratLabel, stratColor, stratBg;
+    if (rank === 0) { stratLabel = '선두 수성'; stratColor = '#166534'; stratBg = '#dcfce7'; }
+    else if (gapToAbove <= 15) { stratLabel = '역전 가능'; stratColor = '#92400e'; stratBg = '#fef3c7'; }
+    else { stratLabel = '차별화 돌파'; stratColor = '#991b1b'; stratBg = '#fee2e2'; }
+
+    return `
+      <div style="background:white;border:1px solid #e2e8f0;border-radius:8px;padding:20px;border-left:5px solid ${color.solid}">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px">
+          <div style="display:flex;align-items:center;gap:10px">
+            <span style="font-size:18px;font-weight:900;color:${color.solid}">${rank+1}위 ${c.name}</span>
+            <span style="font-size:16px;font-weight:900;color:${color.solid}">${totalScore}점</span>
+            <span style="padding:3px 10px;border-radius:12px;font-size:12px;font-weight:700;background:${stratBg};color:${stratColor}">${stratLabel}</span>
+          </div>
+          <span style="font-size:12px;color:#1e293b">경쟁자 평균 대비 <strong style="color:${vsAvg>=0?'#16a34a':'#dc2626'}">${vsAvg>=0?'+':''}${vsAvg}점</strong></span>
+        </div>
+
+        <!-- 비교 지표 요약 -->
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px;margin-bottom:14px">
+          <div style="text-align:center;padding:8px;background:#f0fdf4;border-radius:6px">
+            <div style="font-size:18px;font-weight:900;color:#16a34a">${leadingMetrics.length}</div>
+            <div style="font-size:12px;font-weight:700;color:#166534">1위 지표</div>
+          </div>
+          <div style="text-align:center;padding:8px;background:#fef3c7;border-radius:6px">
+            <div style="font-size:18px;font-weight:900;color:#d97706">${fierceAdvantage.length}</div>
+            <div style="font-size:12px;font-weight:700;color:#92400e">치열 영역 선점</div>
+          </div>
+          <div style="text-align:center;padding:8px;background:#ede9fe;border-radius:6px">
+            <div style="font-size:18px;font-weight:900;color:#7c3aed">${dominantOwned.length}</div>
+            <div style="font-size:12px;font-weight:700;color:#5b21b6">압도적 우위</div>
+          </div>
+          <div style="text-align:center;padding:8px;background:#fee2e2;border-radius:6px">
+            <div style="font-size:18px;font-weight:900;color:#dc2626">${trailingMetrics.length}</div>
+            <div style="font-size:12px;font-weight:700;color:#991b1b">최하위 지표</div>
+          </div>
+        </div>
+
+        <!-- 비교 분석 핵심 -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
+          <div style="padding:10px;background:#f0fdf4;border-radius:6px;border-left:3px solid #16a34a">
+            <div style="font-size:12px;font-weight:800;color:#166534;margin-bottom:5px">✅ 경쟁 우위 영역</div>
+            <div style="font-size:12px;color:#1e293b;line-height:1.6">
+              ${leadingMetrics.length > 0
+                ? leadingMetrics.map(lm => `<div>· <strong>${lm.m}</strong> (+${Math.round(lm.gap)}점 우위${lm.intensity.includes('압도') ? ' 🔵압도적' : ''})</div>`).join('')
+                : '<div style="color:#1e293b">없음 — 모든 지표에서 경쟁자에 뒤처짐</div>'}
+            </div>
+          </div>
+          <div style="padding:10px;background:#fee2e2;border-radius:6px;border-left:3px solid #dc2626">
+            <div style="font-size:12px;font-weight:800;color:#991b1b;margin-bottom:5px">⚠️ 경쟁 열위 영역</div>
+            <div style="font-size:12px;color:#1e293b;line-height:1.6">
+              ${fierceDisadvantage.length > 0 || trailingMetrics.length > 0
+                ? [...new Set([...fierceDisadvantage.map(fd=>fd.m), ...trailingMetrics])].slice(0,4).map(met => {
+                    const myVal = Math.round(m[met]||0);
+                    const bestVal = Math.round(Math.max(...others.map(o=>o.metrics?.[met]||0)));
+                    return `<div>· <strong>${met}</strong> (${myVal}점, 최고 ${bestVal}점, -${bestVal-myVal}점)</div>`;
+                  }).join('')
+                : '<div style="color:#1e293b">없음 — 전 지표 경쟁력 확보</div>'}
+            </div>
+          </div>
+        </div>
+
+        <!-- 전략 가이드 & 액션플랜 200단어 -->
+        <div style="padding:16px;background:linear-gradient(135deg,#f8fafc,${color.bg});border-radius:8px;border:1px solid ${color.border};border-top:3px solid ${color.solid}">
+          <div style="font-size:13px;font-weight:800;color:${color.solid};margin-bottom:10px;display:flex;align-items:center;gap:6px">
+            📋 ${c.name} 종합 판세 진단 & 전략 가이드
+          </div>
+          <div style="font-size:12px;color:#1e293b;line-height:1.85">
+            ${rank === 0 ? `
+              <strong>${c.name} 후보는 현재 종합 ${totalScore}점으로 1위</strong>를 달리고 있으며, 10개 지표 중 <strong>${leadingMetrics.length}개에서 1위</strong>를 차지하고 있습니다.
+              ${gapToBelow <= 15
+                ? `그러나 2위와의 격차가 ${gapToBelow}점에 불과하여 <strong>안심할 수 없는 초접전 상황</strong>입니다. 선거 막판 단 하나의 이슈로도 역전될 수 있는 범위이므로, 방심은 곧 패배입니다.`
+                : `2위와 ${gapToBelow}점 격차로 비교적 안정적이나, 격차가 줄어드는 추세를 보인다면 <strong>즉각적인 전략 수정</strong>이 필요합니다.`}
+              <br><br>
+              <strong>[핵심 과제] 약점 방어 + 프레임 유지</strong><br>
+              가장 취약한 ${bot2[0]?.[0]||'-'}(${Math.round(bot2[0]?.[1]||0)}점)은 경쟁 캠프의 <strong>1순위 공격 대상</strong>입니다.
+              이 지표 관련 구체적 개선 실적을 <strong>선제적으로 공개</strong>하여 공격 효과를 사전에 차단하세요.
+              예: 관련 분야 전문가 자문단 구성 발표, 현장 방문 영상 공개, 구체적 수치 목표 제시 등.
+              ${fierceDisadvantage.length > 0 ? `치열한 경쟁 영역(${fierceDisadvantage.map(f=>f.m).join(', ')})에서는 1~3점 차이로 역전될 수 있으므로, 해당 분야 관련 <strong>정책 콘텐츠를 주 2회 이상</strong> 발신하여 우위를 유지하세요.` : ''}
+              <br><br>
+              <strong>[자원 배분] 강점 유지 50% / 약점 방어 30% / 2위 견제 20%</strong><br>
+              ${dominantOwned.length > 0 ? `압도적 우위 지표(${dominantOwned.map(d=>d.m).join(', ')})는 자연스럽게 유지되므로 과투자하지 마세요.` : '1위 지표를 유지하면서도'}
+              약점 보강에 자원을 집중하고, 2위의 프레임 전환 시도를 <strong>48시간 이내에 대응</strong>하는 모니터링 체계를 구축하세요.
+              현장 유세에서는 "검증된 리더십"을, SNS에서는 "구체적 성과 수치"를 메인 메시지로 사용하세요.
+            ` : gapToAbove <= 15 ? `
+              <strong>${c.name} 후보는 현재 ${rank+1}위(${totalScore}점)</strong>로, ${rank}위와 <strong>${gapToAbove}점 격차</strong>입니다.
+              이 격차는 <strong>충분히 역전 가능한 범위</strong>이며, 전략적 집중을 통해 판세를 뒤집을 수 있습니다.
+              10개 지표 중 ${leadingMetrics.length}개에서 1위를 확보하고 있어 부분적 경쟁력은 입증되었습니다.
+              <br><br>
+              <strong>[핵심 과제] 역전 가능 지표 집중 공략</strong><br>
+              ${reversibleUp.length > 0
+                ? `현재 ${reversibleUp.length}개 지표에서 8점 이내 격차로 역전 가능합니다: ${reversibleUp.slice(0,3).map(r=>`<strong>${r.name}(-${r.gap}점)</strong>`).join(', ')}.
+                  이 지표들에 캠페인 자원의 <strong>최소 50%를 집중 배분</strong>하세요.
+                  각 지표와 연결된 구체적 정책을 1개씩 발표하고, 관련 현장 활동을 주 2회 이상 진행하세요.`
+                : `전 지표에서 격차가 크므로, 최고 강점(${top3[0]?.[0]||'-'})을 극대화하여 "이 분야 1등" 이미지를 각인시키세요.`}
+              <br><br>
+              <strong>[프레임 전환] 유리한 의제로 선거 축 이동</strong><br>
+              ${leadingMetrics.length > 0
+                ? `${leadingMetrics[0].m}에서 +${Math.round(leadingMetrics[0].gap)}점 우위가 있으므로, "이번 선거의 핵심은 ${leadingMetrics[0].m}"이라는 <strong>의제 설정</strong>을 주도하세요.`
+                : `${top3[0]?.[0]||'핵심 강점'}을 중심으로 새로운 선거 의제를 제시하세요.`}
+              토론회·SNS·언론 인터뷰에서 이 프레임을 일관되게 반복하면, 종합 순위와 관계없이 <strong>"이 분야 전문가"</strong>로 포지셔닝할 수 있습니다.
+              <br><br>
+              <strong>[자원 배분] 역전 지표 50% / 강점 극대화 30% / 약점 최소방어 20%</strong><br>
+              약점(${bot2[0]?.[0]||'-'})은 "보완 중"이라는 메시지만 유지하되 깊이 들어가지 마세요.
+              ${gapToBelow > 0 ? `동시에 ${rank+2}위(${below?.name||''})의 추격도 주시하세요 — 아래와의 격차 ${gapToBelow}점도 관리해야 합니다.` : ''}
+            ` : `
+              <strong>${c.name} 후보는 현재 ${rank+1}위(${totalScore}점)</strong>로, ${rank}위와 <strong>${gapToAbove}점 격차</strong>가 있습니다.
+              종합 순위에서의 역전보다 <strong>"특정 분야 독보적 전문가"</strong> 포지션을 구축하는 것이 현실적이고 효과적입니다.
+              ${leadingMetrics.length > 0 ? `${leadingMetrics.length}개 지표에서 1위를 확보하고 있어, 이 영역을 기반으로 차별화할 수 있습니다.` : '현재 1위 지표가 없으므로, 가장 강한 영역에서 독보적 위치를 만들어야 합니다.'}
+              <br><br>
+              <strong>[핵심 과제] 기존 구도 깨기 — 새로운 프레임 제시</strong><br>
+              현재 1~2위 중심의 경쟁 구도를 그대로 두면 불리합니다.
+              ${top3[0]?.[0]||'최고 강점'}(${Math.round(top3[0]?.[1]||0)}점)을 중심으로 <strong>"이번 선거의 진짜 쟁점은 ${top3[0]?.[0]||'이것'}"</strong>이라는 새로운 의제를 제시하세요.
+              기존 1·2위 간 경쟁 축과 다른 축을 만들어, <strong>자신이 유리한 경쟁 구도</strong>를 새롭게 설정하는 것이 핵심입니다.
+              매일 1건씩 이 분야 관련 현장 활동·정책·콘텐츠를 게시하세요.
+              <br><br>
+              <strong>[약점 관리] 최소 노출 + 선제 인정</strong><br>
+              ${bot2[0]?.[0]||'-'}(${Math.round(bot2[0]?.[1]||0)}점)은 경쟁자 최고(${Math.round(Math.max(...others.map(o=>o.metrics?.[bot2[0]?.[0]]||0)))}점)와 격차가 큽니다.
+              이 영역에서의 공격에 대해 <strong>"부족함을 인정하되, 제 강점(${top3[0]?.[0]||'-'})으로 보완하겠다"</strong>는 솔직한 답변을 준비하세요.
+              약점을 숨기려 하면 더 큰 이슈가 됩니다 — 인정하고 대안을 제시하는 것이 3위 이하 후보에게 가장 효과적인 방어입니다.
+              <br><br>
+              <strong>[자원 배분] 강점 극대화 70% / 약점 최소방어 20% / 기타 10%</strong><br>
+              한정된 자원을 강점에 압도적으로 집중하여, 유권자가 "${c.name} = ${top3[0]?.[0]||'핵심 역량'}"을 떠올리게 만드는 것이 최종 목표입니다.
+            `}
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  const html = rankHTML + metrixHTML + gapAnalysis + competitionHTML + candidateGuideHTML;
   document.getElementById('s09-comparison').innerHTML = html;
+}
+
+/* ══════════════════════════════════════
+   S10~S15: 데이터 기반 도출 섹션
+   ══════════════════════════════════════ */
+
+/* ── S10: 후보 유형 자동 분류 ── */
+function renderCandidateTypes() {
+  const data = getData();
+  if (!data?.candidates?.length) { document.getElementById('s10-content').innerHTML = '<p style="color:#1e293b">업로드된 후보자 데이터가 없습니다.</p>'; return; }
+
+  const TYPE_RULES = [
+    { name: '비전 리더형', icon: '🚀', keys: ['비전명확성','리더십'], desc: '비전·리더십이 돋보이는 유형. 세대교체·변화 프레임에서 강점을 발휘합니다.', color: '#7c3aed', frameMatch: '세대교체 선거', frameFav: true },
+    { name: '도덕·청렴형', icon: '⚖️', keys: ['청렴성','윤리성'], desc: '도덕성·청렴성이 핵심 자산. 안정·검증 프레임에서 강한 신뢰를 얻습니다.', color: '#059669', frameMatch: '안정·검증 선거', frameFav: true },
+    { name: '실무 행정형', icon: '🏛️', keys: ['정책실행력','대응성'], desc: '정책 실행력과 대응성이 뛰어난 유형. 경제 선거 프레임에서 유리합니다.', color: '#2563eb', frameMatch: '경제 선거', frameFav: true },
+    { name: '소통 전문형', icon: '🎤', keys: ['소통능력','전문성'], desc: '소통력과 전문성을 겸비한 유형. 이슈·전문성 선거에서 두각을 나타냅니다.', color: '#d97706', frameMatch: '이슈·전문성 선거', frameFav: true },
+    { name: '공익 봉사형', icon: '🤝', keys: ['공익성','책임성'], desc: '공익성과 책임감이 강한 유형. 지역 밀착형 선거에서 신뢰를 구축합니다.', color: '#0891b2', frameMatch: '경제 선거', frameFav: false },
+  ];
+
+  function classifyCandidate(c) {
+    const m = c.metrics || {};
+    let best = { score: -1, type: TYPE_RULES[0] };
+    TYPE_RULES.forEach(t => {
+      const avg = t.keys.reduce((s,k) => s + (m[k]||0), 0) / t.keys.length;
+      if (avg > best.score) best = { score: avg, type: t };
+    });
+    return { ...best.type, score: best.score, topMetrics: best.type.keys.map(k=>({ name:k, val: m[k]||0 })) };
+  }
+
+  const colors = CANDIDATE_COLORS;
+  const cards = data.candidates.map((c, idx) => {
+    const ct = classifyCandidate(c);
+    return `
+      <div class="ctype-card" style="border-top-color:${ct.color}" data-icon="${ct.icon}">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px">
+          <span style="font-size:28px">${ct.icon}</span>
+          <div>
+            <span class="ctype-tag" style="background:${colors[idx%5].bg};color:${colors[idx%5].solid}">${c.name}</span>
+            <div class="ctype-name">${ct.name}</div>
+          </div>
+        </div>
+        <div class="ctype-desc">${ct.desc}</div>
+        <div style="margin-bottom:10px">
+          <div style="font-size:12px;font-weight:700;color:#1e293b;margin-bottom:5px">핵심 지표 점수</div>
+          <div class="ctype-metrics">
+            ${ct.topMetrics.map(m=>`<span class="ctype-metric-tag" style="border-left:3px solid ${ct.color}">${m.name} <strong>${Math.round(m.val)}점</strong></span>`).join('')}
+          </div>
+        </div>
+        <div style="padding:8px 12px;border-radius:6px;font-size:12px;line-height:1.55;background:${ct.frameFav?'#f0fdf4':'#fef2f2'};border-left:3px solid ${ct.frameFav?'#16a34a':'#dc2626'}">
+          <strong>${ct.frameMatch}</strong> 프레임에서 ${ct.frameFav?'✅ 유리':'⚠️ 주의'} — 유형 적합도 <strong>${Math.round(ct.score)}점</strong>
+        </div>
+      </div>`;
+  }).join('');
+
+  document.getElementById('s10-content').innerHTML = `
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px">${cards}</div>
+    <div class="ls-insight">
+      <strong>📊 핵심 인사이트</strong><br>
+      후보 유형은 선거 프레임과 직접 연결됩니다. <strong>자신의 유형에 유리한 프레임을 선점</strong>하는 것이 핵심 전략입니다.<br><br>
+      <strong>비전 리더형</strong> 후보는 "세대교체"와 "변화"를 선거의 핵심 의제로 설정하고, 젊은 유권자층과의 접점을 최대한 확대해야 합니다. 반대로 이 유형의 후보가 경험·안정 프레임에 끌려가면 즉시 불리해집니다.<br><br>
+      <strong>도덕·청렴형</strong> 후보는 네거티브 공세가 시작될 때 가장 강력한 방패를 갖고 있습니다. 다만 정책 실행력 부족이라는 공격에 대비해 구체적 실행 플랜을 준비해야 합니다.<br><br>
+      <strong>유형이 겹치는 후보</strong>가 있다면 같은 프레임에서 경쟁하게 되므로 <strong>차별화 포인트</strong>를 반드시 준비해야 합니다. 핵심 지표 점수 차이가 5점 이내라면 사실상 동일 유형으로 봐야 하며, 이 경우 스토리텔링과 현장 이미지로 차별화해야 합니다.<br><br>
+      캠프 전략 방향: 이번 주 안에 <strong>자신의 유형과 프레임 키워드 3개</strong>를 확정하고, 모든 공보물·SNS 메시지에 일관되게 반영하세요.
+    </div>`;
+}
+
+/* ── S11: 메트릭 균형도 분석 ── */
+function renderBalanceAnalysis() {
+  const data = getData();
+  if (!data?.candidates?.length) { document.getElementById('s11-content').innerHTML = '<p style="color:#1e293b">업로드된 후보자 데이터가 없습니다.</p>'; return; }
+
+  const colors = CANDIDATE_COLORS;
+
+  const results = data.candidates.map((c, idx) => {
+    const vals = METRICS.map(m => c.metrics?.[m] || 0);
+    const avg = vals.reduce((s,v)=>s+v,0) / vals.length;
+    const std = Math.sqrt(vals.reduce((s,v)=>s+Math.pow(v-avg,2),0) / vals.length);
+    const maxVal = Math.max(...vals);
+    const minVal = Math.min(...vals);
+    const range = maxVal - minVal;
+    // 균형도 점수: 표준편차가 낮을수록 100에 가까움 (0~100)
+    const balanceScore = Math.max(0, Math.round(100 - std * 5));
+    const type = balanceScore >= 70 ? '올라운더형' : balanceScore >= 45 ? '혼합형' : '뾰족형';
+    const typeColor = balanceScore >= 70 ? '#16a34a' : balanceScore >= 45 ? '#d97706' : '#7c3aed';
+    const typeBg = balanceScore >= 70 ? '#dcfce7' : balanceScore >= 45 ? '#fef3c7' : '#ede9fe';
+    const strategy = balanceScore >= 70
+      ? '전방위 방어에 강함. 약점 공격에 내성이 있으나, 뚜렷한 강점 어필이 과제'
+      : balanceScore >= 45
+      ? '강점과 약점이 공존. 강점 극대화 + 약점 최소 노출 전략 필요'
+      : '특정 분야 강점이 뚜렷. 해당 프레임 선점 시 유리하나, 약점 공격에 취약';
+
+    return { name: c.name, idx, balanceScore, type, typeColor, typeBg, std: std.toFixed(1), range, avg: avg.toFixed(1), maxVal, minVal, strategy };
+  });
+
+  const bars = results.map(r => `
+    <div class="balance-bar-wrap">
+      <div class="balance-bar-header">
+        <span class="balance-bar-name">${r.name}</span>
+        <span>
+          <span class="balance-bar-val" style="color:${colors[r.idx%5].solid}">${r.balanceScore}점</span>
+          <span class="balance-type-badge" style="background:${r.typeBg};color:${r.typeColor}">${r.type}</span>
+        </span>
+      </div>
+      <div class="balance-bar-track">
+        <div class="balance-bar-fill" style="width:${r.balanceScore}%;background:${colors[r.idx%5].solid}"></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;margin-top:5px;font-size:12px;color:#1e293b">
+        <span>평균 ${r.avg}점 · 편차 ${r.std} · 범위 ${r.range}점 (${Math.round(r.minVal)}~${Math.round(r.maxVal)})</span>
+        <span>${r.strategy}</span>
+      </div>
+    </div>`).join('');
+
+  document.getElementById('s11-content').innerHTML = `
+    <div style="background:white;border:1px solid var(--border);border-radius:var(--radius-sm);padding:20px">
+      <div style="font-size:13px;font-weight:800;color:#7e22ce;margin-bottom:16px">📐 균형도 점수 (100 = 완벽한 균형)</div>
+      ${bars}
+    </div>
+    <div class="ls-insight">
+      <strong>📊 핵심 인사이트</strong><br>
+      <strong>올라운더형</strong>은 네거티브 공방에서 방어력이 높고, <strong>뾰족형</strong>은 특정 프레임에서 독보적 존재감을 발휘합니다. 자신의 균형 유형에 맞는 전략을 택해야 합니다.<br><br>
+      <strong>올라운더형(균형도 70점 이상)</strong>은 "종합 역량" 메시지를 밀어야 합니다. 약점 공격이 들어와도 방어력이 높지만, 역으로 뚜렷한 강점이 없다는 비판에 취약합니다. 이를 극복하기 위해 <strong>"고르게 잘하는 것이 위기 대응력"</strong>이라는 프레임을 선점하세요. 구체적으로 다양한 분야 경험 사례를 1-2개씩 준비해 두면 효과적입니다.<br><br>
+      <strong>뾰족형(균형도 45점 미만)</strong>은 "이 분야만큼은 1등" 메시지를 밀어야 합니다. 표준편차가 클수록 약점 공격에 노출되기 쉬우므로, 하위 2개 메트릭에 대한 방어 논리를 반드시 준비해야 합니다. 강점은 극대화하되 약점은 "개선 중"이라는 메시지로 관리하세요.<br><br>
+      <strong>혼합형(45~70점)</strong>은 두 전략을 상황에 따라 병행해야 합니다. 상대 후보의 유형을 분석해서 올라운더와 대결할 때는 뾰족 전략을, 뾰족형과 대결할 때는 올라운더 전략을 구사하는 <strong>유연한 적응 전략</strong>이 유효합니다.
+    </div>`;
+}
+
+/* ── S12: AI 모델 합의도 분석 ── */
+function renderConsensusAnalysis() {
+  const data = getData();
+  if (!data?.candidates?.length) { document.getElementById('s12-content').innerHTML = '<p style="color:#1e293b">업로드된 후보자 데이터가 없습니다.</p>'; return; }
+
+  const colors = CANDIDATE_COLORS;
+
+  // AI 모델 점수가 있는지 확인
+  const hasAIScores = data.candidates.some(c => {
+    const scores = AI_MODELS.map(m => c.ai_scores?.[m] || 0).filter(v => v > 0);
+    return scores.length >= 2;
+  });
+
+  // 4개 평가 관점 (AI 점수 없을 때 메트릭 기반 대체)
+  const EVAL_PERSPECTIVES = [
+    { name: '역량 평가', icon: '💼', keys: ['정책실행력','전문성','대응성'], color: '#2563eb' },
+    { name: '인성 평가', icon: '⚖️', keys: ['청렴성','윤리성','책임성'], color: '#16a34a' },
+    { name: '리더십 평가', icon: '🚀', keys: ['리더십','비전명확성'], color: '#7c3aed' },
+    { name: '소통·공익 평가', icon: '🤝', keys: ['소통능력','공익성'], color: '#d97706' },
+  ];
+
+  const results = data.candidates.map((c, idx) => {
+    let analysisScores = [];
+    let scoreLabels = [];
+
+    if (hasAIScores) {
+      // AI 모델 점수 사용
+      const aiScores = AI_MODELS.map(m => c.ai_scores?.[m] || 0).filter(v => v > 0);
+      if (aiScores.length >= 2) {
+        analysisScores = aiScores;
+        scoreLabels = AI_MODELS.map((m,i) => ({ name: AI_LABELS[m], score: c.ai_scores?.[m] || 0, color: AI_COLORS[i] })).filter(s => s.score > 0);
+      }
+    }
+
+    // AI 점수가 없으면 메트릭 기반 4개 관점 분석
+    if (analysisScores.length < 2) {
+      const m = c.metrics || {};
+      analysisScores = EVAL_PERSPECTIVES.map(p => {
+        const vals = p.keys.map(k => m[k] || 0);
+        return Math.round(vals.reduce((s,v)=>s+v,0) / vals.length * 10); // 100점→1000점 스케일
+      });
+      scoreLabels = EVAL_PERSPECTIVES.map((p, i) => ({ name: `${p.icon} ${p.name}`, score: analysisScores[i], color: p.color }));
+    }
+
+    const avg = analysisScores.reduce((s,v)=>s+v,0) / analysisScores.length;
+    const std = Math.sqrt(analysisScores.reduce((s,v)=>s+Math.pow(v-avg,2),0) / analysisScores.length);
+    const consensus = Math.max(0, Math.round(100 - std / (hasAIScores ? 2 : 8)));
+
+    let label, color, bg;
+    if (consensus >= 85) { label = '높은 합의'; color = '#16a34a'; bg = '#dcfce7'; }
+    else if (consensus >= 65) { label = '보통 합의'; color = '#d97706'; bg = '#fef3c7'; }
+    else { label = '낮은 합의'; color = '#dc2626'; bg = '#fee2e2'; }
+
+    // 가장 높은 관점 / 가장 낮은 관점
+    const sortedLabels = [...scoreLabels].sort((a,b) => b.score - a.score);
+    const highest = sortedLabels[0];
+    const lowest = sortedLabels[sortedLabels.length - 1];
+    const spread = highest && lowest ? highest.score - lowest.score : 0;
+
+    return { name: c.name, idx, consensus, label, color, bg, modelScores: scoreLabels, avg: Math.round(avg), std: std.toFixed(1), highest, lowest, spread };
+  });
+
+  const modeLabel = hasAIScores ? 'AI 모델별 점수 기반' : '메트릭 기반 4개 관점 분석';
+
+  const gauges = results.map(r => {
+    const circumference = 2 * Math.PI * 32;
+    const offset = circumference - (r.consensus / 100) * circumference;
+    return `
+    <div class="consensus-card">
+      <div style="font-size:14px;font-weight:800;color:${colors[r.idx%5].solid};margin-bottom:8px">${r.name}</div>
+      <div class="consensus-gauge">
+        <svg width="80" height="80">
+          <circle cx="40" cy="40" r="32" stroke="#e2e8f0" stroke-width="6" fill="none"/>
+          <circle cx="40" cy="40" r="32" stroke="${r.color}" stroke-width="6" fill="none"
+            stroke-dasharray="${circumference}" stroke-dashoffset="${offset}" stroke-linecap="round"/>
+        </svg>
+        <div class="gauge-text" style="color:${r.color}">${r.consensus}</div>
+      </div>
+      <div style="margin-bottom:8px">
+        <span style="padding:3px 10px;border-radius:10px;font-size:12px;font-weight:700;background:${r.bg};color:${r.color}">${r.label}</span>
+      </div>
+      <div style="font-size:12px;color:#1e293b;margin-bottom:8px">평균 ${r.avg}점 · 편차 ${r.std}</div>
+      <div style="display:flex;flex-direction:column;gap:4px">
+        ${(r.modelScores||[]).map(ms => `
+          <div style="display:flex;align-items:center;gap:6px;font-size:12px">
+            <span style="width:8px;height:8px;border-radius:50%;background:${ms.color};flex-shrink:0"></span>
+            <span style="flex:1;text-align:left;font-weight:600">${ms.name}</span>
+            <span style="font-weight:900">${ms.score}</span>
+          </div>`).join('')}
+      </div>
+      ${r.highest && r.lowest ? `
+      <div style="margin-top:8px;padding-top:8px;border-top:1px solid #e2e8f0;font-size:12px;color:#1e293b;line-height:1.5">
+        <div>📈 최고: <strong style="color:#16a34a">${r.highest.name}</strong></div>
+        <div>📉 최저: <strong style="color:#dc2626">${r.lowest.name}</strong></div>
+        <div>📊 편차폭: <strong>${r.spread}점</strong></div>
+      </div>` : ''}
+    </div>`;
+  }).join('');
+
+  document.getElementById('s12-content').innerHTML = `
+    <div style="padding:8px 14px;background:#f5f3ff;border-radius:8px;border:1px solid #ddd6fe;margin-bottom:14px;font-size:12px;color:#5b21b6;font-weight:600;display:flex;align-items:center;gap:6px">
+      📊 분석 모드: <strong>${modeLabel}</strong>
+      ${!hasAIScores ? ' — AI 모델별 점수(ai_scores)가 없어, 10개 평가 지표를 4개 관점(역량·인성·리더십·소통공익)으로 묶어 합의도를 산출합니다.' : ''}
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px">${gauges}</div>
+
+    <!-- 후보별 합의도 전략 가이드 -->
+    ${results.map(r => {
+      const cc = colors[r.idx%5];
+      const high = r.highest?.name || '-';
+      const low = r.lowest?.name || '-';
+      const spread = r.spread || 0;
+      const cons = r.consensus;
+
+      let guideHTML = '';
+      if (cons >= 85) {
+        guideHTML = `
+          <strong>${r.name} 후보는 합의도 ${cons}점으로 "높은 합의"</strong> 상태입니다. 어떤 관점에서 평가하든 비슷한 결과가 나온다는 뜻으로, <strong>유권자 인식이 이미 안정적으로 형성</strong>되어 있습니다. 이 상태의 최대 장점은 여론 변동에 강하다는 것이며, 최대 위험은 안정감에 안주하여 관리를 소홀히 하는 것입니다.
+          <br><br>
+          <strong>[액션 1] 이미지 일관성 유지</strong><br>
+          현재 형성된 긍정 이미지를 <strong>절대 흔들리지 않도록</strong> 관리하세요. 모든 공식 발언·SNS 게시물·인터뷰에서 동일한 톤과 메시지를 유지하는 것이 핵심입니다. 이미지 일관성이 깨지는 순간(돌발 발언, 논란 행동), 높은 합의도가 한 번에 붕괴될 수 있습니다. 선거 기간 동안 <strong>발언 사전 검토 체계</strong>를 반드시 가동하세요.
+          <br><br>
+          <strong>[액션 2] 최저 관점(${low}) 보완</strong><br>
+          합의도가 높더라도 상대적으로 낮은 관점이 존재합니다. ${low} 관련 콘텐츠를 <strong>주 1~2회 보강</strong>하여 전방위 평가를 더욱 탄탄하게 만드세요. 완벽한 균형은 공격 포인트를 원천 차단합니다.
+          <br><br>
+          <strong>[액션 3] 안정적 평가를 공약 신뢰도로 전환</strong><br>
+          "모든 관점에서 검증된 후보"라는 메시지를 <strong>공약 신뢰도</strong>와 연결하세요. "이 후보의 공약은 실현 가능하다"는 인식을 심으면, 높은 합의도가 투표 행동 전환으로 이어집니다.`;
+      } else if (cons >= 65) {
+        guideHTML = `
+          <strong>${r.name} 후보는 합의도 ${cons}점으로 "보통 합의"</strong> 상태입니다. 관점에 따라 평가가 다소 차이가 있으며(편차폭 ${spread}점), 최고 관점은 <strong>${high}</strong>, 최저 관점은 <strong>${low}</strong>입니다. 이는 유권자 사이에서도 "강점은 인정하지만 약점도 보인다"는 혼합 인식이 형성되어 있음을 시사합니다.
+          <br><br>
+          <strong>[액션 1] 최저 관점 집중 보강</strong><br>
+          ${low}에서 점수가 낮아 전체 합의도를 끌어내리고 있습니다. 이 관점과 관련된 <strong>구체적 실적·사례·정책을 주 2~3회</strong> 발신하세요. 예: 관련 분야 현장 방문 영상, 전문가 추천서 공개, 구체적 수치 목표 제시 등. 최저 관점을 10점만 올려도 합의도가 크게 개선됩니다.
+          <br><br>
+          <strong>[액션 2] 최고 관점(${high}) 프레임 선점</strong><br>
+          ${high}에서 높은 평가를 받고 있으므로, 이 관점이 <strong>선거의 핵심 평가 기준</strong>이 되도록 의제를 설정하세요. "이번 선거에서 가장 중요한 것은 ${high.replace(/[💼⚖️🚀🤝]/g,'').trim()}"라는 메시지를 일관되게 전달하면, 자연스럽게 유리한 평가 프레임이 형성됩니다.
+          <br><br>
+          <strong>[액션 3] 편차 모니터링 주기화</strong><br>
+          보통 합의 구간은 캠페인 활동에 따라 합의도가 <strong>상승 또는 하락할 수 있는 불안정 구간</strong>입니다. 매주 평가 관점별 여론 변화를 추적하고, 특정 관점의 급격한 하락이 감지되면 즉각 대응 콘텐츠를 투입하세요.`;
+      } else {
+        guideHTML = `
+          <strong>${r.name} 후보는 합의도 ${cons}점으로 "낮은 합의"</strong> 상태입니다. 관점에 따라 평가가 크게 갈리며(편차폭 ${spread}점), ${high}에서는 높지만 ${low}에서는 낮습니다. 이는 <strong>유권자 사이에서도 호불호가 극명하게 갈릴 가능성</strong>이 높다는 신호입니다. 위기이자 기회 — 낮은 합의도는 "아직 유권자 인식이 유동적"이라는 뜻이기도 합니다.
+          <br><br>
+          <strong>[액션 1] 자기 정의(Self-Definition) 전략 즉시 가동</strong><br>
+          유권자가 "이 후보가 누구인지" 아직 확정하지 못한 상태입니다. <strong>내가 먼저 나를 규정</strong>하지 않으면, 상대 캠프가 부정적으로 규정합니다. "저는 ○○한 후보입니다"라는 <strong>핵심 정체성 메시지를 1문장으로 확정</strong>하고, 모든 채널에서 반복하세요. SNS 프로필·유세 첫마디·명함·현수막 모두 동일한 메시지로 통일하세요.
+          <br><br>
+          <strong>[액션 2] 최저 관점 긴급 보강 — 72시간 집중 캠페인</strong><br>
+          ${low}이 전체 합의도를 크게 끌어내리고 있습니다. 이 관점 관련 <strong>집중 콘텐츠 3~5개를 72시간 내에 연속 발신</strong>하세요. 관련 분야 전문가 추천·현장 활동 영상·구체적 정책 등을 쏟아내면, 단기간에 해당 관점의 인식을 개선할 수 있습니다.
+          <br><br>
+          <strong>[액션 3] 편차를 강점으로 전환</strong><br>
+          "${high.replace(/[💼⚖️🚀🤝]/g,'').trim()}에서 압도적이라는 것은, 이 분야의 <strong>독보적 전문가</strong>라는 뜻"이라는 프레임으로 전환하세요. 편차가 큰 것을 "특화된 강점"으로 재해석하면, 약점이 아니라 차별화 포인트가 됩니다.`;
+      }
+
+      return `
+        <div style="background:white;border:1px solid var(--border);border-radius:var(--radius-sm);padding:18px;border-left:5px solid ${cc.solid};margin-bottom:10px">
+          <div style="font-size:13px;font-weight:800;color:${cc.solid};margin-bottom:10px;display:flex;align-items:center;gap:8px">
+            📋 ${r.name} 합의도 전략 가이드
+            <span style="padding:2px 10px;border-radius:10px;font-size:12px;font-weight:700;background:${r.bg};color:${r.color}">${r.label} · ${cons}점</span>
+          </div>
+          <div style="font-size:12px;color:#1e293b;line-height:1.85">${guideHTML}</div>
+        </div>`;
+    }).join('')}
+
+    <div class="ls-insight">
+      <strong>📊 핵심 인사이트</strong><br>
+      <strong>합의도가 낮은 후보</strong>는 AI 모델마다 평가가 달라, 여론에서도 평가가 갈릴 가능성이 높습니다. 이는 <strong>리스크이자 기회</strong>입니다.<br><br>
+      <strong>합의도 85점 이상(높은 합의)</strong>: 여론이 안정적으로 형성되어 있음을 의미합니다. 현재의 긍정적 평가를 유지하는 것이 최우선이며, 이미지 관리에 집중하세요. 돌발적인 언행이나 논란 소지 행동을 철저히 자제해야 합니다. 안정된 평가는 한 번의 실수로 무너질 수 있습니다.<br><br>
+      <strong>합의도 65점 이하(낮은 합의)</strong>: 긍정 프레임을 선점하면 평가가 급상승할 여지가 있습니다. 적극적인 자기 정의(self-definition) 전략을 구사하세요. SNS·언론 인터뷰를 통해 "내가 어떤 후보인지"를 직접 규정하지 않으면, 상대 캠프가 부정적으로 규정할 것입니다.<br><br>
+      <strong>모든 후보에게 공통 조언</strong>: AI 평가 편차는 유권자 인식 분산의 선행 지표입니다. 편차가 큰 모델의 평가 기준을 분석하여 해당 관점의 유권자층에 맞는 맞춤 메시지를 개발하고, <strong>매 2주마다 AI 합의도를 재측정</strong>하여 캠페인 효과를 검증하세요.
+    </div>`;
+}
+
+/* ── S13: 취약점 공격 노출도 ── */
+function renderVulnerability() {
+  const data = getData();
+  if (!data?.candidates?.length) { document.getElementById('s13-content').innerHTML = '<p style="color:#1e293b">업로드된 후보자 데이터가 없습니다.</p>'; return; }
+
+  const colors = CANDIDATE_COLORS;
+  const candidates = data.candidates;
+
+  // 각 후보의 하위 3개 메트릭에 대해, 경쟁자 최고점과의 격차를 공격 노출도로 계산
+  const allHTML = candidates.map((c, idx) => {
+    const m = c.metrics || {};
+    const entries = METRICS.map(k => ({ name: k, val: m[k]||0 })).sort((a,b)=>a.val-b.val);
+    const bottom3 = entries.slice(0, 3);
+
+    const vulns = bottom3.map(b => {
+      // 해당 메트릭에서 경쟁자 중 최고 점수 찾기
+      let maxCompetitor = { name: '-', val: 0 };
+      candidates.forEach((comp, ci) => {
+        if (ci === idx) return;
+        const v = comp.metrics?.[b.name] || 0;
+        if (v > maxCompetitor.val) maxCompetitor = { name: comp.name, val: v };
+      });
+      const gap = maxCompetitor.val - b.val;
+      const risk = Math.min(100, Math.round(gap * 3 + (100 - b.val) * 0.5));
+      let level, lvColor, lvBg;
+      if (risk >= 70) { level = '위험'; lvColor = '#991b1b'; lvBg = '#fee2e2'; }
+      else if (risk >= 40) { level = '주의'; lvColor = '#92400e'; lvBg = '#fef3c7'; }
+      else { level = '안전'; lvColor = '#166534'; lvBg = '#dcfce7'; }
+      return { ...b, gap: Math.round(gap), risk, level, lvColor, lvBg, competitor: maxCompetitor };
+    });
+
+    // 후보별 가이드 생성
+    const dangerCount = vulns.filter(v => v.level === '위험').length;
+    const cautionCount = vulns.filter(v => v.level === '주의').length;
+    const safeCount = vulns.filter(v => v.level === '안전').length;
+    const topStrength = Object.entries(m).sort(([,a],[,b])=>b-a)[0];
+
+    // 위험/주의 지표별 구체적 방어 전략 생성
+    const defenseItems = vulns.map(v => {
+      if (v.level === '위험') {
+        return `<strong>[${v.name}] 위험 등급 — 화제 전환 전략</strong><br>
+          경쟁자(${v.competitor.name})와 <strong>${v.gap}점 격차</strong>로 공격 가능성이 매우 높습니다.
+          이 지표에서 정면 반박은 역효과가 큽니다. 대신 <strong>"${v.name}은 개선 중이며, 제 강점인 ${topStrength?.[0]||'핵심 역량'}(${Math.round(topStrength?.[1]||0)}점)을 봐달라"</strong>는 화제 전환 화법을 사용하세요.
+          구체적 액션: (1) ${v.name} 관련 개선 노력 1가지를 선제적으로 공개 (2) 관련 분야 전문가 자문단 또는 멘토 1인을 공개 지정 (3) 토론회에서 이 질문이 나올 경우 <strong>30초 이내 답변 후 강점으로 전환</strong>하는 리허설을 최소 5회 반복하세요.`;
+      } else if (v.level === '주의') {
+        return `<strong>[${v.name}] 주의 등급 — 정면 대응 + 사례 반박</strong><br>
+          경쟁자와 <strong>${v.gap}점 격차</strong>로 공격받을 수 있지만, 구체적 사례로 충분히 방어 가능합니다.
+          이 격차는 캠페인 활동으로 역전할 수 있는 범위입니다. 구체적 액션: (1) ${v.name} 관련 본인의 실적·경험·에피소드를 <strong>2~3개 정리</strong>하여 Q&A 카드 제작 (2) SNS에서 해당 분야 관련 콘텐츠를 <strong>주 1~2회 게시</strong>하여 인식 개선 (3) 현장에서 ${v.name} 관련 활동(방문·간담회·봉사)을 <strong>주 1회 이상 진행</strong>하고 영상으로 기록하세요.`;
+      } else {
+        return `<strong>[${v.name}] 안전 등급 — 현행 유지</strong><br>
+          경쟁자와 <strong>${v.gap}점 격차</strong>로 공격 가능성이 낮습니다. 현재 수준을 유지하되, 방심하지 마세요.
+          이 지표가 갑자기 이슈화되면 격차가 확대될 수 있으므로, <strong>월 1회 간단한 관련 콘텐츠</strong>를 게시하여 기본적인 관심을 보여주세요.`;
+      }
+    });
+
+    return `
+      <div style="margin-bottom:24px">
+        <div style="font-size:14px;font-weight:900;color:${colors[idx%5].solid};margin-bottom:10px;display:flex;align-items:center;gap:8px">
+          <span style="background:${colors[idx%5].bg};padding:4px 12px;border-radius:20px">${c.name}</span>
+          <span style="font-size:12px;font-weight:600;color:#1e293b">취약 지표 TOP 3</span>
+          <span style="margin-left:auto;display:flex;gap:4px">
+            ${dangerCount > 0 ? `<span style="padding:2px 8px;border-radius:10px;font-size:12px;font-weight:700;background:#fee2e2;color:#991b1b">위험 ${dangerCount}</span>` : ''}
+            ${cautionCount > 0 ? `<span style="padding:2px 8px;border-radius:10px;font-size:12px;font-weight:700;background:#fef3c7;color:#92400e">주의 ${cautionCount}</span>` : ''}
+            ${safeCount > 0 ? `<span style="padding:2px 8px;border-radius:10px;font-size:12px;font-weight:700;background:#dcfce7;color:#166534">안전 ${safeCount}</span>` : ''}
+          </span>
+        </div>
+        ${vulns.map(v => `
+          <div class="vuln-item" style="border-left-color:${v.lvColor}">
+            <div class="vuln-level" style="background:${v.lvBg};color:${v.lvColor}">${v.level}<br>${v.risk}점</div>
+            <div style="flex:1">
+              <div style="font-size:13px;font-weight:800;color:#0f172a;margin-bottom:3px">${v.name} — ${Math.round(v.val)}점</div>
+              <div style="font-size:12px;color:#1e293b">경쟁자 최고: ${v.competitor.name} (${Math.round(v.competitor.val)}점) · 격차 <strong>${v.gap}점</strong></div>
+            </div>
+          </div>`).join('')}
+
+        <!-- 후보별 방어 전략 가이드 200단어 -->
+        <div style="margin-top:12px;padding:16px;background:white;border-radius:8px;border:1px solid ${colors[idx%5].border};border-top:3px solid ${colors[idx%5].solid}">
+          <div style="font-size:13px;font-weight:800;color:${colors[idx%5].solid};margin-bottom:12px;display:flex;align-items:center;gap:6px">
+            🛡️ ${c.name} 취약점 방어 전략 가이드
+          </div>
+          <div style="font-size:12px;color:#1e293b;line-height:1.85;margin-bottom:14px">
+            <strong>${c.name} 후보의 취약점 현황:</strong> 위험 ${dangerCount}개 · 주의 ${cautionCount}개 · 안전 ${safeCount}개.
+            ${dangerCount >= 2
+              ? `위험 등급이 2개 이상으로, <strong>선거 기간 중 집중 공격을 받을 가능성이 매우 높습니다.</strong> 지금 즉시 방어 태세를 구축해야 합니다. 모든 캠프 구성원이 아래 방어 전략을 숙지하고, 동일한 답변을 할 수 있도록 <strong>48시간 이내에 Q&A 통일 카드를 배포</strong>하세요.`
+              : dangerCount === 1
+              ? `위험 등급 1개가 있어 <strong>해당 지표에 대한 선제 방어가 필요</strong>합니다. 나머지는 관리 가능한 수준이므로, 위험 지표에 방어 자원을 집중하세요.`
+              : `위험 등급이 없어 상대적으로 안정적이나, 주의 등급 지표가 이슈화되면 위험으로 격상될 수 있으므로 <strong>사전 준비는 필수</strong>입니다.`}
+          </div>
+
+          <div style="display:flex;flex-direction:column;gap:12px">
+            ${defenseItems.map(d => `
+              <div style="padding:12px;background:#f8fafc;border-radius:8px;border-left:3px solid #e2e8f0;font-size:12px;color:#1e293b;line-height:1.85">
+                ${d}
+              </div>`).join('')}
+          </div>
+
+          <div style="margin-top:14px;padding:10px 14px;background:linear-gradient(135deg,#eff6ff,#f0fdf4);border-radius:8px;border:1px solid #bae6fd;font-size:12px;color:#0c4a6e;line-height:1.75">
+            <strong>📌 즉시 실행 체크리스트:</strong><br>
+            ☐ 위험·주의 등급 지표별 Q&A 답변 카드 1장씩 제작<br>
+            ☐ 캠프 전 구성원 대상 답변 통일 브리핑 (1시간)<br>
+            ☐ 토론회 예상 질문 리스트에 취약 지표 질문 포함 → 모의 토론 2회 이상<br>
+            ☐ SNS 모니터링에 취약 지표 키워드 알림 설정<br>
+            ☐ ${topStrength?.[0]||'최고 강점'} 강조 콘텐츠 3개 사전 제작 (화제 전환용)
+          </div>
+        </div>
+      </div>`;
+  }).join('');
+
+  document.getElementById('s13-content').innerHTML = `${allHTML}
+    <div class="ls-insight">
+      <strong>📊 핵심 인사이트</strong><br>
+      <strong>"위험" 등급 지표</strong>는 경쟁 캠프가 공격할 가능성이 가장 높은 영역입니다. 이 지표에 대한 <strong>방어 논리와 반박 자료를 사전에 준비</strong>해야 합니다.<br><br>
+      <strong>공격 예방의 황금 원칙</strong>: 공격을 받기 전에 먼저 해당 영역의 개선 노력을 보여주는 것이 가장 효과적인 방어입니다. 예컨대 청렴성이 취약하다면, 상대가 공격하기 전에 먼저 재산 공개나 투명성 행동을 선제적으로 보여주세요. 이를 "선제 예방 접종(inoculation)" 전략이라 합니다.<br><br>
+      <strong>위험 등급(공격 노출도 70점 이상)</strong>: 경쟁자와 격차가 크므로 정면 반박은 오히려 역효과입니다. 화제 전환 전략을 쓰세요. "그 부분은 개선 중이며, 오히려 제 강점인 ○○을 보시면..."이라는 전환 화법을 팀 전체가 숙지해야 합니다.<br><br>
+      <strong>주의 등급(40~69점)</strong>: 격차가 좁으므로 구체적 사례 1-2개를 준비해 정면 대응하세요. 이 구간은 캠페인 활동으로 충분히 역전 가능합니다.<br><br>
+      실전 팁: 지금 당장 <strong>위험 등급 지표별로 Q&A 답변 카드 1장씩</strong>을 만들어 모든 캠프 구성원이 일관된 답변을 할 수 있도록 훈련하세요.
+    </div>`;
+}
+
+/* ── S14: 역전 가능성 매트릭스 ── */
+function renderReversalMatrix() {
+  const data = getData();
+  if (!data?.candidates?.length || data.candidates.length < 2) {
+    document.getElementById('s14-content').innerHTML = '<p style="color:#1e293b">2명 이상의 후보자 데이터가 필요합니다.</p>'; return;
+  }
+
+  const colors = CANDIDATE_COLORS;
+  const sorted = [...data.candidates].map((c,i)=>({...c,idx:i})).sort((a,b)=>(b.total_score||0)-(a.total_score||0));
+
+  const cards = [];
+  for (let i = 1; i < sorted.length; i++) {
+    const chaser = sorted[i];
+    const target = sorted[i-1];
+    const totalGap = Math.round((target.total_score||0) - (chaser.total_score||0));
+
+    // 메트릭별 역전 가능 여부
+    const metricAnalysis = METRICS.map(m => {
+      const chaserVal = chaser.metrics?.[m] || 0;
+      const targetVal = target.metrics?.[m] || 0;
+      const gap = Math.round(targetVal - chaserVal);
+      const canOvertake = gap > 0 && gap <= 8;
+      const alreadyLeading = chaserVal > targetVal;
+      return { name: m, gap, canOvertake, alreadyLeading, chaserVal: Math.round(chaserVal), targetVal: Math.round(targetVal) };
+    });
+
+    const overtakeable = metricAnalysis.filter(m => m.canOvertake);
+    const leading = metricAnalysis.filter(m => m.alreadyLeading);
+    const difficult = metricAnalysis.filter(m => m.gap > 8);
+
+    cards.push(`
+      <div class="reversal-card">
+        <div class="reversal-arrow">📈 ${chaser.name} → ${target.name} 역전 분석 (격차: ${totalGap}점)</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:12px">
+          <div style="text-align:center;padding:10px;background:#dcfce7;border-radius:8px">
+            <div style="font-size:20px;font-weight:900;color:#16a34a">${leading.length}개</div>
+            <div style="font-size:12px;font-weight:700;color:#166534">이미 앞서는 지표</div>
+          </div>
+          <div style="text-align:center;padding:10px;background:#fef3c7;border-radius:8px">
+            <div style="font-size:20px;font-weight:900;color:#d97706">${overtakeable.length}개</div>
+            <div style="font-size:12px;font-weight:700;color:#92400e">역전 가능 지표</div>
+          </div>
+          <div style="text-align:center;padding:10px;background:#fee2e2;border-radius:8px">
+            <div style="font-size:20px;font-weight:900;color:#dc2626">${difficult.length}개</div>
+            <div style="font-size:12px;font-weight:700;color:#991b1b">역전 어려운 지표</div>
+          </div>
+        </div>
+        ${overtakeable.length > 0 ? `
+          <div style="font-size:12px;font-weight:800;color:#92400e;margin-bottom:8px">🎯 집중 공략 지표 (역전 가능)</div>
+          <div style="display:flex;flex-direction:column;gap:5px;margin-bottom:10px">
+            ${overtakeable.map(m => `
+              <div style="display:flex;align-items:center;gap:8px;padding:6px 10px;background:#fffbeb;border-radius:6px;font-size:12px">
+                <span style="font-weight:700;min-width:80px">${m.name}</span>
+                <span style="color:#1e293b">${m.chaserVal}점 → ${m.targetVal}점</span>
+                <span style="font-weight:800;color:#d97706;margin-left:auto">+${m.gap}점 필요</span>
+              </div>`).join('')}
+          </div>` : ''}
+        ${leading.length > 0 ? `
+          <div style="font-size:12px;font-weight:800;color:#166534;margin-bottom:8px">✅ 우위 확보 지표 (유지 필수)</div>
+          <div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:14px">
+            ${leading.map(m => `<span style="padding:4px 10px;border-radius:6px;background:#dcfce7;font-size:12px;font-weight:600">${m.name} +${Math.abs(m.gap)}점</span>`).join('')}
+          </div>` : ''}
+
+        <!-- 추격자(chaser) 역전 전략 가이드 -->
+        <div style="padding:16px;background:linear-gradient(135deg,#fffbeb,#fef3c7);border-radius:8px;border:1px solid #fcd34d;border-top:3px solid #d97706;margin-bottom:12px">
+          <div style="font-size:13px;font-weight:800;color:#92400e;margin-bottom:10px;display:flex;align-items:center;gap:6px">
+            📋 ${chaser.name} 역전 실행 가이드
+            <span style="padding:2px 8px;border-radius:10px;font-size:12px;font-weight:700;background:#fee2e2;color:#991b1b">격차 ${totalGap}점</span>
+          </div>
+          <div style="font-size:12px;color:#1e293b;line-height:1.85">
+            <strong>${chaser.name} 후보는 ${target.name}과 ${totalGap}점 격차</strong>로, ${totalGap <= 10 ? '초접전 상황입니다. 단 하나의 이슈만으로도 역전이 가능한 범위이며, <strong>집중력과 속도가 승부를 결정</strong>합니다.' : totalGap <= 25 ? '역전 가능한 범위입니다. 전략적 집중을 통해 3~4주 내에 격차를 좁힐 수 있습니다.' : '상당한 격차가 있습니다. 파격적인 전략 전환과 특정 분야 독점 포지셔닝이 필요합니다.'}
+            10개 지표 중 <strong>이미 ${leading.length}개에서 앞서고 있고, ${overtakeable.length}개에서 역전 가능</strong>(8점 이내)합니다.
+            <br><br>
+            <strong>[액션 1] 역전 가능 지표 집중 투자 — 자원의 50% 배분</strong><br>
+            ${overtakeable.length > 0
+              ? `${overtakeable.slice(0,3).map(m => `<strong>${m.name}(+${m.gap}점 필요)</strong>`).join(', ')}에 캠페인 자원을 집중하세요.
+                각 지표별 구체적 액션: (1) 관련 정책 1건 발표 (2) 현장 활동 주 2회 + SNS 영상 공유 (3) 해당 분야 전문가·시민 추천 인터뷰 1건 확보.
+                <strong>3주 내에 각 지표 3~5점 상승</strong>을 목표로 설정하세요.`
+              : `역전 가능 지표(8점 이내)가 없으므로, 가장 격차가 작은 지표부터 집중 공략하세요.
+                동시에 이미 앞서는 ${leading.length}개 지표의 우위를 극대화하여 종합 격차를 줄이세요.`}
+            <br><br>
+            <strong>[액션 2] 우위 지표 유지 — 자원의 30% 배분</strong><br>
+            ${leading.length > 0
+              ? `${leading.slice(0,3).map(m => m.name).join(', ')}에서 이미 앞서고 있습니다. 이 우위가 무너지면 역전의 발판 자체가 사라집니다.
+                해당 강점을 보여주는 콘텐츠를 <strong>주 1~2회 꾸준히 게시</strong>하고, 유세 현장에서도 반복 언급하세요.`
+              : `현재 앞서는 지표가 없으므로, 최고 점수 지표에서 독보적 우위를 만들어야 합니다.
+                해당 분야에서 "이 후보만의 것"이라는 인식을 심기 위해 집중 콘텐츠를 쏟아내세요.`}
+            <br><br>
+            <strong>[액션 3] ${target.name} 약점 의제화 — 자원의 20% 배분</strong><br>
+            ${difficult.length > 0
+              ? `${target.name}이 강한 지표(${difficult.slice(0,2).map(m=>m.name).join(', ')})에서 정면 경쟁은 비효율적입니다.
+                대신 <strong>${target.name}의 약점 지표를 선거의 핵심 이슈로 격상</strong>시키세요.`
+              : `전 지표에서 격차가 작으므로, ${target.name}의 가장 약한 영역을 찾아 토론회·SNS에서 이슈화하세요.`}
+            "○○ 분야가 이번 선거에서 왜 중요한지" 형태의 의제 제기가 직접 공격보다 효과적입니다.
+          </div>
+        </div>
+
+        <!-- 방어자(target) 방어 가이드 -->
+        <div style="padding:16px;background:linear-gradient(135deg,#f0fdf4,#dcfce7);border-radius:8px;border:1px solid #86efac;border-top:3px solid #16a34a">
+          <div style="font-size:13px;font-weight:800;color:#166534;margin-bottom:10px;display:flex;align-items:center;gap:6px">
+            🛡️ ${target.name} 방어 가이드 (vs ${chaser.name})
+          </div>
+          <div style="font-size:12px;color:#1e293b;line-height:1.85">
+            <strong>${target.name} 후보는 ${chaser.name}보다 ${totalGap}점 앞서고 있지만</strong>, ${overtakeable.length}개 지표에서 8점 이내 역전 위험이 있습니다.
+            ${totalGap <= 15 ? '<strong>안심할 수 없는 격차</strong>이며, 방심은 곧 역전으로 이어집니다.' : '비교적 안정적이나, 특정 지표에서의 역전이 누적되면 종합 역전으로 이어질 수 있습니다.'}
+            <br><br>
+            <strong>[방어 핵심] 역전 위험 지표 격차 확대</strong><br>
+            ${overtakeable.length > 0
+              ? `${chaser.name}이 역전을 노리는 지표: ${overtakeable.slice(0,3).map(m => `<strong>${m.name}(현재 +${m.gap}점)</strong>`).join(', ')}.
+                이 지표들에서 <strong>격차를 10점 이상으로 벌려놓는 것</strong>이 가장 안전한 방어입니다.
+                해당 분야 관련 실적·정책을 선제적으로 발표하고, SNS에서 주 2회 이상 관련 콘텐츠를 게시하세요.
+                상대가 이 지표에서 공세를 시작하면, <strong>48시간 이내에 구체적 실적으로 대응</strong>하는 체계를 구축하세요.`
+              : `${chaser.name}이 역전할 수 있는 지표가 없어 안정적이나, 모든 지표에서 꾸준한 활동을 유지하세요.`}
+            <br><br>
+            <strong>[모니터링] ${chaser.name}의 캠페인 동향 실시간 추적</strong><br>
+            ${chaser.name}이 어떤 지표에 자원을 집중하는지 <strong>매일 SNS·언론 동향을 분석</strong>하세요.
+            상대가 특정 분야에서 갑자기 콘텐츠를 쏟아내기 시작하면, 그것이 역전 공략 지표입니다.
+            해당 지표에서 즉각 방어 콘텐츠를 투입하여 격차 축소를 차단하세요.
+          </div>
+        </div>
+      </div>`);
+  }
+
+  document.getElementById('s14-content').innerHTML = `${cards.join('')}
+    <div class="ls-insight">
+      <strong>📊 핵심 인사이트</strong><br>
+      역전은 <strong>모든 지표를 올리는 것이 아니라, "역전 가능" 지표에 집중</strong>할 때 현실적입니다. 이미 앞서는 지표는 유지하면서, 격차 8점 이내 지표를 집중 공략하는 <strong>선택과 집중 전략</strong>이 핵심입니다.<br><br>
+      <strong>역전 가능 지표(8점 이내)</strong>는 선거 운동 3주 이내에 집중 캠페인으로 충분히 좁힐 수 있는 격차입니다. 이 지표와 관련된 정책 발표, 현장 방문, SNS 콘텐츠를 집중 배치하세요. 반면 <strong>역전 어려운 지표(9점 이상)</strong>에 에너지를 낭비하면 역전 가능 지표를 공략할 자원이 부족해집니다.<br><br>
+      <strong>이미 앞서는 지표</strong>는 반드시 유지해야 합니다. 이 지표에서 뒤처지면 역전의 발판 자체가 무너집니다. 해당 강점을 보여주는 활동을 꾸준히 유지하면서, 동시에 역전 가능 지표에 추가 자원을 투입하는 <strong>투트랙 전략</strong>을 권장합니다.<br><br>
+      <strong>선두 후보 캠프에게</strong>: 상대가 어떤 지표에서 역전을 노리는지 이 분석으로 사전에 파악하고, 해당 지표에서 자신의 우위를 증명하는 콘텐츠를 선제적으로 배포하세요. 역전 가능 지표에서 격차를 10점 이상으로 벌려놓는 것이 가장 안전한 방어입니다.
+    </div>`;
+}
+
+/* ── S15: 강점 겹침·차별화 맵 ── */
+function renderDifferentiationMap() {
+  const data = getData();
+  if (!data?.candidates?.length) { document.getElementById('s15-content').innerHTML = '<p style="color:#1e293b">업로드된 후보자 데이터가 없습니다.</p>'; return; }
+
+  const colors = CANDIDATE_COLORS;
+  const candidates = data.candidates;
+
+  // 모든 강점 키워드 수집 + 소유자 매핑
+  const keywordMap = {};
+  candidates.forEach((c, idx) => {
+    (c.strengths || []).forEach(s => {
+      const key = s.trim();
+      if (!key) return;
+      if (!keywordMap[key]) keywordMap[key] = [];
+      keywordMap[key].push({ name: c.name, idx });
+    });
+  });
+
+  // 메트릭 기반 상위 강점도 추가
+  candidates.forEach((c, idx) => {
+    const m = c.metrics || {};
+    const top3 = Object.entries(m).sort(([,a],[,b])=>b-a).slice(0,3);
+    top3.forEach(([k]) => {
+      if (!keywordMap[k]) keywordMap[k] = [];
+      if (!keywordMap[k].find(o => o.idx === idx)) keywordMap[k].push({ name: c.name, idx });
+    });
+  });
+
+  // 독점 vs 공유 분류
+  const exclusive = Object.entries(keywordMap).filter(([,v]) => v.length === 1);
+  const shared = Object.entries(keywordMap).filter(([,v]) => v.length > 1);
+
+  const exclusiveHTML = exclusive.length > 0 ? exclusive.map(([keyword, owners]) => `
+    <div class="diff-row">
+      <div class="diff-keyword">${keyword}</div>
+      <div class="diff-owners">
+        ${owners.map(o => `<span class="diff-owner-tag diff-exclusive">${o.name} 독점</span>`).join('')}
+      </div>
+      <span style="margin-left:auto;font-size:12px;color:#16a34a;font-weight:700">🏆 차별화 자산</span>
+    </div>`).join('') : '<div style="padding:10px;font-size:12px;color:#1e293b">독점 강점 없음</div>';
+
+  const sharedHTML = shared.length > 0 ? shared.map(([keyword, owners]) => `
+    <div class="diff-row">
+      <div class="diff-keyword">${keyword}</div>
+      <div class="diff-owners">
+        ${owners.map(o => `<span class="diff-owner-tag diff-shared">${o.name}</span>`).join('')}
+      </div>
+      <span style="margin-left:auto;font-size:12px;color:#92400e;font-weight:700">⚠️ 경쟁 영역</span>
+    </div>`).join('') : '<div style="padding:10px;font-size:12px;color:#1e293b">중복 강점 없음</div>';
+
+  // 후보별 독점 강점 요약
+  const perCandidate = candidates.map((c, idx) => {
+    const myExclusive = exclusive.filter(([,v]) => v[0].idx === idx).map(([k]) => k);
+    const myShared = shared.filter(([,v]) => v.find(o => o.idx === idx)).map(([k]) => k);
+    return `
+      <div style="padding:12px;background:${colors[idx%5].bg};border-radius:8px;border-left:4px solid ${colors[idx%5].solid}">
+        <div style="font-size:13px;font-weight:800;color:${colors[idx%5].solid};margin-bottom:5px">${c.name}</div>
+        <div style="font-size:12px;line-height:1.6;color:#1e293b">
+          독점 강점: ${myExclusive.length > 0 ? myExclusive.map(k=>`<strong>${k}</strong>`).join(', ') : '<span style="color:#1e293b">없음</span>'}<br>
+          경쟁 강점: ${myShared.length > 0 ? myShared.join(', ') : '<span style="color:#1e293b">없음</span>'}
+        </div>
+      </div>`;
+  }).join('');
+
+  document.getElementById('s15-content').innerHTML = `
+    <div style="background:white;border:1px solid var(--border);border-radius:var(--radius-sm);padding:20px;margin-bottom:14px">
+      <div style="font-size:13px;font-weight:800;color:#166534;margin-bottom:12px">🏆 독점 포지션 (나만의 강점)</div>
+      <div class="diff-matrix">${exclusiveHTML}</div>
+    </div>
+    <div style="background:white;border:1px solid var(--border);border-radius:var(--radius-sm);padding:20px;margin-bottom:14px">
+      <div style="font-size:13px;font-weight:800;color:#92400e;margin-bottom:12px">⚠️ 경쟁 영역 (강점이 겹치는 분야)</div>
+      <div class="diff-matrix">${sharedHTML}</div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px;margin-bottom:14px">${perCandidate}</div>
+
+    <!-- 후보별 차별화 전략 가이드 -->
+    ${candidates.map((c, idx) => {
+      const cc = colors[idx%5];
+      const myExclusive = exclusive.filter(([,v]) => v[0].idx === idx).map(([k]) => k);
+      const myShared = shared.filter(([,v]) => v.find(o => o.idx === idx)).map(([k]) => k);
+      const m = c.metrics || {};
+      const top3 = Object.entries(m).sort(([,a],[,b])=>b-a).slice(0,3);
+
+      // 경쟁 영역에서 내 점수 vs 경쟁자 최고 점수
+      const sharedBattles = myShared.map(keyword => {
+        const myVal = m[keyword] ? Math.round(m[keyword]) : null;
+        const competitors = shared.find(([k])=>k===keyword)?.[1]?.filter(o=>o.idx!==idx) || [];
+        const compBest = competitors.length > 0
+          ? Math.max(...competitors.map(o => data.candidates[o.idx]?.metrics?.[keyword]||0))
+          : 0;
+        return { keyword, myVal, compBest: Math.round(compBest), competitors: competitors.map(o=>o.name), lead: myVal !== null ? myVal - Math.round(compBest) : null };
+      }).filter(b => b.myVal !== null);
+
+      let guideHTML = '';
+
+      if (myExclusive.length >= 2) {
+        // 독점 강점 풍부 — 독점 극대화 전략
+        guideHTML = `
+          <strong>${c.name} 후보는 ${myExclusive.length}개의 독점 강점</strong>(${myExclusive.map(k=>`<strong>${k}</strong>`).join(', ')})을 보유하고 있어,
+          <strong>차별화 포지셔닝에 매우 유리한 위치</strong>입니다. 경쟁자가 따라올 수 없는 영역이 있다는 것은 선거에서 가장 강력한 무기입니다.
+          <br><br>
+          <strong>[액션 1] 독점 강점 = 선거 핵심 프레임</strong><br>
+          ${myExclusive.slice(0,2).join('·')}을 "이번 선거의 핵심 판단 기준"으로 프레임화하세요.
+          모든 토론·인터뷰·SNS·공보물에서 <strong>"이번 선거에서 가장 중요한 것은 ${myExclusive[0]}"</strong>이라는 메시지를 반복하세요.
+          유권자가 이 기준으로 후보를 비교하면, ${c.name} 후보가 자동으로 1위가 됩니다.
+          <strong>주 5회 이상</strong> 관련 콘텐츠를 게시하여 "○○ 하면 ${c.name}" 연상 구조를 만드세요.
+          <br><br>
+          <strong>[액션 2] 독점 강점 스토리텔링 3종 세트 제작</strong><br>
+          독점 강점별로: (1) <strong>60초 영상</strong> — 왜 이 분야가 중요한지 + 본인의 실적 (2) <strong>카드뉴스 5장</strong> — 구체적 수치·사례·비전 (3) <strong>현장 사진 시리즈</strong> — 실제 활동 증거.
+          이 3종 세트를 <strong>선거 기간 내내 순환 게시</strong>하세요.
+          ${myShared.length > 0 ? `<br><br><strong>[액션 3] 경쟁 영역(${myShared.slice(0,2).join(', ')}) 최소 에너지 투입</strong><br>
+          경쟁 영역에서 승부하려 하지 마세요. 독점 강점에 자원의 <strong>70% 이상을 집중</strong>하고, 경쟁 영역은 "저도 충분히 준비되어 있습니다" 수준의 최소 방어만 하세요.` : ''}`;
+
+      } else if (myExclusive.length === 1) {
+        // 독점 1개 + 경쟁 영역 — 독점 강화 + 경쟁 돌파
+        guideHTML = `
+          <strong>${c.name} 후보는 독점 강점 1개</strong>(<strong>${myExclusive[0]}</strong>)와 경쟁 영역 ${myShared.length}개를 보유하고 있습니다.
+          독점 강점을 핵심 무기로 삼되, 경쟁 영역에서도 <strong>구체적 사례로 우위를 증명</strong>해야 합니다.
+          <br><br>
+          <strong>[액션 1] 독점 강점 집중 부각 — 자원의 50%</strong><br>
+          <strong>${myExclusive[0]}</strong>은 경쟁자 누구도 가지지 못한 유일한 차별점입니다.
+          모든 캠페인 메시지의 <strong>첫 문장에 이 키워드를 배치</strong>하세요.
+          유세 인사말: "○○에서 검증된 ${c.name}입니다", SNS 프로필: "${myExclusive[0]}의 전문가 ${c.name}", 명함·현수막 모두 통일.
+          <strong>하루 1건 이상</strong> 이 강점 관련 콘텐츠를 게시하세요.
+          <br><br>
+          <strong>[액션 2] 경쟁 영역 — "구체적 증거"로 차별화 — 자원의 30%</strong><br>
+          ${myShared.length > 0 ? `${myShared.slice(0,2).join(', ')}에서 ${myShared.length > 0 ? sharedBattles.filter(b=>b.lead!==null&&b.lead>0).length > 0 ? '일부 점수 우위가 있으므로' : '경쟁자와 비슷한 수준이므로' : ''}
+          <strong>수치·날짜·장소가 포함된 구체적 사례 2~3개</strong>를 준비하세요.
+          "저도 이 분야를 잘 압니다"는 소용없습니다. "2024년 ○월, ○○에서 ○○을 달성했습니다"처럼 <strong>검증 가능한 팩트</strong>만이 경쟁에서 이깁니다.
+          토론회에서 이 영역 질문이 나오면 즉시 구체적 사례를 제시할 수 있도록 리허설하세요.` : '경쟁 영역이 없어 독점 강점에 더 집중할 수 있습니다.'}
+          <br><br>
+          <strong>[액션 3] 독점 강점 영역 확장 — 자원의 20%</strong><br>
+          현재 독점 1개를 <strong>2개 이상으로 늘리는 것</strong>이 중기 목표입니다.
+          ${top3[1] ? `${top3[1][0]}(${Math.round(top3[1][1])}점)을 독점 수준으로 끌어올려, 경쟁자와 5점 이상 격차를 만드세요. 관련 분야 현장 활동을 주 1회 추가하면 선거 막판에 독점 포지션으로 전환될 수 있습니다.` : '상위 2번째 지표를 집중 육성하세요.'}`;
+
+      } else {
+        // 독점 없음 — 긴급 독점 포지션 구축
+        guideHTML = `
+          <strong>${c.name} 후보는 현재 독점 강점이 없습니다.</strong> 모든 강점이 경쟁자와 겹쳐, 유권자에게 <strong>"이 후보만의 것"이 아직 각인되지 않은 상태</strong>입니다.
+          이는 가장 시급하게 해결해야 할 과제입니다 — 차별화 없이는 선거에서 기억되지 못합니다.
+          <br><br>
+          <strong>[액션 1] 긴급 독점 포지션 구축 — 최우선 과제</strong><br>
+          현재 가장 높은 지표인 <strong>${top3[0]?.[0]||'-'}(${Math.round(top3[0]?.[1]||0)}점)</strong>을 독점 강점으로 육성하세요.
+          이 분야에서 <strong>경쟁자보다 5점 이상 격차</strong>를 만드는 것이 목표입니다.
+          즉시 시작할 액션: (1) 이 분야 관련 <strong>집중 콘텐츠 5개를 1주일 내</strong> 연속 발신 (2) 현장 방문·간담회·봉사활동 등 관련 활동을 <strong>주 3회 이상</strong> 진행 (3) 관련 분야 전문가 또는 수혜자의 <strong>추천 영상 1건</strong> 확보.
+          <br><br>
+          <strong>[액션 2] 경쟁 영역에서 "진짜" 증명</strong><br>
+          ${myShared.length > 0 ? `${myShared.slice(0,2).join(', ')}에서 경쟁자와 겹칩니다.
+          여기서 이기려면 <strong>"누가 더 진짜인가"를 구체적 실적으로 증명</strong>해야 합니다.
+          ${sharedBattles.length > 0 && sharedBattles[0].lead !== null ? (sharedBattles[0].lead > 0 ? `${sharedBattles[0].keyword}에서 +${sharedBattles[0].lead}점 우위가 있으므로, 이 영역부터 "진짜 전문가"로 포지셔닝하세요.` : `${sharedBattles[0].keyword}에서 ${Math.abs(sharedBattles[0].lead)}점 뒤처져 있으므로, 구체적 실적 사례를 준비하여 반격하세요.`) : '각 경쟁 영역별 구체적 실적 사례 2개씩 준비하세요.'}
+          수치·날짜·장소가 포함된 사례만이 유권자를 설득합니다.` : '경쟁 영역도 없으므로 새로운 강점을 빠르게 구축해야 합니다.'}
+          <br><br>
+          <strong>[액션 3] "○○ 하면 ${c.name}" 연상 구조 만들기</strong><br>
+          선거 종료까지 <strong>단 하나의 키워드</strong>라도 ${c.name} 후보와 연결되도록 만드세요.
+          가장 유력한 키워드: <strong>"${top3[0]?.[0]||'핵심 역량'}"</strong>.
+          이 키워드를 모든 채널(유세 인사말·SNS 프로필·명함·현수막)에 통일 배치하고, 매일 관련 콘텐츠를 게시하세요.
+          3주간 일관된 반복이면 유권자 인식에 각인됩니다.`;
+      }
+
+      return `
+        <div style="background:white;border:1px solid var(--border);border-radius:var(--radius-sm);padding:18px;border-left:5px solid ${cc.solid};margin-bottom:10px">
+          <div style="font-size:13px;font-weight:800;color:${cc.solid};margin-bottom:10px;display:flex;align-items:center;gap:8px">
+            📋 ${c.name} 차별화 전략 가이드
+            <span style="padding:2px 8px;border-radius:10px;font-size:12px;font-weight:700;background:${myExclusive.length >= 2 ? '#dcfce7' : myExclusive.length === 1 ? '#fef3c7' : '#fee2e2'};color:${myExclusive.length >= 2 ? '#166534' : myExclusive.length === 1 ? '#92400e' : '#991b1b'}">독점 ${myExclusive.length}개 · 경쟁 ${myShared.length}개</span>
+          </div>
+          <div style="font-size:12px;color:#1e293b;line-height:1.85">${guideHTML}</div>
+        </div>`;
+    }).join('')}
+
+    <div class="ls-insight">
+      <strong>📊 핵심 인사이트</strong><br>
+      <strong>독점 강점</strong>은 선거에서 가장 강력한 무기입니다. 경쟁자가 따라올 수 없는 영역이기 때문에, 이 강점을 선거의 핵심 프레임으로 설정해야 합니다.<br><br>
+      <strong>독점 강점 활용 전략</strong>: 독점 강점이 있는 후보는 모든 토론·인터뷰·공보물에서 해당 키워드를 반복 노출시켜야 합니다. 유권자의 뇌리에 "○○ 하면 이 후보"라는 연상 구조를 만드는 것이 목표입니다. 반복 횟수가 많을수록 인식 점유율이 높아집니다.<br><br>
+      <strong>경쟁 영역(강점이 겹치는 분야)</strong>에서는 "누가 더 진짜인가"를 증명하는 구체적 실적·사례가 승부를 가릅니다. 단순히 "저도 이 분야를 잘 압니다"라는 주장은 소용없습니다. <strong>수치·날짜·장소가 포함된 구체적 사례</strong>만이 경쟁에서 이길 수 있습니다.<br><br>
+      <strong>독점 강점이 없는 경우</strong>: 현재 메트릭 기반으로 가장 점수가 높은 1개 지표를 집중 육성하여 독점 포지션을 만드세요. 경쟁자보다 5점 이상 차이가 나는 분야를 찾아 해당 분야의 스토리텔링을 강화하면, 선거 막판에는 독점 포지션으로 전환될 수 있습니다.
+    </div>`;
+}
+
+/* ── S16: 후보별 맞춤 승리 공식 (자동 생성) ── */
+function renderWinFormulas() {
+  const data = getData();
+  if (!data?.candidates?.length) { document.getElementById('s16-content').innerHTML = '<p style="color:#1e293b">업로드된 후보자 데이터가 없습니다.</p>'; return; }
+
+  const colors = CANDIDATE_COLORS;
+  const candidates = data.candidates;
+  const sorted = [...candidates].map((c,i)=>({...c,idx:i})).sort((a,b)=>(b.total_score||0)-(a.total_score||0));
+
+  const html = candidates.map((c, idx) => {
+    const m = c.metrics || {};
+    const rank = sorted.findIndex(x=>x.idx===idx) + 1;
+    const metricEntries = Object.entries(m).sort(([,a],[,b])=>a-b);
+    const weakest = metricEntries.slice(0,2);
+    const strongest = Object.entries(m).sort(([,a],[,b])=>b-a).slice(0,2);
+
+    // 경쟁자 분석
+    const competitors = candidates.filter((_,i)=>i!==idx);
+    const leader = sorted[0];
+    const isLeader = rank === 1;
+
+    // 약점에서 경쟁자 최고점 찾기
+    const weakGap = weakest.map(([k,v]) => {
+      const maxComp = Math.max(...competitors.map(comp => comp.metrics?.[k]||0));
+      return { name: k, myVal: Math.round(v), compMax: Math.round(maxComp), gap: Math.round(maxComp - v) };
+    });
+
+    // 강점에서 경쟁자와 비교
+    const strongLead = strongest.map(([k,v]) => {
+      const maxComp = Math.max(...competitors.map(comp => comp.metrics?.[k]||0));
+      return { name: k, myVal: Math.round(v), lead: Math.round(v - maxComp) };
+    });
+
+    // 역전 가능 메트릭 수
+    let reversibleCount = 0;
+    if (!isLeader) {
+      const target = sorted[rank-2]; // 바로 위 순위
+      METRICS.forEach(met => {
+        const gap = (target.metrics?.[met]||0) - (m[met]||0);
+        if (gap > 0 && gap <= 8) reversibleCount++;
+      });
+    }
+
+    const formulas = [];
+    const priorityStyle = { '최우선': { bg:'#fee2e2', color:'#991b1b' }, '중요': { bg:'#fef3c7', color:'#92400e' }, '보완': { bg:'#dcfce7', color:'#166534' } };
+
+    if (isLeader) {
+      // 1위: 방어 전략
+      formulas.push({
+        title: `약점 선제 보강: ${weakGap[0]?.name} (${weakGap[0]?.myVal}점 → 목표 ${weakGap[0]?.myVal+5}점)`,
+        desc: `현재 가장 취약한 ${weakGap[0]?.name}에서 경쟁자(${weakGap[0]?.compMax}점)와 ${weakGap[0]?.gap}점 격차. 공격받기 전에 선제적으로 이 영역의 개선 노력을 보여줘야 합니다. 구체적 실적·사례를 미리 준비하세요.`,
+        priority: '최우선'
+      });
+      formulas.push({
+        title: `강점 극대화: ${strongLead[0]?.name}(+${strongLead[0]?.lead}점 우위) 독점 프레임 구축`,
+        desc: `${strongLead[0]?.name}에서 ${strongLead[0]?.lead}점 우위를 보유. 이 강점을 선거의 핵심 프레임으로 설정하면 경쟁자가 따라올 수 없는 독점적 포지션을 구축할 수 있습니다. "이 분야만큼은 ${c.name}" 이미지를 각인시키세요.`,
+        priority: '중요'
+      });
+      formulas.push({
+        title: '2위 추격자 견제: 차별화 포인트 명확화',
+        desc: `2위 ${sorted[1]?.name||'경쟁자'}와의 격차(${Math.round((c.total_score||0)-(sorted[1]?.total_score||0))}점)를 유지하려면, 2위의 강점 영역에서 동등 이상의 경쟁력을 증명해야 합니다. 상대의 프레임에 끌려가지 말고 자신의 프레임을 유지하세요.`,
+        priority: '보완'
+      });
+    } else {
+      // 2위 이하: 역전 전략
+      const target = sorted[rank-2];
+      const totalGap = Math.round((target.total_score||0) - (c.total_score||0));
+
+      formulas.push({
+        title: `역전 집중 공략: ${reversibleCount}개 지표에서 격차 좁히기 (총 ${totalGap}점 차)`,
+        desc: `${rank-1}위 ${target.name}과 ${totalGap}점 격차. ${reversibleCount}개 지표에서 역전 가능(8점 이내 격차). 전 지표를 올리려 하지 말고, 역전 가능 지표에만 집중 투자하여 효율적으로 격차를 좁히세요.`,
+        priority: '최우선'
+      });
+      formulas.push({
+        title: `차별화 무기 활용: ${strongLead[0]?.name}(${strongLead[0]?.myVal}점) 독점 강점 어필`,
+        desc: `${strongLead[0]?.name}은 ${strongLead[0]?.lead > 0 ? '경쟁자보다 '+strongLead[0]?.lead+'점 앞서는 독점 강점' : '핵심 경쟁력'}입니다. 이 강점을 중심으로 "이 분야에서는 내가 1등"이라는 메시지를 집중 전달하세요. 종합 순위보다 특정 분야 1등이 유권자에게 더 강하게 각인됩니다.`,
+        priority: '중요'
+      });
+      formulas.push({
+        title: `상대 약점 공략: ${target.name}의 ${Object.entries(target.metrics||{}).sort(([,a],[,b])=>a-b)[0]?.[0]||'취약 지표'} 집중 부각`,
+        desc: `${target.name}의 가장 약한 지표(${Object.entries(target.metrics||{}).sort(([,a],[,b])=>a-b)[0]?.[0]||'-'}: ${Math.round(Object.entries(target.metrics||{}).sort(([,a],[,b])=>a-b)[0]?.[1]||0)}점)을 토론·SNS에서 이슈화하세요. 직접 공격보다 "이 분야가 중요하지 않습니까?"라는 의제 설정 방식이 효과적입니다.`,
+        priority: '보완'
+      });
+    }
+
+    return `
+      <div style="margin-bottom:20px">
+        <div style="font-size:15px;font-weight:900;color:${colors[idx%5].solid};margin-bottom:12px;display:flex;align-items:center;gap:8px">
+          <span style="background:${colors[idx%5].bg};padding:4px 14px;border-radius:20px">${c.name}</span>
+          <span style="font-size:12px;color:#1e293b;font-weight:600">승리 공식 · ${rank}위 ${isLeader?'(선두 방어)':'(역전 공략)'}</span>
+        </div>
+        ${formulas.map((f, fi) => {
+          const ps = priorityStyle[f.priority];
+          return `
+          <div class="win-formula-card" style="border-left-color:${colors[idx%5].solid};margin-bottom:8px">
+            <div class="win-formula-title"><span class="win-formula-num" style="background:${colors[idx%5].solid}">${fi+1}</span>${f.title}
+              <span style="margin-left:8px;padding:2px 8px;border-radius:10px;font-size:12px;font-weight:700;background:${ps.bg};color:${ps.color}">${f.priority}</span>
+            </div>
+            <div class="win-formula-desc">${f.desc}</div>
+          </div>`;
+        }).join('')}
+
+        <!-- 후보별 실행 가이드 200단어 -->
+        <div style="margin-top:10px;padding:16px;background:white;border-radius:8px;border:1px solid ${colors[idx%5].border};border-top:3px solid ${colors[idx%5].solid}">
+          <div style="font-size:13px;font-weight:800;color:${colors[idx%5].solid};margin-bottom:10px;display:flex;align-items:center;gap:6px">
+            📋 ${c.name} 승리 공식 실행 가이드
+          </div>
+          <div style="font-size:12px;color:#1e293b;line-height:1.85">
+            ${isLeader ? `
+              <strong>${c.name} 후보는 ${Math.round(c.total_score||0)}점으로 1위</strong>이며, 위 3가지 공식을 <strong>"약점 방어 50% / 강점 프레임 30% / 견제 20%"</strong> 비율로 실행해야 합니다.
+              <br><br>
+              <strong>[주간 실행 루틴]</strong><br>
+              <strong>월요일</strong>: 주간 캠페인 목표 설정 + 경쟁자 SNS·언론 동향 리뷰<br>
+              <strong>화~수</strong>: 약점 보강 콘텐츠 발신 (${weakGap[0]?.name||'취약 지표'} 관련 현장 활동·정책 1건 + SNS 게시)<br>
+              <strong>목~금</strong>: 강점 프레임 콘텐츠 집중 (${strongLead[0]?.name||'핵심 강점'} 관련 영상·카드뉴스 2건)<br>
+              <strong>토요일</strong>: 2위 ${sorted[1]?.name||'경쟁자'} 동향 분석 + 대응 전략 수정<br>
+              <strong>일요일</strong>: 주간 성과 점검 + 다음 주 조정
+              <br><br>
+              <strong>[위기 대응 매뉴얼]</strong><br>
+              ${weakGap[0]?.name||'취약 지표'}에서 공격이 시작되면: (1) <strong>4시간 이내</strong> 사전 준비한 Q&A 카드 배포 (2) 24시간 내 관련 개선 활동 영상 1건 게시 (3) 48시간 내 ${strongLead[0]?.name||'강점'} 관련 대형 콘텐츠로 화제 전환. <strong>절대 감정적 반박 금지</strong> — 팩트와 실적으로만 대응하세요.
+              <br><br>
+              <strong>[매주 체크리스트]</strong><br>
+              ☐ 약점 보강 콘텐츠 2건 이상 게시했는가?<br>
+              ☐ 강점 프레임 메시지가 일관되게 유지되고 있는가?<br>
+              ☐ 2위 추격자의 새로운 공세 포인트가 있는가?<br>
+              ☐ 지지층 결집도가 유지되고 있는가? (SNS 반응·현장 참석자 수 체크)<br>
+              ☐ 이번 주 예상치 못한 리스크가 발생했는가? → 즉시 소대장 보고
+            ` : `
+              <strong>${c.name} 후보는 ${rank}위(${Math.round(c.total_score||0)}점)</strong>이며, 위 3가지 공식을 <strong>"역전 집중 50% / 차별화 강점 30% / 상대 약점 공략 20%"</strong> 비율로 실행해야 합니다.
+              <br><br>
+              <strong>[주간 실행 루틴]</strong><br>
+              <strong>월요일</strong>: 역전 가능 지표(${reversibleCount}개) 관련 주간 목표 설정 + 1위 동향 분석<br>
+              <strong>화~수</strong>: 역전 지표 집중 캠페인 (관련 정책 발표·현장 방문·SNS 콘텐츠 각 1건)<br>
+              <strong>목요일</strong>: ${strongLead[0]?.name||'핵심 강점'} 독점 강점 콘텐츠 (영상 1건 + 카드뉴스 1건)<br>
+              <strong>금요일</strong>: ${sorted[rank-2]?.name||'상위 후보'} 약점 관련 의제 설정 콘텐츠 게시<br>
+              <strong>토~일</strong>: 주간 성과 점검 + 격차 변화 추적 + 다음 주 전략 조정
+              <br><br>
+              <strong>[역전 가속 전술]</strong><br>
+              역전 가능 지표에서 <strong>3주 내 3~5점 상승</strong>이 목표입니다. 이를 위해:
+              (1) 각 역전 지표별 <strong>"나는 이것을 이렇게 하겠다" 구체적 정책 1건</strong>을 즉시 발표
+              (2) 해당 분야 현장 활동을 <strong>주 2회 이상</strong> 진행하고 영상·사진 기록
+              (3) 관련 분야 전문가·시민의 <strong>추천 인터뷰 1건</strong>을 확보하여 신뢰도 강화.
+              동시에 ${strongLead[0]?.name||'독점 강점'}에서 "이 분야 1등" 메시지를 <strong>매일 1회 이상</strong> 반복하세요.
+              <br><br>
+              <strong>[매주 체크리스트]</strong><br>
+              ☐ 역전 지표 관련 콘텐츠 3건 이상 게시했는가?<br>
+              ☐ 독점 강점 메시지가 매일 노출되고 있는가?<br>
+              ☐ 상위 후보 약점 의제화 콘텐츠 1건 이상 게시했는가?<br>
+              ☐ 격차가 줄어들고 있는가? (여론 반응·SNS 인게이지먼트 체크)<br>
+              ☐ 새로운 역전 기회(돌발 이슈·상대 실수)가 포착되었는가? → 즉시 대응
+            `}
+          </div>
+        </div>
+      </div>`;
+  }).join('');
+
+  document.getElementById('s16-content').innerHTML = `${html}
+    <div class="ls-insight">
+      <strong>📊 핵심 인사이트</strong><br>
+      승리 공식은 <strong>순위에 따라 전략이 완전히 달라집니다.</strong> 1위는 "방어+프레임 유지"가 핵심이고, 2위 이하는 "선택과 집중+차별화"가 핵심입니다.<br><br>
+      <strong>1위 캠프에게</strong>: 가장 큰 실수는 상대의 공격에 일일이 반응하는 것입니다. 수세적 방어는 "1위가 흔들린다"는 신호로 읽힙니다. 대신 자신의 강점 어필에 집중하면서 약점은 조용히 보완하세요. 특히 2위와의 격차가 15점 이내라면, 지금이 가장 위험한 시기입니다. 지지층 결집에 최우선 자원을 투입하세요.<br><br>
+      <strong>2위 이하 캠프에게</strong>: "모든 지표를 올리겠다"는 전략은 자원 낭비입니다. 역전 가능 지표 1-2개에만 집중 투자하고, 나머지는 현 수준 유지로 에너지를 아끼세요. 또한 1위 후보의 약점 지표를 선거 의제로 만드는 것이 가장 효율적인 역전 전략입니다.<br><br>
+      <strong>공통 원칙</strong>: 승리 공식의 3가지 항목 중 <strong>최우선 1개에 전체 캠페인 자원의 50%</strong>를 집중하고, 나머지 2개에 각각 25%씩 배분하세요. 이 배분 원칙을 지키는 캠프가 선거 막판에 힘이 남습니다. 매주 실행 여부를 점검하고 필요시 즉시 수정하세요.
+    </div>`;
+}
+
+/* ── S17: 유권자 설득 메시지 설계 (자동 생성) ── */
+function renderPersuasionMessages() {
+  const data = getData();
+  if (!data?.candidates?.length) { document.getElementById('s17-content').innerHTML = '<p style="color:#1e293b">업로드된 후보자 데이터가 없습니다.</p>'; return; }
+
+  const colors = CANDIDATE_COLORS;
+  const targetColors = ['#0891b2','#d97706','#7c3aed','#dc2626','#16a34a'];
+
+  // 세대별 관심사 매핑
+  const AGE_GROUPS = [
+    { target: '18~29세 청년층', icon: '🎓', issues: ['일자리','창업','임대료','환경'], frame: '변화·혁신' },
+    { target: '30~44세 중년층', icon: '👨‍👩‍👧', issues: ['교육','보육','생활비','주택'], frame: '안정·실용' },
+    { target: '45~59세 중장년층', icon: '💼', issues: ['경제','사업환경','의료','노후'], frame: '경험·성과' },
+    { target: '60세 이상 시니어층', icon: '🧓', issues: ['연금','의료','치안','전통'], frame: '신뢰·안정' },
+  ];
+
+  const html = data.candidates.map((c, idx) => {
+    const m = c.metrics || {};
+    const strongest = Object.entries(m).sort(([,a],[,b])=>b-a).slice(0,3).map(([k])=>k);
+    const stKeywords = (c.strengths||[]).concat(strongest).filter((v,i,a)=>a.indexOf(v)===i).slice(0,4);
+
+    const messages = AGE_GROUPS.map((ag, mi) => {
+      // 후보의 강점과 세대 관심사를 연결하여 메시지 생성
+      const matchIssue = ag.issues[0];
+      const keyStrength = stKeywords[mi % stKeywords.length] || strongest[0];
+
+      const msgTemplates = [
+        `${matchIssue} 문제, ${keyStrength}(으)로 해결하겠습니다. ${c.name}이(가) 약속합니다.`,
+        `${ag.frame}이 필요한 지금, ${keyStrength}이 검증된 ${c.name}이(가) 함께하겠습니다.`,
+        `여러분의 ${matchIssue} 걱정, ${c.name}의 ${keyStrength}(으)로 반드시 풀겠습니다.`,
+        `${matchIssue}·${ag.issues[1]} 모두 챙기는 ${keyStrength}의 리더, ${c.name}입니다.`,
+      ];
+      const msg = msgTemplates[mi % msgTemplates.length];
+
+      const reasons = [
+        `${ag.target}의 최우선 관심사(${matchIssue})와 후보 강점(${keyStrength})을 직접 연결하여 설득력 극대화`,
+        `${ag.frame} 프레임에 맞춰 후보의 ${keyStrength} 역량을 자연스럽게 어필`,
+        `구체적 이슈(${matchIssue})를 제시하여 추상적 공약 대비 체감도 상승`,
+        `${ag.target}이 중시하는 가치(${ag.frame})와 후보 이미지를 일치시켜 신뢰 구축`,
+      ];
+
+      return {
+        target: `${ag.icon} ${ag.target}`,
+        message: msg,
+        reason: reasons[mi % reasons.length]
+      };
+    });
+
+    return `
+      <div style="margin-bottom:20px">
+        <div style="font-size:15px;font-weight:900;color:${colors[idx%5].solid};margin-bottom:12px;display:flex;align-items:center;gap:8px">
+          <span style="background:${colors[idx%5].bg};padding:4px 14px;border-radius:20px">${c.name}</span>
+          <span style="font-size:12px;color:#1e293b;font-weight:600">설득 메시지</span>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px">
+          ${messages.map((msg, mi) => `
+            <div class="msg-card" style="border-top-color:${targetColors[mi%5]}">
+              <div class="msg-target" style="color:${targetColors[mi%5]}">🎯 ${msg.target}</div>
+              <div class="msg-text">"${msg.message}"</div>
+              <div class="msg-reason">💡 ${msg.reason}</div>
+            </div>`).join('')}
+        </div>
+
+        <!-- 후보별 메시지 실행 가이드 200단어 -->
+        <div style="margin-top:12px;padding:16px;background:white;border-radius:8px;border:1px solid ${colors[idx%5].border};border-top:3px solid ${colors[idx%5].solid}">
+          <div style="font-size:13px;font-weight:800;color:${colors[idx%5].solid};margin-bottom:10px;display:flex;align-items:center;gap:6px">
+            📋 ${c.name} 메시지 캠페인 실행 가이드
+          </div>
+          <div style="font-size:12px;color:#1e293b;line-height:1.85">
+            <strong>${c.name} 후보의 핵심 메시지 키워드:</strong> ${stKeywords.slice(0,3).map(k=>`<strong>"${k}"</strong>`).join(' · ')}.
+            위 4개 세대별 메시지를 <strong>채널별로 최적화</strong>하여 동시 운영해야 합니다.
+            <br><br>
+            <strong>[채널별 메시지 배포 전략]</strong><br>
+            <strong>📱 SNS (Instagram·Facebook)</strong>: ${AGE_GROUPS[0].icon} 청년층 메시지를 <strong>카드뉴스 5장 + 60초 릴스 영상</strong>으로 제작. 게시 시간 <strong>오후 7~9시</strong>(청년 활동 시간). 주 3~4회 게시. 해시태그에 "${stKeywords[0]||'핵심키워드'}" 반드시 포함.<br>
+            <strong>📺 카카오톡·밴드</strong>: ${AGE_GROUPS[2].icon} 중장년·${AGE_GROUPS[3].icon} 시니어 메시지를 <strong>이미지 1장 + 텍스트 3줄</strong> 형태로 제작. 오전 8~9시 발송. 주 2~3회. "검증된 경험"과 "안정적 리더십" 키워드 중심.<br>
+            <strong>🎤 오프라인 유세</strong>: 방문 지역의 <strong>주 연령대에 맞는 메시지를 선택</strong>하여 유세 인사말로 사용. 시장·전통시장은 중장년 메시지, 대학가·카페 거리는 청년 메시지, 아파트 단지는 중년(교육·보육) 메시지.
+            <br><br>
+            <strong>[A/B 테스트 실행법]</strong><br>
+            각 세대별 메시지를 <strong>2가지 버전</strong>으로 제작하여 SNS에서 동시 게시하세요.
+            48시간 후 반응(좋아요·댓글·공유)이 높은 버전을 <strong>"위닝 메시지"로 확정</strong>하고 이후 모든 캠페인에 통일 사용합니다.
+            특히 ${stKeywords[0]||'핵심 강점'}을 강조하는 표현 vs 구체적 이슈(${AGE_GROUPS[0].issues[0]})를 먼저 제시하는 표현을 비교하면, 유권자가 어디에 더 반응하는지 데이터로 확인할 수 있습니다.
+            <br><br>
+            <strong>[콘텐츠 제작 즉시 실행 체크리스트]</strong><br>
+            ☐ 세대별 카드뉴스 4종 제작 (세대당 5장 × 4 = 20장)<br>
+            ☐ 60초 릴스 영상 2종 (청년용·중장년용)<br>
+            ☐ 카카오톡 발송용 이미지+텍스트 2종<br>
+            ☐ 유세 인사말 스크립트 3종 (청년·중년·시니어)<br>
+            ☐ A/B 테스트 2세트 게시 → 48시간 후 위닝 메시지 확정
+          </div>
+        </div>
+      </div>`;
+  }).join('');
+
+  document.getElementById('s17-content').innerHTML = `${html}
+    <div class="ls-insight">
+      <strong>📊 핵심 인사이트</strong><br>
+      설득 메시지의 핵심은 <strong>"후보 강점 × 유권자 관심사"의 교차점</strong>입니다. 같은 후보라도 세대별로 완전히 다른 메시지를 전달해야 합니다.<br><br>
+      <strong>18~29세 청년층</strong>은 변화와 혁신에 반응합니다. 추상적인 비전보다 "이 정책으로 내 일자리·임대료가 어떻게 달라지는가"라는 직접적 연결이 핵심입니다. 이 세대는 SNS 단문 메시지에 노출되므로, 15초 안에 전달될 수 있는 한 줄 공약이 필요합니다.<br><br>
+      <strong>45~59세 중장년층과 60세 이상 시니어층</strong>은 경험과 신뢰를 봅니다. "검증된 실적"과 "믿을 수 있는 사람"이라는 이미지를 중심으로 메시지를 구성하세요. 이 세대는 투표율이 높으므로 설득 1명의 효과가 청년층보다 훨씬 큽니다.<br><br>
+      <strong>실행 방법</strong>: 각 세대별로 메시지 테스트(A/B test)를 실시하세요. 같은 강점도 표현 방식에 따라 설득력이 크게 달라집니다. 특히 <strong>공약 카드 뉴스</strong>는 세대별로 별도 제작하는 것을 권장합니다. 유권자가 "이 후보는 나의 문제를 이해하고 있다"고 느끼게 하는 것이 설득의 출발점입니다.
+    </div>`;
+}
+
+/* ── S18: 공격 시나리오 사전 대비 (자동 생성) ── */
+function renderAttackScenarios() {
+  const data = getData();
+  if (!data?.candidates?.length || data.candidates.length < 2) { document.getElementById('s18-content').innerHTML = '<p style="color:#1e293b">2명 이상의 후보자 데이터가 필요합니다.</p>'; return; }
+
+  const colors = CANDIDATE_COLORS;
+  const candidates = data.candidates;
+
+  const html = candidates.map((c, idx) => {
+    const m = c.metrics || {};
+    const weakest = Object.entries(m).sort(([,a],[,b])=>a-b).slice(0,3);
+    const competitors = candidates.filter((_,i)=>i!==idx);
+
+    const scenarios = weakest.map(([weakName, weakVal]) => {
+      // 이 약점에서 가장 강한 경쟁자 찾기
+      let attacker = { name: '-', val: 0, idx: 0 };
+      competitors.forEach((comp, ci) => {
+        const v = comp.metrics?.[weakName] || 0;
+        if (v > attacker.val) attacker = { name: comp.name, val: v, idx: candidates.indexOf(comp) };
+      });
+      const gap = Math.round(attacker.val - weakVal);
+
+      const attackTemplates = {
+        '청렴성': `${c.name} 후보의 청렴성에 의문이 제기되고 있습니다. 과거 행적을 국민 앞에 투명하게 밝혀야 합니다.`,
+        '윤리성': `${c.name} 후보의 윤리 기준이 공직자로서 적합한지 유권자 여러분이 판단해 주십시오.`,
+        '비전명확성': `${c.name} 후보의 공약은 구체성이 부족합니다. 실현 가능한 비전을 제시해야 합니다.`,
+        '리더십': `위기 상황에서 ${c.name} 후보가 과연 리더십을 발휘할 수 있겠습니까?`,
+        '소통능력': `${c.name} 후보는 유권자의 목소리에 귀를 기울이고 있습니까? 소통 부재가 우려됩니다.`,
+        '책임성': `${c.name} 후보의 책임감 있는 행정이 가능한지, 과거 실적으로 검증해야 합니다.`,
+        '대응성': `급변하는 상황에 ${c.name} 후보가 제대로 대응할 수 있을지 의문입니다.`,
+        '정책실행력': `${c.name} 후보의 정책이 실제로 실행 가능한지, 구체적 로드맵이 보이지 않습니다.`,
+        '전문성': `이 분야에 대한 ${c.name} 후보의 전문성은 어느 수준입니까? 경험이 부족해 보입니다.`,
+        '공익성': `${c.name} 후보가 진정으로 공익을 위해 일할 것인지, 실질적 증거가 필요합니다.`,
+      };
+      const attack = attackTemplates[weakName] || `${c.name} 후보의 ${weakName} 역량에 대해 유권자 검증이 필요합니다.`;
+
+      const topStrName = Object.entries(m).sort(([,a],[,b])=>b-a)[0]?.[0]||'핵심 역량';
+      const defenseTemplates = {
+        '청렴성': `"저의 모든 재산과 활동 내역은 이미 공개되어 있습니다. 사실에 기반한 검증을 환영합니다. 오히려 저는 ${topStrName}에서 검증된 후보입니다."`,
+        '윤리성': `"윤리 기준은 말이 아닌 행동으로 증명하는 것입니다. 저의 지금까지의 행적이 그 답입니다. ${topStrName}이라는 강점으로 지역에 기여하겠습니다."`,
+        '비전명확성': `"구체적인 실행 계획은 이미 발표했습니다. 선거 기간 중 더 상세한 로드맵을 공개하겠습니다. 비전은 있되 실행력이 뒷받침되어야 하며, 저는 ${topStrName}으로 이를 증명합니다."`,
+        '리더십': `"리더십은 위기 때 드러납니다. 저는 지금까지 수많은 현장에서 검증받았습니다. ${(c.strengths||[])[0]||'풍부한 경험'}이 저의 리더십의 근거입니다."`,
+        '소통능력': `"현장에서 직접 뛰며 주민 목소리를 듣겠습니다. 소통은 방법이 아니라 진정성입니다. 당선 후에도 열린 소통을 약속드립니다."`,
+        '책임성': `"책임감은 결과로 증명합니다. 저는 맡은 모든 일에서 끝까지 책임지고 성과를 냈습니다. ${topStrName}과 함께 책임지는 리더가 되겠습니다."`,
+        '대응성': `"위기 상황에서의 빠른 대응은 경험에서 나옵니다. 저는 현장에서 수많은 문제를 즉각 해결해 온 경험이 있습니다. 앞으로도 주민 목소리에 가장 빠르게 반응하겠습니다."`,
+        '정책실행력': `"정책은 발표가 아니라 실행입니다. 저의 구체적인 실행 계획과 단계별 로드맵을 확인해 주십시오. ${topStrName}을 바탕으로 반드시 실현하겠습니다."`,
+        '전문성': `"전문성은 하루아침에 만들어지지 않습니다. 저는 이 분야에서 오랜 경험과 학습을 쌓아왔으며, ${topStrName}과 결합하여 실질적 성과를 만들겠습니다."`,
+        '공익성': `"공익을 위한 헌신은 저의 모든 활동의 출발점입니다. 지금까지의 봉사 활동과 지역 기여 실적이 그 증거입니다. 앞으로도 주민 이익을 최우선으로 하겠습니다."`,
+      };
+      const defense = defenseTemplates[weakName] || `"${weakName}에 대한 우려를 이해합니다. 하지만 저의 ${topStrName}(${Math.round(Object.entries(m).sort(([,a],[,b])=>b-a)[0]?.[1]||0)}점)이 그 답입니다. 구체적 실적으로 증명하겠습니다."`;
+
+      const defenseStrategy = gap >= 10
+        ? `핵심 방어: "${weakName}" 이슈를 직접 다루지 말고, 자신의 최고 강점(${topStrName})으로 화제를 전환하세요. 약점을 인정하되 강점의 맥락에서 재해석하는 것이 효과적입니다. 구체적 개선 계획을 1가지 제시하여 "인식하고 있다"는 메시지를 전달하세요.`
+        : `핵심 방어: 격차가 ${gap}점으로 크지 않으므로, 구체적 사례 1-2개를 준비하여 정면 반박하세요. 이 영역의 노력을 SNS·현장에서 적극 보여주면 역전 가능합니다.`;
+
+      return { weakName, weakVal: Math.round(weakVal), attacker, gap, attack, defense, defenseStrategy };
+    });
+
+    return `
+      <div style="margin-bottom:20px">
+        <div style="font-size:15px;font-weight:900;color:${colors[idx%5].solid};margin-bottom:12px;display:flex;align-items:center;gap:8px">
+          <span style="background:${colors[idx%5].bg};padding:4px 14px;border-radius:20px">${c.name}</span>
+          <span style="font-size:12px;color:#1e293b;font-weight:600">공격-방어 시나리오</span>
+        </div>
+        ${scenarios.map((s, si) => `
+          <div class="attack-scenario">
+            <div class="attack-header">
+              <span class="attack-badge" style="background:#fee2e2;color:#991b1b">공격 #${si+1}</span>
+              <span style="font-size:12px;font-weight:700;color:#1e293b">공격자: ${s.attacker.name} (${s.weakName} ${Math.round(s.attacker.val)}점) → ${c.name} (${s.weakVal}점) · 격차 ${s.gap}점</span>
+            </div>
+            <div class="attack-point">🗣️ <strong>예상 공격:</strong> "${s.attack}"</div>
+            <div class="defense-point">
+              🛡️ <strong>방어 화법:</strong> ${s.defense}<br>
+              📋 <strong>방어 전략:</strong> ${s.defenseStrategy}
+            </div>
+          </div>`).join('')}
+      </div>`;
+  }).join('');
+
+  document.getElementById('s18-content').innerHTML = `${html}
+    <div class="ls-insight">
+      <strong>📊 핵심 인사이트</strong><br>
+      공격은 반드시 <strong>약점 지표에서 시작</strong>됩니다. 하위 3개 메트릭에 대한 방어 시나리오를 사전에 준비하면, 실제 공격 시 당황하지 않고 즉각 대응할 수 있습니다.<br><br>
+      <strong>방어의 황금 원칙</strong>: 약점을 부정하지 말고, 강점의 맥락에서 재해석하세요. "그 부분은 부족할 수 있지만, 이 분야에서는 확실합니다"라는 전환이 가장 효과적입니다. 부정하면 더 의심을 받고, 인정하되 전환하면 오히려 솔직하다는 인상을 줍니다.<br><br>
+      <strong>격차 10점 이상(위험 구간)</strong>: 정면 반박보다 화제 전환이 낫습니다. 해당 약점을 직접 언급하는 것은 오히려 이슈를 키우는 효과가 있습니다. 대신 "국민이 진짜 원하는 것은 ○○"라며 의제 자체를 이동시키세요.<br><br>
+      <strong>격차 10점 이내(관리 가능 구간)</strong>: 구체적 사례로 정면 돌파하세요. 날짜, 장소, 수치가 있는 반박 자료를 준비해 "사실과 다릅니다"라고 명확히 반박할 수 있어야 합니다.<br><br>
+      <strong>즉시 실행</strong>: 지금 바로 각 공격 시나리오별로 <strong>30초 답변 훈련</strong>을 시작하세요. 실제 토론과 인터뷰 전에 최소 10회 이상 연습하면 순발력 있는 대응이 가능합니다.
+    </div>`;
+}
+
+/* ── S19: 선거 판세 종합 내러티브 (자동 생성) ── */
+function renderNarrative() {
+  const data = getData();
+  if (!data?.candidates?.length) { document.getElementById('s19-content').innerHTML = '<p style="color:#1e293b">업로드된 후보자 데이터가 없습니다.</p>'; return; }
+
+  const candidates = data.candidates;
+  const sorted = [...candidates].map((c,i)=>({...c,idx:i})).sort((a,b)=>(b.total_score||0)-(a.total_score||0));
+  const district = data.district || '해당 선거구';
+  const leader = sorted[0];
+  const runner = sorted[1];
+  const gap = Math.round((leader.total_score||0) - (runner?.total_score||0));
+
+  // 경쟁 강도 분석
+  let intensity = '';
+  if (gap <= 10) intensity = '초접전';
+  else if (gap <= 25) intensity = '경쟁적';
+  else if (gap <= 50) intensity = '우세';
+  else intensity = '압도적';
+
+  // 핵심 전장(가장 치열한 메트릭)
+  const battlegrounds = METRICS.map(m => {
+    const scores = sorted.map(c => c.metrics?.[m]||0);
+    const metricGap = Math.max(...scores) - Math.min(...scores);
+    return { name: m, gap: metricGap };
+  }).sort((a,b) => a.gap - b.gap).slice(0,3).map(b => b.name);
+
+  // 각 후보 강점 요약
+  const candidateSummaries = sorted.map(c => {
+    const top = Object.entries(c.metrics||{}).sort(([,a],[,b])=>b-a)[0];
+    return `<strong>${c.name}</strong>(${Math.round(c.total_score||0)}점)은 ${top?.[0]||'종합'}에서 강세`;
+  }).join(', ');
+
+  const narrative = `
+    <strong>${district}</strong> 선거의 판세는 현재 <strong>${intensity} 구도</strong>로 전개되고 있습니다.
+    ${sorted.length}명의 후보가 경합하는 가운데, ${candidateSummaries}를 보이고 있습니다.
+    <br><br>
+    현재 선두는 <strong>${leader.name}</strong>(${Math.round(leader.total_score||0)}점)이며,
+    ${runner ? `2위 <strong>${runner.name}</strong>(${Math.round(runner?.total_score||0)}점)과의 격차는 <strong>${gap}점</strong>입니다.` : '단독 선두를 달리고 있습니다.'}
+    ${gap <= 15 ? '이 격차는 선거 막판 변수에 따라 충분히 뒤집힐 수 있는 범위로, 사실상 모든 후보에게 기회가 열려 있습니다.' : gap <= 30 ? '일정한 격차가 있으나, 특정 이슈의 부각이나 효과적인 캠페인 전략으로 판세 변동이 가능한 범위입니다.' : '상당한 격차가 형성되어 있어, 2위 이하 후보들의 역전을 위해서는 파격적인 전략 전환이 필요합니다.'}
+    <br><br>
+    이번 선거의 <strong>핵심 전장</strong>은 ${battlegrounds.map(b=>`<strong>${b}</strong>`).join(', ')} 영역입니다.
+    이 지표들에서 후보 간 격차가 가장 작아, 어떤 후보든 집중 투자하면 우위를 점할 수 있는 경쟁 영역입니다.
+    ${sorted.length >= 3 ? `<br><br>특히 주목할 점은 ${sorted.length}파전 구도에서 <strong>표 분산 효과</strong>가 작용할 수 있다는 것입니다. 3위 이하 후보의 지지율이 2위에 집중되면 판세가 급변할 가능성이 있으며, 이는 모든 캠프가 주시해야 할 변수입니다.` : ''}
+    <br><br>
+    결론적으로, 이번 선거는 <strong>"누가 자신의 강점을 먼저 프레임화하느냐"</strong>에 달려 있습니다.
+    종합 점수보다 중요한 것은 유권자가 <strong>"이번 선거의 핵심 이슈가 무엇인가"를 어떻게 인식하느냐</strong>이며,
+    자신에게 유리한 이슈를 선거의 중심 의제로 설정하는 캠프가 최종 승자가 될 가능성이 높습니다.
+  `;
+
+  // 후보별 판세 기반 전략 가이드 생성
+  const candidateGuides = sorted.map((c, rank) => {
+    const cc = CANDIDATE_COLORS[c.idx % 5];
+    const m = c.metrics || {};
+    const totalScore = Math.round(c.total_score || 0);
+    const top3 = Object.entries(m).sort(([,a],[,b])=>b-a).slice(0,3);
+    const bot2 = Object.entries(m).sort(([,a],[,b])=>a-b).slice(0,2);
+    const isLeader = rank === 0;
+
+    // 이 후보가 핵심 전장에서 우위인지 분석
+    const battleStatus = battlegrounds.map(bg => {
+      const myVal = Math.round(m[bg] || 0);
+      const bestVal = Math.round(Math.max(...sorted.filter(x=>x.idx!==c.idx).map(x=>x.metrics?.[bg]||0)));
+      return { name: bg, myVal, bestVal, lead: myVal - bestVal };
+    });
+    const battleWins = battleStatus.filter(b => b.lead > 0).length;
+    const battleLosses = battleStatus.filter(b => b.lead < 0).length;
+
+    // 표 분산/집중 효과 분석
+    const nextAbove = rank > 0 ? sorted[rank-1] : null;
+    const nextBelow = rank < sorted.length-1 ? sorted[rank+1] : null;
+    const gapAbove = nextAbove ? Math.round((nextAbove.total_score||0) - totalScore) : 0;
+    const gapBelow = nextBelow ? Math.round(totalScore - (nextBelow.total_score||0)) : 0;
+
+    let guideHTML = '';
+
+    if (isLeader) {
+      guideHTML = `
+        <strong>현재 판세에서 ${c.name} 후보는 ${intensity} 구도의 선두</strong>입니다.
+        핵심 전장(${battlegrounds.join(', ')}) ${battlegrounds.length}개 중 <strong>${battleWins}개에서 우위</strong>, ${battleLosses}개에서 열위입니다.
+        ${gap <= 15 ? `2위와 ${gap}점 격차로 <strong>매우 불안정한 선두</strong>이며, 핵심 전장에서 밀리면 즉시 역전됩니다.` : `${gap}점 격차의 안정적 선두이나, 핵심 전장에서의 우위를 유지해야 합니다.`}
+        <br><br>
+        <strong>[판세 활용 전략] 프레임 주도권 사수</strong><br>
+        현재 유리한 판세를 유지하려면, <strong>"이번 선거의 핵심 이슈는 ${top3[0]?.[0]||'핵심 역량'}"</strong>이라는 프레임을 선거 끝까지 유지해야 합니다.
+        경쟁 후보가 다른 이슈로 프레임을 전환하려 할 때, <strong>48시간 내에 자신의 프레임으로 되돌리는 콘텐츠</strong>를 투입하세요.
+        핵심 전장에서 열위인 ${battleStatus.filter(b=>b.lead<0).map(b=>b.name).join(', ')||'영역'}에 대해서는 관련 정책·현장 활동을 <strong>주 2회 이상</strong> 진행하여 격차를 줄이세요.
+        <br><br>
+        <strong>[위험 시나리오 대비]</strong><br>
+        ${sorted.length >= 3 ? `${sorted.length}파전 구도에서 <strong>하위 후보 지지층이 2위에 집중되면 역전</strong>될 수 있습니다. 하위 후보의 철수·단일화 움직임을 실시간 모니터링하고, 발생 시 즉각 지지층 결집 메시지를 발신하세요.` : `양자 구도에서는 부동층 확보가 곧 승리입니다. 부동층이 반응하는 구체적 생활 이슈 메시지에 자원을 집중하세요.`}
+        매일 SNS 여론 동향을 분석하고, 판세 변동 징후(갑작스러운 경쟁자 콘텐츠 급증, 부정 여론 확산) 발견 시 <strong>4시간 내 대응 체계</strong>를 가동하세요.`;
+
+    } else if (gapAbove <= 15) {
+      guideHTML = `
+        <strong>현재 판세에서 ${c.name} 후보는 ${rank+1}위(${totalScore}점)</strong>로, ${nextAbove?.name||'상위 후보'}와 <strong>${gapAbove}점 격차</strong>입니다.
+        ${intensity} 구도에서 <strong>역전 가능한 위치</strong>에 있습니다.
+        핵심 전장(${battlegrounds.join(', ')}) 중 <strong>${battleWins}개에서 우위</strong>를 점하고 있어, 이 영역을 기반으로 판세를 뒤집을 수 있습니다.
+        <br><br>
+        <strong>[판세 역전 전략] 핵심 전장 선점</strong><br>
+        핵심 전장은 후보 간 격차가 가장 작은 영역입니다.
+        ${battleStatus.filter(b=>b.lead>0).length > 0
+          ? `${battleStatus.filter(b=>b.lead>0).map(b=>`<strong>${b.name}(+${b.lead}점)</strong>`).join(', ')}에서 이미 우위이므로, 이 영역을 <strong>선거의 핵심 의제로 격상</strong>시키세요. "이번 선거의 진짜 쟁점은 ${battleStatus.filter(b=>b.lead>0)[0]?.name||'이것'}"이라는 메시지를 모든 채널에서 반복하면, 자연스럽게 유리한 평가 기준이 형성됩니다.`
+          : `핵심 전장에서 아직 우위가 없으므로, 가장 격차가 작은 ${battleStatus.sort((a,b)=>Math.abs(a.lead)-Math.abs(b.lead))[0]?.name||'영역'}부터 집중 공략하세요. 관련 정책 1건 발표 + 현장 활동 주 3회로 단기간에 우위를 잡을 수 있습니다.`}
+        <br><br>
+        <strong>[판세 변동 기회 포착]</strong><br>
+        ${sorted.length >= 3 ? `${sorted.length}파전 구도는 ${c.name} 후보에게 기회입니다. 하위 후보의 지지층이 이탈할 경우 <strong>이 표를 흡수하는 것이 역전의 열쇠</strong>입니다. 하위 후보 지지층의 관심사를 분석하고, 이들에게 맞는 메시지를 사전 준비하세요.` : ''}
+        1위 후보의 약점(${Object.entries(sorted[0]?.metrics||{}).sort(([,a],[,b])=>a-b)[0]?.[0]||'-'})이 이슈화되는 순간이 <strong>최적의 역전 타이밍</strong>입니다.
+        해당 이슈 관련 대응 콘텐츠를 미리 제작해 두고, 기회 포착 시 <strong>24시간 내 집중 발신</strong>하세요.`;
+
+    } else {
+      guideHTML = `
+        <strong>현재 판세에서 ${c.name} 후보는 ${rank+1}위(${totalScore}점)</strong>로, 상위 후보와 <strong>${gapAbove}점 격차</strong>가 있습니다.
+        ${intensity} 구도에서 <strong>기존 판세의 틀을 깨야</strong> 승산이 생깁니다.
+        핵심 전장(${battlegrounds.join(', ')}) 중 ${battleWins > 0 ? `<strong>${battleWins}개에서 우위</strong>가 있어 이를 활용할 수 있습니다.` : '우위가 없으므로 새로운 의제를 만들어야 합니다.'}
+        <br><br>
+        <strong>[판세 전환 전략] 새로운 선거 축 제시</strong><br>
+        현재 1~2위 중심의 경쟁 구도를 그대로 두면 불리합니다.
+        <strong>"기존 후보들이 간과하는 진짜 문제"</strong>를 제시하여 선거의 축을 바꾸세요.
+        ${top3[0]?.[0]||'최고 강점'}(${Math.round(top3[0]?.[1]||0)}점)을 중심으로 "이번 선거에서 아무도 이야기하지 않는 ${top3[0]?.[0]||'핵심 이슈'}, 제가 하겠습니다"라는 <strong>차별화 내러티브</strong>를 구축하세요.
+        이 메시지를 매일 SNS·현장에서 반복하면, 3주 후 유권자 인식에 새로운 프레임이 각인됩니다.
+        <br><br>
+        <strong>[표 결집 전략]</strong><br>
+        ${sorted.length >= 3 ? `${sorted.length}파전에서 하위 후보 간 지지층 교류가 발생할 수 있습니다.
+        비슷한 순위의 후보 지지층이 반응하는 이슈를 파악하고, <strong>이들과 공유할 수 있는 공통 의제</strong>를 선점하세요.
+        "변화를 원하는 모든 분들의 선택지"라는 포지션이 하위 후보 지지층을 끌어모을 수 있습니다.` : `양자 구도에서는 부동층 전체를 타겟으로, ${top3[0]?.[0]||'핵심 강점'}을 유일한 차별점으로 내세우세요.`}
+        지금부터 선거일까지 <strong>"${c.name} = ${top3[0]?.[0]||'핵심 역량'}"</strong>이라는 단 하나의 연상 구조를 만드는 것이 최종 목표입니다.`;
+    }
+
+    return `
+      <div style="background:white;border:1px solid var(--border);border-radius:var(--radius-sm);padding:18px;border-left:5px solid ${cc.solid};margin-bottom:10px">
+        <div style="font-size:13px;font-weight:800;color:${cc.solid};margin-bottom:10px;display:flex;align-items:center;gap:8px">
+          📋 ${c.name} 판세 기반 전략 가이드
+          <span style="padding:2px 8px;border-radius:10px;font-size:12px;font-weight:700;background:${isLeader?'#dcfce7':gapAbove<=15?'#fef3c7':'#fee2e2'};color:${isLeader?'#166534':gapAbove<=15?'#92400e':'#991b1b'}">${rank+1}위 · ${isLeader?'프레임 사수':gapAbove<=15?'역전 가능':'판세 전환'}</span>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px">
+          <div style="text-align:center;padding:8px;background:#f0f9ff;border-radius:6px">
+            <div style="font-size:16px;font-weight:900;color:#0284c7">${battleWins}/${battlegrounds.length}</div>
+            <div style="font-size:12px;font-weight:700;color:#0369a1">전장 우위</div>
+          </div>
+          <div style="text-align:center;padding:8px;background:${isLeader?'#dcfce7':'#fef3c7'};border-radius:6px">
+            <div style="font-size:16px;font-weight:900;color:${isLeader?'#16a34a':'#d97706'}">${isLeader?'+'+gap:'-'+gapAbove}점</div>
+            <div style="font-size:12px;font-weight:700;color:${isLeader?'#166534':'#92400e'}">${isLeader?'선두 격차':'상위 격차'}</div>
+          </div>
+          <div style="text-align:center;padding:8px;background:#f5f3ff;border-radius:6px">
+            <div style="font-size:16px;font-weight:900;color:#7c3aed">${intensity}</div>
+            <div style="font-size:12px;font-weight:700;color:#5b21b6">경쟁 강도</div>
+          </div>
+        </div>
+        <div style="font-size:12px;color:#1e293b;line-height:1.85">${guideHTML}</div>
+      </div>`;
+  }).join('');
+
+  document.getElementById('s19-content').innerHTML = `
+    <div class="narrative-box">${narrative}</div>
+
+    <!-- 후보별 판세 기반 전략 가이드 -->
+    <div style="margin-top:16px;display:flex;flex-direction:column;gap:10px">${candidateGuides}</div>
+
+    <div class="ls-insight" style="margin-top:16px">
+      <strong>📊 핵심 인사이트</strong><br>
+      선거 판세는 <strong>고정된 것이 아니라 프레임에 의해 움직입니다.</strong> 점수 격차보다 중요한 것은 "어떤 기준으로 후보를 평가할 것인가"를 유권자에게 설정하는 것입니다.<br><br>
+      현재 <strong>${intensity} 구도</strong>에서 핵심 전장(${battlegrounds.map(b=>`<strong>${b}</strong>`).join(', ')})을 선점하는 캠프가 주도권을 가져갑니다. 핵심 전장은 후보 간 격차가 가장 작은 영역으로, 누구든 집중 투자하면 우위를 뒤집을 수 있는 곳입니다.<br><br>
+      <strong>프레임 전쟁의 실전 원칙</strong>: 먼저 이슈를 선점하는 캠프가 유리합니다. 상대 캠프가 의제를 설정하기 전에 자신에게 유리한 이슈를 뉴스와 SNS에 선제 배포하세요. 상대방의 프레임에 반응하는 것은 이미 그 프레임을 인정하는 것과 같습니다.<br><br>
+      <strong>내러티브 관리</strong>: 유권자는 정책보다 스토리에 더 강하게 반응합니다. "이 후보는 어떤 사람인가"라는 인간적 내러티브를 선거 초반에 확실히 구축하세요. 나중에 만들어진 이미지는 초기 이미지를 이기기 어렵습니다. <strong>지금 이 순간이 내러티브를 설정할 가장 중요한 시점</strong>임을 명심하세요.
+    </div>`;
+}
+
+/* ── S20: 캠프 리더 브리핑 요약 (자동 생성) ── */
+function renderBriefing() {
+  const data = getData();
+  if (!data?.candidates?.length) { document.getElementById('s20-content').innerHTML = '<p style="color:#1e293b">업로드된 후보자 데이터가 없습니다.</p>'; return; }
+
+  const now = new Date().toLocaleDateString('ko-KR');
+  const district = data.district || '-';
+  const sorted = [...data.candidates].map((c,i)=>({...c,idx:i})).sort((a,b)=>(b.total_score||0)-(a.total_score||0));
+  const leader = sorted[0];
+  const runner = sorted[1];
+  const gap = runner ? Math.round((leader.total_score||0)-(runner.total_score||0)) : 0;
+
+  // 핵심 발견
+  const findings = [];
+  // 1) 선두/격차
+  findings.push(`현재 선두 ${leader.name}(${Math.round(leader.total_score||0)}점)${runner ? `, 2위 ${runner.name}과 ${gap}점 격차` : ''}`);
+  // 2) 가장 치열한 지표
+  const fiercest = METRICS.map(m => {
+    const vals = sorted.map(c => c.metrics?.[m]||0);
+    return { name: m, range: Math.max(...vals) - Math.min(...vals) };
+  }).sort((a,b)=>a.range-b.range)[0];
+  findings.push(`가장 치열한 경쟁 지표: ${fiercest.name} (후보 간 격차 ${Math.round(fiercest.range)}점)`);
+  // 3) 전체 평균
+  const avgScore = Math.round(sorted.reduce((s,c)=>s+(c.total_score||0),0) / sorted.length);
+  findings.push(`후보 평균 점수: ${avgScore}점 (${avgScore >= 750 ? '전반적 고수준 경쟁' : avgScore >= 650 ? '중상위권 경쟁' : '혼전 양상'})`);
+
+  // 기회/위협
+  const opportunities = [];
+  const threats = [];
+  sorted.forEach(c => {
+    const topMetric = Object.entries(c.metrics||{}).sort(([,a],[,b])=>b-a)[0];
+    if (topMetric) opportunities.push(`${c.name}: ${topMetric[0]}(${Math.round(topMetric[1])}점) 강점 활용 가능`);
+    const botMetric = Object.entries(c.metrics||{}).sort(([,a],[,b])=>a-b)[0];
+    if (botMetric) threats.push(`${c.name}: ${botMetric[0]}(${Math.round(botMetric[1])}점) 공격 노출 위험`);
+  });
+
+  // 즉시 실행
+  const actions = [
+    `핵심 전장(${fiercest.name}) 관련 정책 메시지 즉시 준비`,
+    `하위 메트릭 방어 시나리오 사전 수립 (S18 참조)`,
+    `세대별 맞춤 설득 메시지 캠페인 자료 제작 (S17 참조)`,
+  ];
+
+  const rankings = sorted.map((c,i) => {
+    const topStr = Object.entries(c.metrics||{}).sort(([,a],[,b])=>b-a)[0];
+    const botStr = Object.entries(c.metrics||{}).sort(([,a],[,b])=>a-b)[0];
+    return { rank: i+1, name: c.name, score: Math.round(c.total_score||0), position: `강점: ${topStr?.[0]||'-'}, 약점: ${botStr?.[0]||'-'}` };
+  });
+
+  document.getElementById('s20-content').innerHTML = `
+    <div class="briefing-box">
+      <div class="briefing-header">
+        <h3>📋 ${district} 캠프 브리핑</h3>
+        <div class="sub">${now} · CONFIDENTIAL</div>
+      </div>
+      <div class="briefing-section">
+        <div style="font-size:14px;font-weight:800;color:#0f172a;margin-bottom:10px;padding:8px 12px;background:#e0f2fe;border-radius:6px">📊 판세 요약: ${sorted.length}명 경합, 선두 ${leader.name}(${Math.round(leader.total_score||0)}점)${runner?`, ${gap}점 격차로 ${gap<=15?'초접전':gap<=30?'경쟁적':'우세'} 구도`:''}</div>
+      </div>
+      <div class="briefing-section">
+        <h4>🏆 현재 순위</h4>
+        <ul>${rankings.map(r=>`<li><strong>${r.rank}위 ${r.name}</strong> (${r.score}점) — ${r.position}</li>`).join('')}</ul>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
+        <div class="briefing-section" style="margin:0">
+          <h4>🔍 핵심 발견</h4>
+          <ul>${findings.map(f=>`<li>${f}</li>`).join('')}</ul>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <div class="briefing-section" style="margin:0">
+            <h4 style="background:#dcfce7;color:#166534">✅ 기회 요인</h4>
+            <ul>${opportunities.slice(0,3).map(o=>`<li>${o}</li>`).join('')}</ul>
+          </div>
+          <div class="briefing-section" style="margin:0">
+            <h4 style="background:#fee2e2;color:#991b1b">⚠️ 위협 요인</h4>
+            <ul>${threats.slice(0,3).map(t=>`<li>${t}</li>`).join('')}</ul>
+          </div>
+        </div>
+      </div>
+      <div class="briefing-section">
+        <h4 style="background:#fef3c7;color:#92400e">🚀 즉시 실행 사항</h4>
+        <ul>${actions.map(a=>`<li><strong>${a}</strong></li>`).join('')}</ul>
+      </div>
+      <div class="briefing-section">
+        <h4>📅 다음 회의 안건</h4>
+        <ul>
+          <li>세대별 메시지 캠페인 자료 검토 및 승인</li>
+          <li>공격 시나리오별 방어 매뉴얼 확정</li>
+          <li>온라인 캠페인 집행 일정 및 예산 확정</li>
+        </ul>
+      </div>
+      <div style="text-align:center;padding-top:12px;border-top:1px solid #e2e8f0;font-size:12px;color:#1e293b">
+        Generated by ElectionAI · Data-Driven Analysis · ${now}
+      </div>
+    </div>
+
+    <!-- 후보별 캠프 실행 가이드 -->
+    ${sorted.map((c, rank) => {
+      const cc = CANDIDATE_COLORS[c.idx % 5];
+      const m = c.metrics || {};
+      const totalScore = Math.round(c.total_score || 0);
+      const isLeader = rank === 0;
+      const top3 = Object.entries(m).sort(([,a],[,b])=>b-a).slice(0,3);
+      const bot2 = Object.entries(m).sort(([,a],[,b])=>a-b).slice(0,2);
+
+      // 경쟁자 대비 분석
+      const others = sorted.filter(x => x.idx !== c.idx);
+      const gapAbove = rank > 0 ? Math.round((sorted[rank-1].total_score||0) - totalScore) : 0;
+      const gapBelow = rank < sorted.length-1 ? Math.round(totalScore - (sorted[rank+1]?.total_score||0)) : 0;
+
+      // 1위 지표 수
+      const leadingCount = METRICS.filter(met => {
+        const myVal = m[met] || 0;
+        return others.every(o => myVal >= (o.metrics?.[met]||0));
+      }).length;
+
+      // 위험 등급 약점 수 (경쟁자 대비 10점 이상 격차)
+      const dangerWeaks = bot2.filter(([k,v]) => {
+        const compMax = Math.max(...others.map(o => o.metrics?.[k]||0));
+        return compMax - v >= 10;
+      });
+
+      // 이번 주 / 다음 주 / 향후 1개월 시간 축 전략
+      let guideHTML = '';
+
+      if (isLeader) {
+        guideHTML = `
+          <strong>${c.name} 후보는 현재 ${totalScore}점 1위</strong>이며, 2위와 ${gap}점 격차입니다.
+          10개 지표 중 <strong>${leadingCount}개에서 1위</strong>, 위험 약점 ${dangerWeaks.length}개를 보유하고 있습니다.
+          아래는 <strong>시간 축별 실행 로드맵</strong>입니다.
+          <br><br>
+          <strong>[이번 주 — 즉시 실행]</strong><br>
+          ☐ ${bot2[0]?.[0]||'하위 지표'} 방어 Q&A 카드 제작 + 캠프 전원 배포 (D+2일 이내)<br>
+          ☐ ${top3[0]?.[0]||'핵심 강점'} 관련 SNS 콘텐츠 3건 게시 (프레임 선점)<br>
+          ☐ 2위 ${sorted[1]?.name||'경쟁자'} SNS·언론 동향 일일 모니터링 시작<br>
+          ☐ 세대별 설득 메시지 카드뉴스 4종 제작 착수 (S17 참조)
+          <br><br>
+          <strong>[다음 주 — 강화 단계]</strong><br>
+          ☐ ${bot2[0]?.[0]||'취약 지표'} 개선 활동 1건 공개 (선제 예방 접종)<br>
+          ☐ ${top3[0]?.[0]||'강점'} 프레임 영상 콘텐츠 2건 제작·배포<br>
+          ☐ 핵심 지지층 대상 결집 이벤트 1회 개최<br>
+          ☐ 공격 시나리오별 모의 토론 1회 실시 (S18 참조)
+          <br><br>
+          <strong>[향후 1개월 — 판세 확정]</strong><br>
+          ☐ 주간 브리핑 정례화 (매주 월요일 오전, 이 보고서 기반)<br>
+          ☐ ${dangerWeaks.length > 0 ? `위험 약점(${dangerWeaks.map(([k])=>k).join(', ')}) 격차를 5점 이내로 축소` : '전 지표 1위 유지 + 격차 확대'}<br>
+          ☐ 부동층 타겟 집중 캠페인 (D-30부터 본격 가동)<br>
+          ☐ 선거 막판 2주 전 일일 브리핑 체제 전환 준비<br>
+          ☐ 조기 투표 독려 메시지 사전 제작 + 지지층 동원 계획 수립`;
+      } else if (gapAbove <= 15) {
+        guideHTML = `
+          <strong>${c.name} 후보는 현재 ${rank+1}위(${totalScore}점)</strong>로, ${sorted[rank-1]?.name||'상위 후보'}와 <strong>${gapAbove}점 격차</strong>입니다.
+          <strong>역전 가능 범위</strong>이며, 집중적인 실행이 필요합니다.
+          <br><br>
+          <strong>[이번 주 — 즉시 실행]</strong><br>
+          ☐ 역전 가능 지표(S14 참조) 관련 정책 1건 즉시 발표<br>
+          ☐ ${top3[0]?.[0]||'최고 강점'} "이 분야 1등" 콘텐츠 매일 1건 게시 시작<br>
+          ☐ ${sorted[rank-1]?.name||'상위 후보'} 약점(${Object.entries(sorted[rank-1]?.metrics||{}).sort(([,a],[,b])=>a-b)[0]?.[0]||'-'}) 관련 의제 설정 콘텐츠 1건 게시<br>
+          ☐ 세대별 설득 메시지 A/B 테스트 2세트 게시 (S17 참조)
+          <br><br>
+          <strong>[다음 주 — 역전 가속]</strong><br>
+          ☐ 역전 지표 관련 현장 활동 주 3회 진행 + 영상 기록<br>
+          ☐ ${top3[0]?.[0]||'독점 강점'} 전문가·수혜자 추천 인터뷰 1건 확보<br>
+          ☐ 경쟁자 약점 관련 토론회·인터뷰 질문 리스트 준비<br>
+          ☐ A/B 테스트 결과 → "위닝 메시지" 확정 → 전 채널 통일
+          <br><br>
+          <strong>[향후 1개월 — 역전 달성]</strong><br>
+          ☐ 역전 가능 지표에서 <strong>3~5점 상승</strong> 달성 (주간 추적)<br>
+          ☐ ${bot2[0]?.[0]||'약점'} 방어 시나리오 숙지 + 모의 토론 2회<br>
+          ☐ ${sorted.length >= 3 ? '하위 후보 지지층 이탈표 흡수 메시지 사전 제작' : '부동층 집중 공략 캠페인 본격 가동'}<br>
+          ☐ 선거 막판 2주: 역전 지표+독점 강점 <strong>더블 집중 캠페인</strong> 돌입<br>
+          ☐ 격차 추적 주간 보고서 작성 → 전략 즉시 수정 체계 구축`;
+      } else {
+        guideHTML = `
+          <strong>${c.name} 후보는 현재 ${rank+1}위(${totalScore}점)</strong>로, 상위 후보와 <strong>${gapAbove}점 격차</strong>가 있습니다.
+          종합 역전보다 <strong>특정 분야 독보적 포지션 구축</strong>이 현실적 목표입니다.
+          <br><br>
+          <strong>[이번 주 — 즉시 실행]</strong><br>
+          ☐ ${top3[0]?.[0]||'최고 강점'}을 핵심 정체성으로 확정 → 모든 채널 통일 배치<br>
+          ☐ "이번 선거의 진짜 쟁점은 ${top3[0]?.[0]||'이것'}" 콘텐츠 3건 집중 게시<br>
+          ☐ ${bot2[0]?.[0]||'약점'} 공격 대비 방어 답변 1장 제작 (화제 전환용)<br>
+          ☐ 현장 유세 인사말을 "${top3[0]?.[0]||'핵심 강점'}의 전문가 ${c.name}" 통일
+          <br><br>
+          <strong>[다음 주 — 차별화 구축]</strong><br>
+          ☐ ${top3[0]?.[0]||'핵심 강점'} 관련 집중 콘텐츠 5건 연속 발신 (독점 포지션 각인)<br>
+          ☐ 해당 분야 현장 활동 주 3회 + 전문가 추천 영상 1건<br>
+          ☐ 1위·2위 후보가 다루지 않는 <strong>틈새 이슈</strong> 1개 발굴 → 독점 의제화<br>
+          ☐ ${sorted.length >= 3 ? '비슷한 순위 후보 지지층과 공유할 수 있는 공통 메시지 설계' : '부동층 중 특정 세대 1개 타겟 집중'}
+          <br><br>
+          <strong>[향후 1개월 — 존재감 확립]</strong><br>
+          ☐ "${c.name} = ${top3[0]?.[0]||'핵심 역량'}" 연상 구조 완성 (3주 반복 각인)<br>
+          ☐ 강점 70% / 약점 방어 20% / 기타 10% 자원 배분 엄수<br>
+          ☐ 토론회에서 자신의 프레임으로 대화 주도 (리허설 3회+)<br>
+          ☐ 선거 막판 2주: 독점 강점 올인 캠페인 + 감성적 호소 영상 1건<br>
+          ☐ 지지층 투표 참여 독려 + 조기 투표 동원 체계 가동`;
+      }
+
+      return `
+        <div style="background:white;border:1px solid var(--border);border-radius:var(--radius-sm);padding:18px;border-left:5px solid ${cc.solid};margin-top:12px">
+          <div style="font-size:13px;font-weight:800;color:${cc.solid};margin-bottom:10px;display:flex;align-items:center;gap:8px">
+            📋 ${c.name} 캠프 실행 로드맵
+            <span style="padding:2px 8px;border-radius:10px;font-size:12px;font-weight:700;background:${isLeader?'#dcfce7':gapAbove<=15?'#fef3c7':'#fee2e2'};color:${isLeader?'#166534':gapAbove<=15?'#92400e':'#991b1b'}">${rank+1}위 · ${isLeader?'선두 수성':gapAbove<=15?'역전 공략':'차별화 돌파'}</span>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px;margin-bottom:12px">
+            <div style="text-align:center;padding:8px;background:${cc.bg};border-radius:6px">
+              <div style="font-size:16px;font-weight:900;color:${cc.solid}">${totalScore}</div>
+              <div style="font-size:12px;font-weight:700;color:${cc.text}">총점</div>
+            </div>
+            <div style="text-align:center;padding:8px;background:#f0fdf4;border-radius:6px">
+              <div style="font-size:16px;font-weight:900;color:#16a34a">${leadingCount}</div>
+              <div style="font-size:12px;font-weight:700;color:#166534">1위 지표</div>
+            </div>
+            <div style="text-align:center;padding:8px;background:#fee2e2;border-radius:6px">
+              <div style="font-size:16px;font-weight:900;color:#dc2626">${dangerWeaks.length}</div>
+              <div style="font-size:12px;font-weight:700;color:#991b1b">위험 약점</div>
+            </div>
+            <div style="text-align:center;padding:8px;background:${isLeader?'#dcfce7':'#fef3c7'};border-radius:6px">
+              <div style="font-size:16px;font-weight:900;color:${isLeader?'#16a34a':'#d97706'}">${isLeader?'+'+gap:'-'+gapAbove}</div>
+              <div style="font-size:12px;font-weight:700;color:${isLeader?'#166534':'#92400e'}">${isLeader?'선두 격차':'상위 격차'}</div>
+            </div>
+          </div>
+          <div style="font-size:12px;color:#1e293b;line-height:1.85">${guideHTML}</div>
+        </div>`;
+    }).join('')}
+
+    <div class="ls-insight" style="margin-top:16px">
+      <strong>📊 핵심 인사이트</strong><br>
+      캠프 브리핑의 핵심은 <strong>"지금 당장 무엇을 해야 하는가"</strong>입니다. 데이터 분석 결과를 실행 가능한 액션으로 전환하는 것이 캠프 리더의 역할이며, 이 브리핑은 그 판단의 근거를 제공합니다.<br><br>
+      <strong>브리핑 활용 3원칙</strong>:<br>
+      첫째, 즉시 실행 사항은 <strong>오늘 안에 담당자를 지정</strong>하고 완료 기한을 설정하세요. 실행 없는 분석은 가치가 없습니다.<br>
+      둘째, 기회 요인은 지금 당장 캠페인 자료로 만드세요. 강점을 알고 있어도 유권자에게 전달하지 않으면 효과가 없습니다. 특히 각 후보의 최고 강점 지표를 비주얼 콘텐츠로 제작해 SNS에 즉시 배포하세요.<br>
+      셋째, 위협 요인은 <strong>방어 시나리오(S18)와 연동</strong>하여 즉각 대응 체계를 구축하세요. 공격이 시작된 후 대응하면 이미 늦습니다.<br><br>
+      <strong>업데이트 주기</strong>: <strong>매주 1회 이상</strong> 이 브리핑을 재생성하여 판세 변화를 추적하세요. 선거 막판 2주는 매일 업데이트를 권장합니다. 판세가 바뀌면 전략도 즉시 바뀌어야 합니다. 데이터에 기반한 빠른 전략 수정이 선거를 이깁니다.
+    </div>`;
 }
 
 /* ══════════════════════════════════════ */
@@ -1542,6 +3751,21 @@ document.addEventListener('DOMContentLoaded', () => {
   // ── 후보자 판세 분석 렌더링 ──
   renderCandidateAnalysis();
   renderComparisonAnalysis();
+
+  // ── S10~S15 데이터 기반 섹션 렌더링 ──
+  renderCandidateTypes();
+  renderBalanceAnalysis();
+  renderConsensusAnalysis();
+  renderVulnerability();
+  renderReversalMatrix();
+  renderDifferentiationMap();
+
+  // ── S16~S20 데이터 기반 자동 생성 ──
+  renderWinFormulas();
+  renderPersuasionMessages();
+  renderAttackScenarios();
+  renderNarrative();
+  renderBriefing();
 
   // ── 연령대 도넛 차트 ──
   new Chart(document.getElementById('ageChart'), {
